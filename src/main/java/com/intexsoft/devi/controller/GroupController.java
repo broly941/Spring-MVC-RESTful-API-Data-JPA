@@ -2,12 +2,11 @@ package com.intexsoft.devi.controller;
 
 import com.intexsoft.devi.entity.Group;
 import com.intexsoft.devi.service.GroupService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Locale;
 
 /**
  * @author DEVIAPHAN
@@ -19,16 +18,12 @@ public class GroupController {
     @Autowired
     GroupService groupService;
 
-    private static final Logger logger =
-            LoggerFactory.getLogger(GroupController.class);
-
     /**
      * @return all group entities in the database.
      */
     @GetMapping("")
-    public List<Group> listAllGroups() {
-        logger.info("get all groups");
-        return groupService.all();
+    public List<Group> all(@RequestHeader("Accept-Language") Locale locale) {
+        return groupService.all(locale);
     }
 
     /**
@@ -37,9 +32,8 @@ public class GroupController {
      * @throws Exception if there is no value
      */
     @GetMapping("/{id}")
-    public Group getGroup(@PathVariable Long id) throws Exception {
-        logger.info("get group by id: " + id);
-        return groupService.get(id);
+    public Group get(@PathVariable Long id, @RequestHeader("Accept-Language") Locale locale) throws Exception {
+        return groupService.get(id, locale);
     }
 
     /**
@@ -50,9 +44,8 @@ public class GroupController {
      * @throws Exception if there is no value
      */
     @PostMapping("")
-    public Group addGroup(@RequestBody Group group, @RequestParam Long curatorId, @RequestParam Long[] teacherIdList) throws Exception {
-        logger.info("add group " + group.getNumber());
-        return groupService.add(group, curatorId, teacherIdList);
+    public Group add(@RequestBody Group group, @RequestParam Long curatorId, @RequestParam Long[] teacherIdList, @RequestHeader("Accept-Language") Locale locale) throws Exception {
+        return groupService.add(group, curatorId, teacherIdList, locale);
     }
 
 
@@ -65,17 +58,15 @@ public class GroupController {
      * @throws Exception if there is no value
      */
     @PutMapping("/{groupId}")
-    public Group updateGroup(@RequestBody Group group, @PathVariable Long groupId, @RequestParam Long curatorId, @RequestParam Long[] teacherIdList) throws Exception {
-        logger.info("update group " + group.getNumber());
-        return groupService.update(group, groupId, curatorId, teacherIdList);
+    public Group update(@RequestBody Group group, @PathVariable Long groupId, @RequestParam Long curatorId, @RequestParam Long[] teacherIdList, @RequestHeader("Accept-Language") Locale locale) throws Exception {
+        return groupService.update(group, groupId, curatorId, teacherIdList, locale);
     }
 
     /**
      * @param id the group entity to be removed from the database
      */
     @DeleteMapping("/{id}")
-    public void deleteGroup(@PathVariable Long id) {
-        logger.info("delete group by id: " + id);
-        groupService.delete(id);
+    public void delete(@PathVariable Long id, @RequestHeader("Accept-Language") Locale locale) {
+        groupService.delete(id, locale);
     }
 }

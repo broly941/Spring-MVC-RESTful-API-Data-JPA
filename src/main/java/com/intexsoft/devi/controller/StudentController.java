@@ -2,15 +2,11 @@ package com.intexsoft.devi.controller;
 
 import com.intexsoft.devi.entity.Student;
 import com.intexsoft.devi.service.StudentService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.MessageSource;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Locale;
 
 /**
  * @author DEVIAPHAN
@@ -22,19 +18,12 @@ public class StudentController {
     @Autowired
     StudentService studentService;
 
-    private static final Logger logger =
-            LoggerFactory.getLogger(StudentController.class);
-
-    @Autowired
-    private MessageSource messageSource;
-
     /**
      * @return all student entities in the database.
      */
     @GetMapping("")
-    public List<Student> listAllStudents() {
-        logger.info("get all students");
-        return studentService.all();
+    public List<Student> all(@RequestHeader("Accept-Language") Locale locale) {
+        return studentService.all(locale);
     }
 
     /**
@@ -42,9 +31,8 @@ public class StudentController {
      * @return student entity by ID in the database.
      */
     @GetMapping("/{id}")
-    public Student getStudent(@PathVariable Long id) throws Exception {
-        logger.info("get student by id: " + id);
-        return studentService.get(id);
+    public Student get(@PathVariable Long id, @RequestHeader("Accept-Language") Locale locale) throws Exception {
+        return studentService.get(id, locale);
     }
 
     /**
@@ -54,9 +42,8 @@ public class StudentController {
      * @throws Exception if there is no value
      */
     @PostMapping("")
-    public Student addStudents(@RequestBody Student student, @RequestParam Long groupId) throws Exception {
-        logger.info("add student " + student.getFirstName() + " " + student.getLastName());
-        return studentService.add(student, groupId);
+    public Student add(@RequestBody Student student, @RequestParam Long groupId, @RequestHeader("Accept-Language") Locale locale) throws Exception {
+        return studentService.add(student, groupId, locale);
     }
 
     /**
@@ -67,17 +54,15 @@ public class StudentController {
      * @throws Exception if there is no value
      */
     @PutMapping("/{studentId}")
-    public Student updateStudent(@RequestBody Student student, @PathVariable Long studentId, @RequestParam Long groupId) throws Exception {
-        logger.info("update student " + student.getFirstName() + " " + student.getLastName());
-        return studentService.update(student, studentId, groupId);
+    public Student update(@RequestBody Student student, @PathVariable Long studentId, @RequestParam Long groupId, @RequestHeader("Accept-Language") Locale locale) throws Exception {
+        return studentService.update(student, studentId, groupId, locale);
     }
 
     /**
      * @param id the student entity to be removed from the database
      */
     @DeleteMapping("/{id}")
-    public void deleteStudent(@PathVariable Long id) {
-        logger.info("delete student by id: " + id);
-        studentService.delete(id);
+    public void delete(@PathVariable Long id, @RequestHeader("Accept-Language") Locale locale) {
+        studentService.delete(id, locale);
     }
 }

@@ -6,10 +6,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Locale;
 
@@ -23,22 +22,20 @@ public class TeacherController {
     @Autowired
     TeacherService teacherService;
 
-    private static final Logger logger =
-            LoggerFactory.getLogger(TeacherController.class);
-
     @Autowired
     MessageSource messageSource;
+
+    private static final Logger LOGGER =
+            LoggerFactory.getLogger(TeacherService.class);
 
     /**
      * @return all teacher entity in the database.
      */
     @GetMapping("")
-    public List<Teacher> listAllTeachers() {
-        logger.info(
-                messageSource.getMessage("messages.all", new Object[] {"Teachers"}, Locale.ENGLISH)
-        );
-        return teacherService.all();
+    public List<Teacher> getAll(@RequestHeader("Accept-Language") Locale locale) {
+        return teacherService.all(locale);
     }
+
 
     /**
      * @param id
@@ -46,9 +43,8 @@ public class TeacherController {
      * @throws Exception if there is no value
      */
     @GetMapping("/{id}")
-    public Teacher getTeacher(@PathVariable Long id) throws Exception {
-        logger.info("get teacher by id: " + id);
-        return teacherService.get(id);
+    public Teacher get(@PathVariable Long id, @RequestHeader("Accept-Language") Locale locale) throws EntityNotFoundException {
+        return teacherService.get(id, locale);
     }
 
     /**
@@ -56,9 +52,8 @@ public class TeacherController {
      * @return added teacher entity in the database.
      */
     @PostMapping("")
-    public Teacher addTeacher(@RequestBody Teacher teacher) {
-        logger.info("add teacher " + teacher.getFirstName() + " " + teacher.getLastName());
-        return teacherService.add(teacher);
+    public Teacher add(@RequestBody Teacher teacher, @RequestHeader("Accept-Language") Locale locale) {
+        return teacherService.add(teacher, locale);
     }
 
     /**
@@ -68,17 +63,15 @@ public class TeacherController {
      * @throws Exception if there is no value
      */
     @PutMapping("/{id}")
-    public Teacher updateTeacher(@RequestBody Teacher teacher, @PathVariable Long id) throws Exception {
-        logger.info("update teacher " + teacher.getFirstName() + " " + teacher.getLastName());
-        return teacherService.update(teacher, id);
+    public Teacher update(@RequestBody Teacher teacher, @PathVariable Long id, @RequestHeader("Accept-Language") Locale locale) throws Exception {
+        return teacherService.update(teacher, id, locale);
     }
 
     /**
      * @param id the teacher entity to be removed from the database
      */
     @DeleteMapping("/{id}")
-    public void deleteTeacher(@PathVariable Long id) {
-        logger.info("delete teacher by id: " + id);
-        teacherService.delete(id);
+    public void delete(@PathVariable Long id, @RequestHeader("Accept-Language") Locale locale) {
+        teacherService.delete(id, locale);
     }
 }
