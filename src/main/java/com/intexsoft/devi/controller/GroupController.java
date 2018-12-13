@@ -5,6 +5,7 @@ import com.intexsoft.devi.service.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Locale;
 
@@ -19,11 +20,11 @@ public class GroupController {
     GroupService groupService;
 
     /**
-     * @return all group entities in the database.
+     * @return getAll group entities in the database.
      */
     @GetMapping("")
-    public List<Group> all(@RequestHeader("Accept-Language") Locale locale) {
-        return groupService.all(locale);
+    public List<Group> getAll(@RequestHeader("Accept-Language") Locale locale) {
+        return groupService.getAll(locale);
     }
 
     /**
@@ -32,8 +33,8 @@ public class GroupController {
      * @throws Exception if there is no value
      */
     @GetMapping("/{id}")
-    public Group get(@PathVariable Long id, @RequestHeader("Accept-Language") Locale locale) throws Exception {
-        return groupService.get(id, locale);
+    public Group getById(@PathVariable Long id, @RequestHeader("Accept-Language") Locale locale) throws EntityNotFoundException {
+        return groupService.getById(id, locale);
     }
 
     /**
@@ -44,10 +45,9 @@ public class GroupController {
      * @throws Exception if there is no value
      */
     @PostMapping("")
-    public Group add(@RequestBody Group group, @RequestParam Long curatorId, @RequestParam Long[] teacherIdList, @RequestHeader("Accept-Language") Locale locale) throws Exception {
-        return groupService.add(group, curatorId, teacherIdList, locale);
+    public Group save(@RequestBody Group group, @RequestParam Long curatorId, @RequestParam Long[] teacherIdList, @RequestHeader("Accept-Language") Locale locale) throws EntityNotFoundException {
+        return groupService.save(group, curatorId, teacherIdList, locale);
     }
-
 
     /**
      * @param group
@@ -58,15 +58,15 @@ public class GroupController {
      * @throws Exception if there is no value
      */
     @PutMapping("/{groupId}")
-    public Group update(@RequestBody Group group, @PathVariable Long groupId, @RequestParam Long curatorId, @RequestParam Long[] teacherIdList, @RequestHeader("Accept-Language") Locale locale) throws Exception {
-        return groupService.update(group, groupId, curatorId, teacherIdList, locale);
+    public Group updateById(@RequestBody Group group, @PathVariable Long groupId, @RequestParam Long curatorId, @RequestParam Long[] teacherIdList, @RequestHeader("Accept-Language") Locale locale) throws EntityNotFoundException {
+        return groupService.updateById(group, groupId, curatorId, teacherIdList, locale);
     }
 
     /**
      * @param id the group entity to be removed from the database
      */
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id, @RequestHeader("Accept-Language") Locale locale) {
-        groupService.delete(id, locale);
+    public void deleteById(@PathVariable Long id, @RequestHeader("Accept-Language") Locale locale) {
+        groupService.deleteById(id, locale);
     }
 }

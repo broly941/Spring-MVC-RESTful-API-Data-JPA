@@ -6,6 +6,5 @@
 </head>
 <body>
     <h2>Deus Vult</h2>
-
 </body>
 </html>

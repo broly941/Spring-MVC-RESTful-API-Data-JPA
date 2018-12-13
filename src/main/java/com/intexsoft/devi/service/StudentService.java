@@ -34,10 +34,12 @@ public class StudentService {
 
     /**
      * @param locale
-     * @return all student entities in the database.
+     * @return getAll student entities in the database.
      */
-    public List<Student> all(Locale locale) {
-        LOGGER.info(messageSource.getMessage("getAll", new Object[]{"students"}, locale));
+    public List<Student> getAll(Locale locale) {
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info(messageSource.getMessage("getAll", new Object[]{"students"}, locale));
+        }
         return studentsRepository.findAll();
     }
 
@@ -46,13 +48,17 @@ public class StudentService {
      * @param locale
      * @return student entity by ID in the database.
      */
-    public Student get(Long id, Locale locale) throws Exception {
+    public Student getById(Long id, Locale locale) throws EntityNotFoundException {
         Optional<Student> studentsOptional = studentsRepository.findById(id);
         if (studentsOptional.isPresent()) {
-            LOGGER.info(messageSource.getMessage("getById", new Object[]{"student", id}, locale));
+            if (LOGGER.isInfoEnabled()) {
+                LOGGER.info(messageSource.getMessage("getById", new Object[]{"student", id}, locale));
+            }
             return studentsOptional.get();
         }
-        LOGGER.error(messageSource.getMessage("EntityNotFoundException", new Object[]{"Get student by id", id}, locale));
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.error(messageSource.getMessage("EntityNotFoundException", new Object[]{"Get student by id", id}, locale));
+        }
         throw new EntityNotFoundException();
     }
 
@@ -61,12 +67,13 @@ public class StudentService {
      * @param groupId
      * @param locale
      * @return added student entity in the database.
-     * @throws EntityNotFoundException if there is no value
      */
     @Transactional
-    public Student add(Student student, Long groupId, Locale locale) throws Exception {
-        student.setGroup(groupService.get(groupId, locale));
-        LOGGER.info(messageSource.getMessage("add", new Object[]{"student"}, locale));
+    public Student save(Student student, Long groupId, Locale locale) {
+        student.setGroup(groupService.getById(groupId, locale));
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info(messageSource.getMessage("add", new Object[]{"student"}, locale));
+        }
         return studentsRepository.save(student);
     }
 
@@ -79,27 +86,33 @@ public class StudentService {
      * @throws EntityNotFoundException if there is no value
      */
     @Transactional
-    public Student update(Student student, Long studentId, Long groupId, Locale locale) throws Exception {
+    public Student updateById(Student student, Long studentId, Long groupId, Locale locale) throws EntityNotFoundException {
         Optional<Student> studentsOptional = studentsRepository.findById(studentId);
         if (!studentsOptional.isPresent()) {
-            LOGGER.error(messageSource.getMessage("EntityNotFoundException", new Object[]{"Update student by id", studentId}, locale));
+            if (LOGGER.isInfoEnabled()) {
+                LOGGER.error(messageSource.getMessage("EntityNotFoundException", new Object[]{"Update student by id", studentId}, locale));
+            }
             throw new EntityNotFoundException();
         }
 
         Student currentStudent = studentsOptional.get();
         currentStudent.setFirstName(student.getFirstName());
         currentStudent.setLastName(student.getLastName());
-        currentStudent.setGroup(groupService.get(groupId, locale));
-        LOGGER.info(messageSource.getMessage("updateById", new Object[]{"student", studentId}, locale));
+        currentStudent.setGroup(groupService.getById(groupId, locale));
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info(messageSource.getMessage("updateById", new Object[]{"student", studentId}, locale));
+        }
         return studentsRepository.save(currentStudent);
     }
 
     /**
      * @param locale
-     * @param id the student entity to be removed from the database
+     * @param id     the student entity to be removed from the database
      */
-    public void delete(Long id, Locale locale) {
-        LOGGER.info(messageSource.getMessage("deletedById", new Object[]{"student", id}, locale));
+    public void deleteById(Long id, Locale locale) {
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info(messageSource.getMessage("deletedById", new Object[]{"student", id}, locale));
+        }
         studentsRepository.deleteById(id);
     }
 }

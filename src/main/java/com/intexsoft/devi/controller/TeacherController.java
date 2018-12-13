@@ -29,11 +29,11 @@ public class TeacherController {
             LoggerFactory.getLogger(TeacherService.class);
 
     /**
-     * @return all teacher entity in the database.
+     * @return getAll teacher entity in the database.
      */
     @GetMapping("")
     public List<Teacher> getAll(@RequestHeader("Accept-Language") Locale locale) {
-        return teacherService.all(locale);
+        return teacherService.getAll(locale);
     }
 
 
@@ -43,8 +43,8 @@ public class TeacherController {
      * @throws Exception if there is no value
      */
     @GetMapping("/{id}")
-    public Teacher get(@PathVariable Long id, @RequestHeader("Accept-Language") Locale locale) throws EntityNotFoundException {
-        return teacherService.get(id, locale);
+    public Teacher getById(@PathVariable Long id, @RequestHeader("Accept-Language") Locale locale) throws EntityNotFoundException {
+        return teacherService.getById(id, locale);
     }
 
     /**
@@ -52,8 +52,8 @@ public class TeacherController {
      * @return added teacher entity in the database.
      */
     @PostMapping("")
-    public Teacher add(@RequestBody Teacher teacher, @RequestHeader("Accept-Language") Locale locale) {
-        return teacherService.add(teacher, locale);
+    public Teacher save(@RequestBody Teacher teacher, @RequestHeader("Accept-Language") Locale locale) {
+        return teacherService.save(teacher, locale);
     }
 
     /**
@@ -63,15 +63,15 @@ public class TeacherController {
      * @throws Exception if there is no value
      */
     @PutMapping("/{id}")
-    public Teacher update(@RequestBody Teacher teacher, @PathVariable Long id, @RequestHeader("Accept-Language") Locale locale) throws Exception {
-        return teacherService.update(teacher, id, locale);
+    public Teacher updateById(@RequestBody Teacher teacher, @PathVariable Long id, @RequestHeader("Accept-Language") Locale locale) throws EntityNotFoundException {
+        return teacherService.updateById(teacher, id, locale);
     }
 
     /**
      * @param id the teacher entity to be removed from the database
      */
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id, @RequestHeader("Accept-Language") Locale locale) {
-        teacherService.delete(id, locale);
+    public void deleteById(@PathVariable Long id, @RequestHeader("Accept-Language") Locale locale) {
+        teacherService.deleteById(id, locale);
     }
 }

@@ -31,10 +31,12 @@ public class TeacherService {
 
     /**
      * @param locale
-     * @return all teacher entity in the database.
+     * @return getAll teacher entity in the database.
      */
-    public List<Teacher> all(Locale locale) {
-        LOGGER.info(messageSource.getMessage("getAll", new Object[]{"teacher"}, locale));
+    public List<Teacher> getAll(Locale locale) {
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info(messageSource.getMessage("getAll", new Object[]{"teacher"}, locale));
+        }
         return teacherRepository.findAll();
     }
 
@@ -44,13 +46,17 @@ public class TeacherService {
      * @return teacher entity by ID in the database.
      * @throws EntityNotFoundException if there is no value
      */
-    public Teacher get(Long id, Locale locale) throws EntityNotFoundException {
+    public Teacher getById(Long id, Locale locale) throws EntityNotFoundException {
         Optional<Teacher> teacherOptional = teacherRepository.findById(id);
         if (teacherOptional.isPresent()) {
-            LOGGER.info(messageSource.getMessage("getById", new Object[]{"teacher", id}, locale));
+            if (LOGGER.isInfoEnabled()) {
+                LOGGER.info(messageSource.getMessage("getById", new Object[]{"teacher", id}, locale));
+            }
             return teacherOptional.get();
         }
-        LOGGER.error(messageSource.getMessage("EntityNotFoundException", new Object[]{"Get teacher by id", id}, locale));
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.error(messageSource.getMessage("EntityNotFoundException", new Object[]{"Get teacher by id", id}, locale));
+        }
         throw new EntityNotFoundException();
     }
 
@@ -60,8 +66,10 @@ public class TeacherService {
      * @return added teacher entity in the database.
      */
     @Transactional
-    public Teacher add(Teacher teacher, Locale locale) {
-        LOGGER.info(messageSource.getMessage("add", new Object[]{"teacher"}, locale));
+    public Teacher save(Teacher teacher, Locale locale) {
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info(messageSource.getMessage("add", new Object[]{"teacher"}, locale));
+        }
         return teacherRepository.save(teacher);
     }
 
@@ -73,26 +81,32 @@ public class TeacherService {
      * @throws EntityNotFoundException if there is no value
      */
     @Transactional
-    public Teacher update(Teacher teacher, Long teacherId, Locale locale) throws EntityNotFoundException {
+    public Teacher updateById(Teacher teacher, Long teacherId, Locale locale) throws EntityNotFoundException {
         Optional<Teacher> teacherOptional = teacherRepository.findById(teacherId);
         if (!teacherOptional.isPresent()) {
-            LOGGER.error(messageSource.getMessage("EntityNotFoundException", new Object[]{"Update teacher by id", teacherId}, locale));
+            if (LOGGER.isInfoEnabled()) {
+                LOGGER.error(messageSource.getMessage("EntityNotFoundException", new Object[]{"Update teacher by id", teacherId}, locale));
+            }
             throw new EntityNotFoundException();
         }
 
         Teacher currentTeacher = teacherOptional.get();
         currentTeacher.setFirstName(teacher.getFirstName());
         currentTeacher.setLastName(teacher.getLastName());
-        LOGGER.info(messageSource.getMessage("updateById", new Object[]{"teacher", teacherId}, locale));
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info(messageSource.getMessage("updateById", new Object[]{"teacher", teacherId}, locale));
+        }
         return teacherRepository.save(currentTeacher);
     }
 
     /**
-     * @param id the teacher entity to be removed from the database
+     * @param id     the teacher entity to be removed from the database
      * @param locale
      */
-    public void delete(Long id, Locale locale) {
-        LOGGER.info(messageSource.getMessage("deletedById", new Object[]{"teacher", id}, locale));
+    public void deleteById(Long id, Locale locale) {
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info(messageSource.getMessage("deletedById", new Object[]{"teacher", id}, locale));
+        }
         teacherRepository.deleteById(id);
     }
 }

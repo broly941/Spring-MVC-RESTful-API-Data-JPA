@@ -5,6 +5,7 @@ import com.intexsoft.devi.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Locale;
 
@@ -19,11 +20,11 @@ public class StudentController {
     StudentService studentService;
 
     /**
-     * @return all student entities in the database.
+     * @return getAll student entities in the database.
      */
     @GetMapping("")
-    public List<Student> all(@RequestHeader("Accept-Language") Locale locale) {
-        return studentService.all(locale);
+    public List<Student> getAll(@RequestHeader("Accept-Language") Locale locale) {
+        return studentService.getAll(locale);
     }
 
     /**
@@ -31,8 +32,8 @@ public class StudentController {
      * @return student entity by ID in the database.
      */
     @GetMapping("/{id}")
-    public Student get(@PathVariable Long id, @RequestHeader("Accept-Language") Locale locale) throws Exception {
-        return studentService.get(id, locale);
+    public Student getById(@PathVariable Long id, @RequestHeader("Accept-Language") Locale locale) throws EntityNotFoundException {
+        return studentService.getById(id, locale);
     }
 
     /**
@@ -42,8 +43,8 @@ public class StudentController {
      * @throws Exception if there is no value
      */
     @PostMapping("")
-    public Student add(@RequestBody Student student, @RequestParam Long groupId, @RequestHeader("Accept-Language") Locale locale) throws Exception {
-        return studentService.add(student, groupId, locale);
+    public Student save(@RequestBody Student student, @RequestParam Long groupId, @RequestHeader("Accept-Language") Locale locale) throws EntityNotFoundException {
+        return studentService.save(student, groupId, locale);
     }
 
     /**
@@ -54,15 +55,15 @@ public class StudentController {
      * @throws Exception if there is no value
      */
     @PutMapping("/{studentId}")
-    public Student update(@RequestBody Student student, @PathVariable Long studentId, @RequestParam Long groupId, @RequestHeader("Accept-Language") Locale locale) throws Exception {
-        return studentService.update(student, studentId, groupId, locale);
+    public Student updateById(@RequestBody Student student, @PathVariable Long studentId, @RequestParam Long groupId, @RequestHeader("Accept-Language") Locale locale) throws EntityNotFoundException {
+        return studentService.updateById(student, studentId, groupId, locale);
     }
 
     /**
      * @param id the student entity to be removed from the database
      */
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id, @RequestHeader("Accept-Language") Locale locale) {
-        studentService.delete(id, locale);
+    public void deleteById(@PathVariable Long id, @RequestHeader("Accept-Language") Locale locale) {
+        studentService.deleteById(id, locale);
     }
 }
