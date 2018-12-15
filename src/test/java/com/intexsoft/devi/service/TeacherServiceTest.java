@@ -2,13 +2,12 @@ package com.intexsoft.devi.service;
 
 import com.intexsoft.devi.entity.Teacher;
 import com.intexsoft.devi.repository.TeacherRepository;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.context.MessageSource;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import javax.persistence.EntityNotFoundException;
@@ -19,6 +18,10 @@ import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
+/**
+ * @author DEVIAPHAN
+ * Test for Business Logic Service Class
+ */
 @RunWith(MockitoJUnitRunner.Silent.class)
 @WebAppConfiguration
 public class TeacherServiceTest {
@@ -29,11 +32,12 @@ public class TeacherServiceTest {
     @Mock
     TeacherRepository teacherRepository;
 
-    @Before
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
-    }
+    @Mock
+    MessageSource messageSource;
 
+    /**
+     * Will return the list if all parameters are correct
+     */
     @Test
     public void getAll() {
         List<Teacher> teacherList = initializeTeacherList();
@@ -42,13 +46,19 @@ public class TeacherServiceTest {
         assertSame(teacherList, teacherService.getAll(Locale.ENGLISH));
     }
 
+    /**
+     * Will return an empty list if all parameters are correct
+     */
     @Test
-    public void getAll_Null() {
+    public void getAll_NotFoundTeachers() {
         when(teacherRepository.findAll())
                 .thenReturn(Collections.emptyList());
-        assertEquals(Collections.emptyList(),teacherService.getAll(Locale.ENGLISH));
+        assertEquals(Collections.emptyList(), teacherService.getAll(Locale.ENGLISH));
     }
 
+    /**
+     * Will return a record by ID if all parameters are correct
+     */
     @Test
     public void getById() {
         Teacher teacher = initializeTeacher((long) 1);
@@ -57,6 +67,9 @@ public class TeacherServiceTest {
         assertSame(teacher, teacherService.getById((long) 1, Locale.ENGLISH));
     }
 
+    /**
+     * Will thrown out an exception if record by ID cannot found
+     */
     @Test(expected = EntityNotFoundException.class)
     public void getById_NotFoundId() {
         when(teacherRepository.findById((long) 2))
@@ -64,13 +77,19 @@ public class TeacherServiceTest {
         teacherService.getById((long) 2, Locale.ENGLISH);
     }
 
+    /**
+     * Will thrown out an exception if ID will null
+     */
     @Test(expected = IllegalArgumentException.class)
-    public void getById_Null() {
+    public void getById_NullTeacher() {
         when(teacherRepository.findById(null))
                 .thenThrow(IllegalArgumentException.class);
         teacherService.getById(null, Locale.ENGLISH);
     }
 
+    /**
+     * Will save a record if all parameters are correct
+     */
     @Test
     public void save() {
         Teacher teacher = initializeTeacher((long) 1);
@@ -79,13 +98,19 @@ public class TeacherServiceTest {
         assertSame(teacher, teacherService.save(teacher, Locale.ENGLISH));
     }
 
+    /**
+     * Will thrown out an exception if entity will null
+     */
     @Test(expected = IllegalArgumentException.class)
-    public void save_Null() {
+    public void save_NullTeacher() {
         when(teacherRepository.save(null))
                 .thenThrow(IllegalArgumentException.class);
         teacherService.save(null, Locale.ENGLISH);
     }
 
+    /**
+     * Will return a record if all parameters are correct
+     */
     @Test
     public void updateById() {
         Teacher teacher = initializeTeacher((long) 1);
@@ -96,6 +121,9 @@ public class TeacherServiceTest {
         assertSame(teacher, teacherService.updateById(teacher, (long) 1, Locale.ENGLISH));
     }
 
+    /**
+     * Will thrown out an exception if entity cannot found
+     */
     @Test(expected = EntityNotFoundException.class)
     public void updateById_NotFoundId() {
         when(teacherRepository.findById((long) 2))
@@ -103,8 +131,11 @@ public class TeacherServiceTest {
         teacherService.updateById(initializeTeacher((long) 1), (long) 1, Locale.ENGLISH);
     }
 
+    /**
+     * Will thrown out an exception if ID will null
+     */
     @Test(expected = IllegalArgumentException.class)
-    public void updateById_Null() {
+    public void updateById_NullAll() {
         when(teacherRepository.findById(null))
                 .thenThrow(IllegalArgumentException.class);
         when(teacherRepository.save(null))
@@ -112,6 +143,9 @@ public class TeacherServiceTest {
         teacherService.updateById(null, null, Locale.ENGLISH);
     }
 
+    /**
+     * Will thrown out an exception if ID will null
+     */
     @Test(expected = IllegalArgumentException.class)
     public void deleteById_Null() {
         doThrow(IllegalArgumentException.class)

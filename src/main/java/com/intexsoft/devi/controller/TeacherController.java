@@ -32,7 +32,7 @@ public class TeacherController {
      * @return getAll teacher entity in the database.
      */
     @GetMapping("")
-    public List<Teacher> getAll(@RequestHeader("Accept-Language") Locale locale) {
+    public List<Teacher> getAll(@RequestHeader(value = "Accept-language", defaultValue = "en") Locale locale) {
         return teacherService.getAll(locale);
     }
 
@@ -43,7 +43,7 @@ public class TeacherController {
      * @throws Exception if there is no value
      */
     @GetMapping("/{id}")
-    public Teacher getById(@PathVariable Long id, @RequestHeader("Accept-Language") Locale locale) throws EntityNotFoundException {
+    public Teacher getById(@PathVariable Long id, @RequestHeader(value = "Accept-language", defaultValue = "en") Locale locale) throws EntityNotFoundException {
         return teacherService.getById(id, locale);
     }
 
@@ -52,7 +52,7 @@ public class TeacherController {
      * @return added teacher entity in the database.
      */
     @PostMapping("")
-    public Teacher save(@RequestBody Teacher teacher, @RequestHeader("Accept-Language") Locale locale) {
+    public Teacher save(@RequestBody Teacher teacher, @RequestHeader(value = "Accept-language", defaultValue = "en") Locale locale) {
         return teacherService.save(teacher, locale);
     }
 
@@ -63,7 +63,7 @@ public class TeacherController {
      * @throws Exception if there is no value
      */
     @PutMapping("/{id}")
-    public Teacher updateById(@RequestBody Teacher teacher, @PathVariable Long id, @RequestHeader("Accept-Language") Locale locale) throws EntityNotFoundException {
+    public Teacher updateById(@RequestBody Teacher teacher, @PathVariable Long id, @RequestHeader(value = "Accept-language", defaultValue = "en") Locale locale) throws EntityNotFoundException {
         return teacherService.updateById(teacher, id, locale);
     }
 
@@ -71,7 +71,7 @@ public class TeacherController {
      * @param id the teacher entity to be removed from the database
      */
     @DeleteMapping("/{id}")
-    public void deleteById(@PathVariable Long id, @RequestHeader("Accept-Language") Locale locale) {
+    public void deleteById(@PathVariable Long id, @RequestHeader(value = "Accept-language", defaultValue = "en") Locale locale) {
         teacherService.deleteById(id, locale);
     }
 }

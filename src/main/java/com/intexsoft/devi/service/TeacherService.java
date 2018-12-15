@@ -34,9 +34,7 @@ public class TeacherService {
      * @return getAll teacher entity in the database.
      */
     public List<Teacher> getAll(Locale locale) {
-        if (LOGGER.isInfoEnabled()) {
-            LOGGER.info(messageSource.getMessage("getAll", new Object[]{"teacher"}, locale));
-        }
+        LOGGER.info(messageSource.getMessage("getAll", new Object[]{"teacher"}, locale));
         return teacherRepository.findAll();
     }
 
@@ -49,14 +47,10 @@ public class TeacherService {
     public Teacher getById(Long id, Locale locale) throws EntityNotFoundException {
         Optional<Teacher> teacherOptional = teacherRepository.findById(id);
         if (teacherOptional.isPresent()) {
-            if (LOGGER.isInfoEnabled()) {
-                LOGGER.info(messageSource.getMessage("getById", new Object[]{"teacher", id}, locale));
-            }
+            LOGGER.info(messageSource.getMessage("getById", new Object[]{"teacher", id}, locale));
             return teacherOptional.get();
         }
-        if (LOGGER.isInfoEnabled()) {
-            LOGGER.error(messageSource.getMessage("EntityNotFoundException", new Object[]{"Get teacher by id", id}, locale));
-        }
+        LOGGER.error(messageSource.getMessage("EntityNotFoundException", new Object[]{"Get teacher by id", id}, locale));
         throw new EntityNotFoundException();
     }
 
@@ -67,9 +61,7 @@ public class TeacherService {
      */
     @Transactional
     public Teacher save(Teacher teacher, Locale locale) {
-        if (LOGGER.isInfoEnabled()) {
-            LOGGER.info(messageSource.getMessage("add", new Object[]{"teacher"}, locale));
-        }
+        LOGGER.info(messageSource.getMessage("add", new Object[]{"teacher"}, locale));
         return teacherRepository.save(teacher);
     }
 
@@ -84,18 +76,14 @@ public class TeacherService {
     public Teacher updateById(Teacher teacher, Long teacherId, Locale locale) throws EntityNotFoundException {
         Optional<Teacher> teacherOptional = teacherRepository.findById(teacherId);
         if (!teacherOptional.isPresent()) {
-            if (LOGGER.isInfoEnabled()) {
-                LOGGER.error(messageSource.getMessage("EntityNotFoundException", new Object[]{"Update teacher by id", teacherId}, locale));
-            }
+            LOGGER.error(messageSource.getMessage("EntityNotFoundException", new Object[]{"Update teacher by id", teacherId}, locale));
             throw new EntityNotFoundException();
         }
 
         Teacher currentTeacher = teacherOptional.get();
         currentTeacher.setFirstName(teacher.getFirstName());
         currentTeacher.setLastName(teacher.getLastName());
-        if (LOGGER.isInfoEnabled()) {
-            LOGGER.info(messageSource.getMessage("updateById", new Object[]{"teacher", teacherId}, locale));
-        }
+        LOGGER.info(messageSource.getMessage("updateById", new Object[]{"teacher", teacherId}, locale));
         return teacherRepository.save(currentTeacher);
     }
 
@@ -104,9 +92,7 @@ public class TeacherService {
      * @param locale
      */
     public void deleteById(Long id, Locale locale) {
-        if (LOGGER.isInfoEnabled()) {
-            LOGGER.info(messageSource.getMessage("deletedById", new Object[]{"teacher", id}, locale));
-        }
+        LOGGER.info(messageSource.getMessage("deletedById", new Object[]{"teacher", id}, locale));
         teacherRepository.deleteById(id);
     }
 }

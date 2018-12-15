@@ -39,9 +39,7 @@ public class GroupService {
      * @return getAll group entities in the database.
      */
     public List<Group> getAll(Locale locale) {
-        if (LOGGER.isInfoEnabled()) {
-            LOGGER.info(messageSource.getMessage("getAll", new Object[]{"groups"}, locale));
-        }
+        LOGGER.info(messageSource.getMessage("getAll", new Object[]{"groups"}, locale));
         return groupRepository.findAll();
     }
 
@@ -54,14 +52,10 @@ public class GroupService {
     public Group getById(Long id, Locale locale) throws EntityNotFoundException {
         Optional<Group> groupOptional = groupRepository.findById(id);
         if (groupOptional.isPresent()) {
-            if (LOGGER.isInfoEnabled()) {
-                LOGGER.info(messageSource.getMessage("getById", new Object[]{"group", id}, locale));
-            }
+            LOGGER.info(messageSource.getMessage("getById", new Object[]{"group", id}, locale));
             return groupOptional.get();
         }
-        if (LOGGER.isInfoEnabled()) {
-            LOGGER.error(messageSource.getMessage("EntityNotFoundException", new Object[]{"Get group by id", id}, locale));
-        }
+        LOGGER.error(messageSource.getMessage("EntityNotFoundException", new Object[]{"Get group by id", id}, locale));
         throw new EntityNotFoundException();
     }
 
@@ -76,9 +70,7 @@ public class GroupService {
     public Group save(Group group, Long curatorId, Long[] teacherIdList, Locale locale) {
         group.setTeacher(teacherService.getById(curatorId, locale));
         group.setTeachers(getTeacherList(teacherIdList, locale));
-        if (LOGGER.isInfoEnabled()) {
-            LOGGER.info(messageSource.getMessage("add", new Object[]{"group"}, locale));
-        }
+        LOGGER.info(messageSource.getMessage("add", new Object[]{"group"}, locale));
         return groupRepository.save(group);
     }
 
@@ -95,9 +87,7 @@ public class GroupService {
     public Group updateById(Group group, Long groupId, Long curatorId, Long[] teacherIdList, Locale locale) throws EntityNotFoundException {
         Optional<Group> groupOptional = groupRepository.findById(groupId);
         if (!groupOptional.isPresent()) {
-            if (LOGGER.isInfoEnabled()) {
-                LOGGER.error(messageSource.getMessage("EntityNotFoundException", new Object[]{"Update group by id", groupId}, locale));
-            }
+            LOGGER.error(messageSource.getMessage("EntityNotFoundException", new Object[]{"Update group by id", groupId}, locale));
             throw new EntityNotFoundException();
 
         }
@@ -105,20 +95,16 @@ public class GroupService {
         currentGroup.setNumber(group.getNumber());
         currentGroup.setTeacher(teacherService.getById(curatorId, locale));
         currentGroup.setTeachers(getTeacherList(teacherIdList, locale));
-        if (LOGGER.isInfoEnabled()) {
-            LOGGER.info(messageSource.getMessage("updateById", new Object[]{"group", groupId}, locale));
-        }
+        LOGGER.info(messageSource.getMessage("updateById", new Object[]{"group", groupId}, locale));
         return groupRepository.save(currentGroup);
     }
 
     /**
      * @param locale
-     * @param id the group entity to be removed from the database
+     * @param id     the group entity to be removed from the database
      */
     public void deleteById(Long id, Locale locale) {
-        if (LOGGER.isInfoEnabled()) {
-            LOGGER.info(messageSource.getMessage("deletedById", new Object[]{"group", id}, locale));
-        }
+        LOGGER.info(messageSource.getMessage("deletedById", new Object[]{"group", id}, locale));
         groupRepository.deleteById(id);
     }
 
