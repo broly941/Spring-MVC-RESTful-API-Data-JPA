@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.intexsoft.devi.config.WebConfig;
-import com.intexsoft.devi.entity.Teacher;
+import com.intexsoft.devi.entity.Student;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,8 +26,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
- * @author DEVIAPHAN
- * Test for Controller Teacher Class
+ * @author DEVIAPHAN on 17.12.2018
+ * @project SpringRESTDataJPA
+ * Test for Controller Student Class
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {WebConfig.class})
@@ -38,8 +39,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         TransactionalTestExecutionListener.class,
         DbUnitTestExecutionListener.class
 })
-@DatabaseSetup(".xml")
-public class TeacherControllerIntegrationTest {
+public class StudentControllerIntegrationTest {
     private MockMvc mockMvc;
     @Autowired
     private WebApplicationContext webApplicationContext;
@@ -54,14 +54,14 @@ public class TeacherControllerIntegrationTest {
      */
     @Test
     public void getAll() throws Exception {
-        mockMvc.perform(get("/university/teachers")
+        mockMvc.perform(get("/university/students")
                 .header("Accept-language", "en")
         )
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andExpect(jsonPath("$[0].id", is(1)))
-                .andExpect(jsonPath("$[0].firstName", is("Иван")))
-                .andExpect(jsonPath("$[0].lastName", is("Васильков")));
+                .andExpect(jsonPath("$[0].firstName", is("Михаил")))
+                .andExpect(jsonPath("$[0].lastName", is("Черняк")));
     }
 
     /**
@@ -69,15 +69,21 @@ public class TeacherControllerIntegrationTest {
      * @throws Exception
      */
     @Test
+    @DatabaseSetup("Teacher.xml")
     public void getById() throws Exception {
-        mockMvc.perform(get("/university/teachers/{id}", 1)
+        mockMvc.perform(get("/university/students/{id}", 1)
                 .header("Accept-language", "en")
         )
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andExpect(jsonPath("$.id", is(1)))
-                .andExpect(jsonPath("$.firstName", is("Иван")))
-                .andExpect(jsonPath("$.lastName", is("Васильков")));
+                .andExpect(jsonPath("$.firstName", is("Михаил")))
+                .andExpect(jsonPath("$.lastName", is("Черняк")));
+        //                .andExpect(status().isOk())
+//                .andExpect(content().contentType("application/json;charset=UTF-8"))
+//                .andExpect(jsonPath("$.id", is(1)))
+//                .andExpect(jsonPath("$.firstName", is("Jackie")))
+//                .andExpect(jsonPath("$.lastName", is("Chan")));
     }
 
     /**
@@ -86,14 +92,15 @@ public class TeacherControllerIntegrationTest {
      */
     @Test
     public void save() throws Exception {
-        Teacher teacherMax = new Teacher();
-        teacherMax.setFirstName("Mad");
-        teacherMax.setLastName("Max");
+        Student studentMax = new Student();
+        studentMax.setFirstName("Mad");
+        studentMax.setLastName("Max");
 
-        mockMvc.perform(post("/university/teachers")
+        mockMvc.perform(post("/university/students/")
                 .header("Accept-language", "en")
+                .param("groupId", "1")
                 .contentType("application/json;charset=UTF-8")
-                .content(json(teacherMax))
+                .content(json(studentMax))
         )
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
@@ -107,14 +114,15 @@ public class TeacherControllerIntegrationTest {
      */
     @Test
     public void update() throws Exception {
-        Teacher teacherMax = new Teacher();
-        teacherMax.setFirstName("Mad");
-        teacherMax.setLastName("Max2");
+        Student studentMax = new Student();
+        studentMax.setFirstName("Mad");
+        studentMax.setLastName("Max2");
 
-        mockMvc.perform(put("/university/teachers/{id}", 12)
+        mockMvc.perform(put("/university/students/{id}", 5)
                 .header("Accept-language", "en")
+                .param("groupId", "2")
                 .contentType("application/json;charset=UTF-8")
-                .content(json(teacherMax))
+                .content(json(studentMax))
         )
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
@@ -128,7 +136,7 @@ public class TeacherControllerIntegrationTest {
      */
     @Test
     public void remove() throws Exception {
-        mockMvc.perform(delete("/university/teachers/{id}", 13)
+        mockMvc.perform(delete("/university/students/{id}", 5)
                 .header("Accept-language", "en")
         )
                 .andExpect(status().isOk());
@@ -138,5 +146,4 @@ public class TeacherControllerIntegrationTest {
         ObjectMapper mapper = new ObjectMapper();
         return mapper.writeValueAsString(o);
     }
-
 }

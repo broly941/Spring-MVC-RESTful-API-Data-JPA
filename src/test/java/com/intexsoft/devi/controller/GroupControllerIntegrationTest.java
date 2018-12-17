@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.intexsoft.devi.config.WebConfig;
-import com.intexsoft.devi.entity.Teacher;
+import com.intexsoft.devi.entity.Group;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,8 +26,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
- * @author DEVIAPHAN
- * Test for Controller Teacher Class
+ * @author DEVIAPHAN on 17.12.2018
+ * @project SpringRESTDataJPA
+ * Test for Controller Group Class
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {WebConfig.class})
@@ -39,7 +40,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         DbUnitTestExecutionListener.class
 })
 @DatabaseSetup(".xml")
-public class TeacherControllerIntegrationTest {
+public class GroupControllerIntegrationTest {
     private MockMvc mockMvc;
     @Autowired
     private WebApplicationContext webApplicationContext;
@@ -54,14 +55,13 @@ public class TeacherControllerIntegrationTest {
      */
     @Test
     public void getAll() throws Exception {
-        mockMvc.perform(get("/university/teachers")
+        mockMvc.perform(get("/university/groups")
                 .header("Accept-language", "en")
         )
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andExpect(jsonPath("$[0].id", is(1)))
-                .andExpect(jsonPath("$[0].firstName", is("Иван")))
-                .andExpect(jsonPath("$[0].lastName", is("Васильков")));
+                .andExpect(jsonPath("$[0].number", is("ПОИТ-162")));
     }
 
     /**
@@ -70,14 +70,13 @@ public class TeacherControllerIntegrationTest {
      */
     @Test
     public void getById() throws Exception {
-        mockMvc.perform(get("/university/teachers/{id}", 1)
+        mockMvc.perform(get("/university/groups/{id}", 1)
                 .header("Accept-language", "en")
         )
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andExpect(jsonPath("$.id", is(1)))
-                .andExpect(jsonPath("$.firstName", is("Иван")))
-                .andExpect(jsonPath("$.lastName", is("Васильков")));
+                .andExpect(jsonPath("$.number", is("ПОИТ-162")));
     }
 
     /**
@@ -86,19 +85,19 @@ public class TeacherControllerIntegrationTest {
      */
     @Test
     public void save() throws Exception {
-        Teacher teacherMax = new Teacher();
-        teacherMax.setFirstName("Mad");
-        teacherMax.setLastName("Max");
+        Group groupMax = new Group();
+        groupMax.setNumber("MadMax");
 
-        mockMvc.perform(post("/university/teachers")
+        mockMvc.perform(post("/university/groups")
                 .header("Accept-language", "en")
+                .param("curatorId", "3")
+                .param("teacherIdList", "3")
                 .contentType("application/json;charset=UTF-8")
-                .content(json(teacherMax))
+                .content(json(groupMax))
         )
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
-                .andExpect(jsonPath("$.firstName", is("Mad")))
-                .andExpect(jsonPath("$.lastName", is("Max")));
+                .andExpect(jsonPath("$.number", is("MadMax")));
     }
 
     /**
@@ -107,19 +106,19 @@ public class TeacherControllerIntegrationTest {
      */
     @Test
     public void update() throws Exception {
-        Teacher teacherMax = new Teacher();
-        teacherMax.setFirstName("Mad");
-        teacherMax.setLastName("Max2");
+        Group groupMax = new Group();
+        groupMax.setNumber("MadMax2");
 
-        mockMvc.perform(put("/university/teachers/{id}", 12)
+        mockMvc.perform(put("/university/groups/{id}", 7)
                 .header("Accept-language", "en")
+                .param("curatorId", "1")
+                .param("teacherIdList", "3")
                 .contentType("application/json;charset=UTF-8")
-                .content(json(teacherMax))
+                .content(json(groupMax))
         )
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
-                .andExpect(jsonPath("$.firstName", is("Mad")))
-                .andExpect(jsonPath("$.lastName", is("Max2")));
+                .andExpect(jsonPath("$.number", is("MadMax2")));
     }
 
     /**
@@ -128,7 +127,7 @@ public class TeacherControllerIntegrationTest {
      */
     @Test
     public void remove() throws Exception {
-        mockMvc.perform(delete("/university/teachers/{id}", 13)
+        mockMvc.perform(delete("/university/groups/{id}", 7)
                 .header("Accept-language", "en")
         )
                 .andExpect(status().isOk());
@@ -138,5 +137,4 @@ public class TeacherControllerIntegrationTest {
         ObjectMapper mapper = new ObjectMapper();
         return mapper.writeValueAsString(o);
     }
-
 }
