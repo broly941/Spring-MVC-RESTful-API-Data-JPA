@@ -15,7 +15,6 @@ import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 /**
@@ -71,20 +70,10 @@ public class TeacherServiceTest {
      * Will thrown out an exception if record by ID cannot found
      */
     @Test(expected = EntityNotFoundException.class)
-    public void getById_NotFoundId() {
+    public void getById_NotFoundTeacher() {
         when(teacherRepository.findById((long) 2))
                 .thenThrow(EntityNotFoundException.class);
         teacherService.getById((long) 2, Locale.ENGLISH);
-    }
-
-    /**
-     * Will thrown out an exception if ID will null
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void getById_NullTeacher() {
-        when(teacherRepository.findById(null))
-                .thenThrow(IllegalArgumentException.class);
-        teacherService.getById(null, Locale.ENGLISH);
     }
 
     /**
@@ -96,16 +85,6 @@ public class TeacherServiceTest {
         when(teacherRepository.save(teacher))
                 .thenReturn(teacher);
         assertSame(teacher, teacherService.save(teacher, Locale.ENGLISH));
-    }
-
-    /**
-     * Will thrown out an exception if entity will null
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void save_NullTeacher() {
-        when(teacherRepository.save(null))
-                .thenThrow(IllegalArgumentException.class);
-        teacherService.save(null, Locale.ENGLISH);
     }
 
     /**
@@ -129,28 +108,6 @@ public class TeacherServiceTest {
         when(teacherRepository.findById((long) 2))
                 .thenThrow(EntityNotFoundException.class);
         teacherService.updateById(initializeTeacher((long) 1), (long) 1, Locale.ENGLISH);
-    }
-
-    /**
-     * Will thrown out an exception if ID will null
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void updateById_NullAll() {
-        when(teacherRepository.findById(null))
-                .thenThrow(IllegalArgumentException.class);
-        when(teacherRepository.save(null))
-                .thenThrow(IllegalArgumentException.class);
-        teacherService.updateById(null, null, Locale.ENGLISH);
-    }
-
-    /**
-     * Will thrown out an exception if ID will null
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void deleteById_Null() {
-        doThrow(IllegalArgumentException.class)
-                .when(teacherRepository).deleteById(null);
-        teacherService.deleteById(null, Locale.ENGLISH);
     }
 
     private List<Teacher> initializeTeacherList() {

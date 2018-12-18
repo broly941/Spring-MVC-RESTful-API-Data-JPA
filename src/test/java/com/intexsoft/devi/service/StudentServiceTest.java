@@ -13,8 +13,8 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import javax.persistence.EntityNotFoundException;
 import java.util.*;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.doThrow;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.when;
 
 /**
@@ -80,16 +80,6 @@ public class StudentServiceTest {
     }
 
     /**
-     * Will thrown out an exception if ID will null
-     */
-    @Test(expected = EntityNotFoundException.class)
-    public void getById_NullStudent() {
-        when(studentsRepository.findById(null))
-                .thenThrow(EntityNotFoundException.class);
-        studentService.getById(null, Locale.ENGLISH);
-    }
-
-    /**
      * Will save a record if all parameters are correct
      */
     @Test
@@ -100,27 +90,6 @@ public class StudentServiceTest {
         when(studentsRepository.save(student))
                 .thenReturn(student);
         assertSame(student, studentService.save(student, null, Locale.ENGLISH));
-    }
-
-    /**
-     * Will thrown out an exception if ID will null
-     */
-    @Test(expected = EntityNotFoundException.class)
-    public void save_NullGroupId() {
-        Student student = initializeStudent((long) 1);
-        when(groupService.getById(null, Locale.ENGLISH))
-                .thenThrow(EntityNotFoundException.class);
-        studentService.save(student, null, Locale.ENGLISH);
-    }
-
-    /**
-     * Will thrown out an exception if ID will null
-     */
-    @Test(expected = NullPointerException.class)
-    public void save_NullStudent() {
-        when(studentsRepository.save(null))
-                .thenThrow(NullPointerException.class);
-        studentService.save(null, (long) 1, Locale.ENGLISH);
     }
 
     /**
@@ -142,32 +111,10 @@ public class StudentServiceTest {
      * Will thrown out an exception if ID will null
      */
     @Test(expected = EntityNotFoundException.class)
-    public void updateById_NullGroupId() {
-        when(groupService.getById(null, Locale.ENGLISH))
+    public void updateById_NotFoundId() {
+        when(studentsRepository.findById((long) 2))
                 .thenThrow(EntityNotFoundException.class);
         studentService.updateById(initializeStudent((long) 1), (long) 2, null, Locale.ENGLISH);
-    }
-
-    /**
-     * Will thrown out an exception if ALL ID will null
-     */
-    @Test(expected = EntityNotFoundException.class)
-    public void updateById_NullAll() {
-        when(studentsRepository.findById(null))
-                .thenThrow(EntityNotFoundException.class);
-        when(studentsRepository.save(null))
-                .thenThrow(EntityNotFoundException.class);
-        studentService.updateById(null, null, null, Locale.ENGLISH);
-    }
-
-    /**
-     * Will thrown out an exception if ID will null
-     */
-    @Test(expected = EntityNotFoundException.class)
-    public void deleteById_Null() {
-        doThrow(EntityNotFoundException.class)
-                .when(studentsRepository).deleteById(null);
-        studentService.deleteById(null, Locale.ENGLISH);
     }
 
     private List<Student> initializeStudentList() {

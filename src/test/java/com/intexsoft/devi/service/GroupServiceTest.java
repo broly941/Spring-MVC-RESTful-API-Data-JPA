@@ -1,19 +1,12 @@
 package com.intexsoft.devi.service;
 
-import ch.qos.logback.classic.spi.ILoggingEvent;
-import ch.qos.logback.core.Appender;
 import com.intexsoft.devi.entity.Group;
 import com.intexsoft.devi.repository.GroupRepository;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentMatcher;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.test.context.web.WebAppConfiguration;
 
@@ -87,57 +80,16 @@ public class GroupServiceTest {
     }
 
     /**
-     * Will thrown out an exception if ID will null
-     */
-    @Test(expected = EntityNotFoundException.class)
-    public void getById_NullGroup() {
-        when(groupRepository.findById(null))
-                .thenThrow(EntityNotFoundException.class);
-        groupService.getById(null, Locale.ENGLISH);
-    }
-
-    /**
      * Will save a record if all parameters are correct
      */
     @Test
     public void save() {
         Group group = initializeGroup((long) 1);
+        when(teacherService.getById((long) 2, Locale.ENGLISH))
+                .thenReturn(null);
         when(groupRepository.save(group))
                 .thenReturn(group);
         assertSame(group, groupService.save(group, (long) 2, new Long[]{}, Locale.ENGLISH));
-    }
-
-    /**
-     * Will thrown out an exception if entity will null
-     */
-    @Test(expected = NullPointerException.class)
-    public void save_NullGroup() {
-        when(groupRepository.save(null))
-                .thenThrow(NullPointerException.class);
-        groupService.save(null, (long) 1, new Long[]{}, Locale.ENGLISH);
-    }
-
-    /**
-     * Will thrown out an exception if ID will null
-     */
-    @Test(expected = EntityNotFoundException.class)
-    public void save_NullCuratorId() {
-        Group group = initializeGroup((long) 1);
-        when(teacherService.getById(null, Locale.ENGLISH))
-                .thenThrow(EntityNotFoundException.class);
-        //ALL WHEN
-        groupService.save(group, null, new Long[]{}, Locale.ENGLISH);
-    }
-
-    /**
-     * Will thrown out an exception if ID will null
-     */
-    @Test(expected = NullPointerException.class)
-    public void save_NullTeacherIdList() {
-        Group group = initializeGroup((long) 1);
-        when(teacherService.getById(null, Locale.ENGLISH))
-                .thenThrow(NullPointerException.class);
-        groupService.save(group, (long) 1, null, Locale.ENGLISH);
     }
 
     /**
@@ -163,29 +115,6 @@ public class GroupServiceTest {
         when(groupRepository.findById((long) 2))
                 .thenThrow(EntityNotFoundException.class);
         groupService.updateById(initializeGroup((long) 1), (long) 1, (long) 1, new Long[]{}, Locale.ENGLISH);
-    }
-    /**
-     * Will thrown out an exception if ALL ID will null
-     */
-    @Test(expected = EntityNotFoundException.class)
-    public void updateById_NullAll() {
-        when(groupRepository.findById(null))
-                .thenThrow(EntityNotFoundException.class);
-        when(teacherService.getById(null, Locale.ENGLISH))
-                .thenThrow(EntityNotFoundException.class);
-        when(groupRepository.save(null))
-                .thenThrow(EntityNotFoundException.class);
-        groupService.updateById(null, null, null, null, Locale.ENGLISH);
-    }
-
-    /**
-     * Will thrown out an exception if ID will null
-     */
-    @Test(expected = EntityNotFoundException.class)
-    public void deleteById_Null() {
-        doThrow(EntityNotFoundException.class)
-                .when(groupRepository).deleteById(null);
-        groupService.deleteById(null, Locale.ENGLISH);
     }
 
     private List<Group> initializeGroupList() {

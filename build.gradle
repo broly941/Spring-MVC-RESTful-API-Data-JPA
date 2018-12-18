@@ -19,7 +19,9 @@ dependencies {
     testCompile group: 'com.jayway.jsonpath', name: 'json-path', version: '2.4.0'
     testCompile group: 'com.jayway.jsonpath', name: 'json-path-assert', version: '2.4.0'
     testCompile group: 'com.github.springtestdbunit', name: 'spring-test-dbunit', version: '1.2.1'
-    compile group: 'com.jolbox', name: 'bonecp', version: '0.8.0.RELEASE'
+    testCompile group: 'org.dbunit', name: 'dbunit', version: '2.6.0'
+    testCompile group: 'com.h2database', name: 'h2', version: '1.4.197'
+    testCompile group: 'com.jolbox', name: 'bonecp', version: '0.8.0.RELEASE'
 
 
     // Spring MVC
@@ -40,7 +42,8 @@ dependencies {
 
     // Parser
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.7'
-    compile group: 'javax.xml', name: 'jaxb-api', version: '2.1'
+    //compile group: 'javax.xml', name: 'jaxb-api', version: '2.1'
+    compile group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.1'
     compile group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
     compile group: 'org.hibernate', name: 'hibernate-validator', version: '6.0.13.Final'
 
