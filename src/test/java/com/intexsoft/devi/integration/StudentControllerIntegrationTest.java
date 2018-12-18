@@ -1,4 +1,4 @@
-package com.intexsoft.devi.controller;
+package com.intexsoft.devi.integration;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

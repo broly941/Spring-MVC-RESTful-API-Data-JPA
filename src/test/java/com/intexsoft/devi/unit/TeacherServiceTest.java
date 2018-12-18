@@ -1,7 +1,8 @@
-package com.intexsoft.devi.service;
+package com.intexsoft.devi.unit;
 
 import com.intexsoft.devi.entity.Teacher;
 import com.intexsoft.devi.repository.TeacherRepository;
+import com.intexsoft.devi.service.TeacherService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
