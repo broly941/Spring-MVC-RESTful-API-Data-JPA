@@ -57,7 +57,7 @@ public class StudentServiceTest {
     public void getAll_NotFoundStudents() {
         when(studentsRepository.findAll())
                 .thenReturn(Collections.emptyList());
-        assertEquals(Collections.emptyList(),studentService.getAll(Locale.ENGLISH));
+        assertEquals(Collections.emptyList(), studentService.getAll(Locale.ENGLISH));
     }
 
     /**

@@ -25,7 +25,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 /**
  * @author DEVIAPHAN
- * @project SpringRESTDataJPA
  * Test for Controller Teacher Class
  */
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -33,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebAppConfiguration
 @TestExecutionListeners({
         DependencyInjectionTestExecutionListener.class,
-        DbUnitTestExecutionListener.class })
+        DbUnitTestExecutionListener.class})
 @DatabaseSetup("/xml/teachers.xml")
 public class TeacherControllerIntegrationTest {
 
@@ -52,11 +51,12 @@ public class TeacherControllerIntegrationTest {
 
     /**
      * Will return an all records from tested db
+     *
      * @throws Exception
      */
     @Test
     public void getAll() throws Exception {
-        mockMvc.perform(get("/university/teachers")
+        mockMvc.perform(get("/teachers")
                 .header("Accept-language", "en")
         )
                 .andExpect(status().isOk())
@@ -68,11 +68,12 @@ public class TeacherControllerIntegrationTest {
 
     /**
      * Will return a record by ID from tested db
+     *
      * @throws Exception
      */
     @Test
     public void getById() throws Exception {
-        mockMvc.perform(get("/university/teachers/{id}", 3)
+        mockMvc.perform(get("/teachers/{id}", 3)
                 .header("Accept-language", "en")
         )
                 .andExpect(status().isOk())
@@ -84,6 +85,7 @@ public class TeacherControllerIntegrationTest {
 
     /**
      * Will save a record in tested db
+     *
      * @throws Exception
      */
     @Test
@@ -92,7 +94,7 @@ public class TeacherControllerIntegrationTest {
         teacher.setFirstName("Yip");
         teacher.setLastName("Man");
 
-        mockMvc.perform(post("/university/teachers")
+        mockMvc.perform(post("/teachers")
                 .header("Accept-language", "en")
                 .contentType("application/json;charset=UTF-8")
                 .content(json(teacher))
@@ -106,6 +108,7 @@ public class TeacherControllerIntegrationTest {
 
     /**
      * Will update a record by ID from tested db
+     *
      * @throws Exception
      */
     @Test
@@ -114,7 +117,7 @@ public class TeacherControllerIntegrationTest {
         teacher.setFirstName("Ilya");
         teacher.setLastName("Korzhavin");
 
-        mockMvc.perform(put("/university/teachers/{id}", 2)
+        mockMvc.perform(put("/teachers/{id}", 2)
                 .header("Accept-language", "en")
                 .contentType("application/json;charset=UTF-8")
                 .content(json(teacher))
@@ -128,11 +131,12 @@ public class TeacherControllerIntegrationTest {
 
     /**
      * Will delete a record by ID from tested db
+     *
      * @throws Exception
      */
     @Test
     public void remove() throws Exception {
-        mockMvc.perform(delete("/university/teachers/{id}", 3)
+        mockMvc.perform(delete("/teachers/{id}", 3)
                 .header("Accept-language", "en")
         )
                 .andExpect(status().isOk());

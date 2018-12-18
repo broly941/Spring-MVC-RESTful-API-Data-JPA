@@ -14,7 +14,7 @@ import java.util.Locale;
  * Processes the request and returns the response as JSON.
  */
 @RestController
-@RequestMapping("/university/students")
+@RequestMapping("/students")
 public class StudentController {
     @Autowired
     StudentService studentService;
@@ -28,7 +28,7 @@ public class StudentController {
     }
 
     /**
-     * @param id
+     * @param id of student
      * @return student entity by ID in the database.
      */
     @GetMapping("/{id}")
@@ -37,10 +37,10 @@ public class StudentController {
     }
 
     /**
-     * @param student
-     * @param groupId
+     * @param student entity
+     * @param groupId of Group
      * @return added student entity in the database.
-     * @throws Exception if there is no value
+     * @throws EntityNotFoundException if there is no value
      */
     @PostMapping("")
     public Student save(@RequestBody Student student, @RequestParam Long groupId, @RequestHeader(value = "Accept-language", defaultValue = "en") Locale locale) throws EntityNotFoundException {
@@ -48,11 +48,11 @@ public class StudentController {
     }
 
     /**
-     * @param student
-     * @param studentId
-     * @param groupId
+     * @param student   entity
+     * @param studentId of student
+     * @param groupId   of group
      * @return updated student entity in the database.
-     * @throws Exception if there is no value
+     * @throws EntityNotFoundException if there is no value
      */
     @PutMapping("/{studentId}")
     public Student updateById(@RequestBody Student student, @PathVariable Long studentId, @RequestParam Long groupId, @RequestHeader(value = "Accept-language", defaultValue = "en") Locale locale) throws EntityNotFoundException {

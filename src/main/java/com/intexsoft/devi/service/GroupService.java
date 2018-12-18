@@ -35,7 +35,7 @@ public class GroupService {
             LoggerFactory.getLogger(GroupService.class);
 
     /**
-     * @param locale
+     * @param locale of messages
      * @return getAll group entities in the database.
      */
     public List<Group> getAll(Locale locale) {
@@ -44,8 +44,8 @@ public class GroupService {
     }
 
     /**
-     * @param id
-     * @param locale
+     * @param id     of group
+     * @param locale of messages
      * @return group entity by ID in the database.
      * @throws EntityNotFoundException if there is no value
      */
@@ -60,10 +60,10 @@ public class GroupService {
     }
 
     /**
-     * @param group
-     * @param curatorId
-     * @param teacherIdList
-     * @param locale
+     * @param group         entity
+     * @param curatorId     of teacher
+     * @param teacherIdList consist of teachers
+     * @param locale        of messages
      * @return added group entity in the database.
      */
     @Transactional
@@ -75,11 +75,11 @@ public class GroupService {
     }
 
     /**
-     * @param group
-     * @param groupId
-     * @param curatorId
-     * @param teacherIdList
-     * @param locale
+     * @param group         entity
+     * @param groupId       of group
+     * @param curatorId     of teacher
+     * @param teacherIdList consist of teachers
+     * @param locale        of messages
      * @return updated group entity in the database.
      * @throws EntityNotFoundException if there is no value
      */
@@ -100,7 +100,7 @@ public class GroupService {
     }
 
     /**
-     * @param locale
+     * @param locale of messages
      * @param id     the group entity to be removed from the database
      */
     public void deleteById(Long id, Locale locale) {

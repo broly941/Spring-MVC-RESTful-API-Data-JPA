@@ -22,6 +22,11 @@ import java.util.Locale;
 @EnableWebMvc
 @ComponentScan("com.intexsoft.devi")
 public class WebConfig implements WebMvcConfigurer {
+    /**
+     * Describes bean for message source, used to logger
+     *
+     * @return messageSource
+     */
     @Bean
     public MessageSource messageSource() {
         ReloadableResourceBundleMessageSource messageSource
@@ -31,6 +36,11 @@ public class WebConfig implements WebMvcConfigurer {
         return messageSource;
     }
 
+    /**
+     * Describes bean for messages source
+     *
+     * @return slr
+     */
     @Bean
     public LocaleResolver localeResolver() {
         SessionLocaleResolver slr = new SessionLocaleResolver();
@@ -38,6 +48,11 @@ public class WebConfig implements WebMvcConfigurer {
         return slr;
     }
 
+    /**
+     * Describes bean for messages source
+     *
+     * @return lci
+     */
     @Bean
     public LocaleChangeInterceptor localeChangeInterceptor() {
         LocaleChangeInterceptor lci = new LocaleChangeInterceptor();
@@ -45,6 +60,11 @@ public class WebConfig implements WebMvcConfigurer {
         return lci;
     }
 
+    /**
+     * Intercept requests
+     *
+     * @param registry interceptors by extending the WebMvcConfigurerAdapter
+     */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(localeChangeInterceptor());

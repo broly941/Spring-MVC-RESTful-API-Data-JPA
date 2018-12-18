@@ -14,7 +14,7 @@ import java.util.Locale;
  * Processes the request and returns the response as JSON.
  */
 @RestController
-@RequestMapping("/university/groups")
+@RequestMapping("/groups")
 public class GroupController {
     @Autowired
     GroupService groupService;
@@ -28,9 +28,9 @@ public class GroupController {
     }
 
     /**
-     * @param id
+     * @param id of group
      * @return group entity by ID in the database.
-     * @throws Exception if there is no value
+     * @throws EntityNotFoundException if there is no value
      */
     @GetMapping("/{id}")
     public Group getById(@PathVariable Long id, @RequestHeader(value = "Accept-language", defaultValue = "en") Locale locale) throws EntityNotFoundException {
@@ -38,11 +38,11 @@ public class GroupController {
     }
 
     /**
-     * @param group
-     * @param curatorId
-     * @param teacherIdList
+     * @param group         entity
+     * @param curatorId     of teacher
+     * @param teacherIdList consist of teachers
      * @return added group entity in the database.
-     * @throws Exception if there is no value
+     * @throws EntityNotFoundException if there is no value
      */
     @PostMapping("")
     public Group save(@RequestBody Group group, @RequestParam Long curatorId, @RequestParam Long[] teacherIdList, @RequestHeader(value = "Accept-language", defaultValue = "en") Locale locale) throws EntityNotFoundException {
@@ -50,12 +50,12 @@ public class GroupController {
     }
 
     /**
-     * @param group
-     * @param groupId
-     * @param curatorId
-     * @param teacherIdList
+     * @param group         entity
+     * @param groupId       of group
+     * @param curatorId     of teacher
+     * @param teacherIdList consist of teachers
      * @return updated group entity in the database.
-     * @throws Exception if there is no value
+     * @throws EntityNotFoundException if there is no value
      */
     @PutMapping("/{groupId}")
     public Group updateById(@RequestBody Group group, @PathVariable Long groupId, @RequestParam Long curatorId, @RequestParam Long[] teacherIdList, @RequestHeader(value = "Accept-language", defaultValue = "en") Locale locale) throws EntityNotFoundException {

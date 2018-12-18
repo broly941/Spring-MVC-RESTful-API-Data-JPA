@@ -13,6 +13,7 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
+import java.util.Objects;
 import java.util.Properties;
 
 /**
@@ -35,8 +36,14 @@ public class DataConfig {
     @Autowired
     Environment environment;
 
+    /**
+     * Interacts with the database.
+     * Create Manager Factory
+     *
+     * @return entity manager factory
+     */
     @Bean
-    LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         LocalContainerEntityManagerFactoryBean lfb = new LocalContainerEntityManagerFactoryBean();
         lfb.setDataSource(dataSource());
         lfb.setPersistenceProviderClass(HibernatePersistenceProvider.class);
@@ -45,23 +52,33 @@ public class DataConfig {
         return lfb;
     }
 
+    /**
+     * method for connection to database
+     *
+     * @return datasource
+     */
     @Bean
-    DataSource dataSource() {
+    public DataSource dataSource() {
         DriverManagerDataSource ds = new DriverManagerDataSource();
         ds.setUrl(environment.getProperty(PROPERTY_URL));
         ds.setUsername(environment.getProperty(PROPERTY_USERNAME));
         ds.setPassword(environment.getProperty(PROPERTY_PASSWORD));
-        ds.setDriverClassName(environment.getProperty(PROPERTY_DRIVER));
+        ds.setDriverClassName(Objects.requireNonNull(environment.getProperty(PROPERTY_DRIVER)));
         return ds;
     }
 
-    Properties hibernateProps() {
+    private Properties hibernateProps() {
         Properties properties = new Properties();
         properties.setProperty(PROPERTY_DIALECT, environment.getProperty(PROPERTY_DIALECT));
         properties.setProperty(PROPERTY_SHOW_SQL, environment.getProperty(PROPERTY_SHOW_SQL));
         return properties;
     }
 
+    /**
+     * Transaction manager (Jpa)
+     *
+     * @return transactionManager
+     */
     @Bean
     JpaTransactionManager transactionManager() {
         JpaTransactionManager transactionManager = new JpaTransactionManager();

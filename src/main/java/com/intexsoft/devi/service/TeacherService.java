@@ -30,7 +30,7 @@ public class TeacherService {
             LoggerFactory.getLogger(TeacherService.class);
 
     /**
-     * @param locale
+     * @param locale of messages
      * @return getAll teacher entity in the database.
      */
     public List<Teacher> getAll(Locale locale) {
@@ -39,8 +39,8 @@ public class TeacherService {
     }
 
     /**
-     * @param id
-     * @param locale
+     * @param id     of teacher
+     * @param locale of messages
      * @return teacher entity by ID in the database.
      * @throws EntityNotFoundException if there is no value
      */
@@ -55,8 +55,8 @@ public class TeacherService {
     }
 
     /**
-     * @param teacher
-     * @param locale
+     * @param teacher entity
+     * @param locale  of messages
      * @return added teacher entity in the database.
      */
     @Transactional
@@ -66,9 +66,9 @@ public class TeacherService {
     }
 
     /**
-     * @param teacher
-     * @param teacherId
-     * @param locale
+     * @param teacher   entity
+     * @param teacherId of teacher
+     * @param locale    of messages
      * @return updated teacher entity in the database.
      * @throws EntityNotFoundException if there is no value
      */
@@ -89,7 +89,7 @@ public class TeacherService {
 
     /**
      * @param id     the teacher entity to be removed from the database
-     * @param locale
+     * @param locale of messages
      */
     public void deleteById(Long id, Locale locale) {
         LOGGER.info(messageSource.getMessage("deletedById", new Object[]{"teacher", id}, locale));

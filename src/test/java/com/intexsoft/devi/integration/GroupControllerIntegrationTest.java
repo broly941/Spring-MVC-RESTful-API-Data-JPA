@@ -27,7 +27,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 /**
  * @author DEVIAPHAN on 17.12.2018
- * @project SpringRESTDataJPA
  * Test for Controller Group Class
  */
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -63,7 +62,7 @@ public class GroupControllerIntegrationTest {
      */
     @Test
     public void getAll() throws Exception {
-        mockMvc.perform(get("/university/groups")
+        mockMvc.perform(get("/groups")
                 .header("Accept-language", "en")
         )
                 .andExpect(status().isOk())
@@ -79,7 +78,7 @@ public class GroupControllerIntegrationTest {
      */
     @Test
     public void getById() throws Exception {
-        mockMvc.perform(get("/university/groups/{id}", 1)
+        mockMvc.perform(get("/groups/{id}", 1)
                 .header("Accept-language", "en")
         )
                 .andExpect(status().isOk())
@@ -98,7 +97,7 @@ public class GroupControllerIntegrationTest {
         Group group = new Group();
         group.setNumber("POIT-12");
 
-        ResultActions performSave = mockMvc.perform(post("/university/groups")
+        ResultActions performSave = mockMvc.perform(post("/groups")
                 .header("Accept-language", "en")
                 .param("curatorId", "3")
                 .param("teacherIdList", "3")
@@ -123,7 +122,7 @@ public class GroupControllerIntegrationTest {
         Group group = new Group();
         group.setNumber("POIT-12");
 
-        mockMvc.perform(put("/university/groups/{id}", 2)
+        mockMvc.perform(put("/groups/{id}", 2)
                 .header("Accept-language", "en")
                 .param("curatorId", "2")
                 .param("teacherIdList", "3")
@@ -143,7 +142,7 @@ public class GroupControllerIntegrationTest {
      */
     @Test
     public void remove() throws Exception {
-        mockMvc.perform(delete("/university/groups/{id}", 1)
+        mockMvc.perform(delete("/groups/{id}", 1)
                 .header("Accept-language", "en")
         )
                 .andExpect(status().isOk());

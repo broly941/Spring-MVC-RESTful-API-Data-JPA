@@ -12,7 +12,7 @@ group 'com.intexsoft.devi'
 
 war {
     version = '1.0'
-    archiveName = "${rootProject.name}-${version}.war"
+    archiveName = "${rootProject.name}.war"
 }
 
 dependencies {

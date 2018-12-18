@@ -33,7 +33,7 @@ public class StudentService {
             LoggerFactory.getLogger(StudentService.class);
 
     /**
-     * @param locale
+     * @param locale of messages
      * @return getAll student entities in the database.
      */
     public List<Student> getAll(Locale locale) {
@@ -42,8 +42,8 @@ public class StudentService {
     }
 
     /**
-     * @param id
-     * @param locale
+     * @param id     of student
+     * @param locale of messages
      * @return student entity by ID in the database.
      */
     public Student getById(Long id, Locale locale) throws EntityNotFoundException {
@@ -57,9 +57,9 @@ public class StudentService {
     }
 
     /**
-     * @param student
-     * @param groupId
-     * @param locale
+     * @param student entity
+     * @param groupId of group
+     * @param locale  of messages
      * @return added student entity in the database.
      */
     @Transactional
@@ -70,10 +70,10 @@ public class StudentService {
     }
 
     /**
-     * @param student
-     * @param studentId
-     * @param groupId
-     * @param locale
+     * @param student   entity
+     * @param studentId of student
+     * @param groupId   of group
+     * @param locale    of messages
      * @return updated student entity in the database.
      * @throws EntityNotFoundException if there is no value
      */
@@ -94,7 +94,7 @@ public class StudentService {
     }
 
     /**
-     * @param locale
+     * @param locale of messages
      * @param id     the student entity to be removed from the database
      */
     public void deleteById(Long id, Locale locale) {

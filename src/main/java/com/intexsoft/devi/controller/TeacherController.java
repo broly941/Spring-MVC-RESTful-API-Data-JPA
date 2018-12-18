@@ -17,7 +17,7 @@ import java.util.Locale;
  * Processes the request and returns the response as JSON.
  */
 @RestController
-@RequestMapping("/university/teachers")
+@RequestMapping("/teachers")
 public class TeacherController {
     @Autowired
     TeacherService teacherService;
@@ -38,9 +38,9 @@ public class TeacherController {
 
 
     /**
-     * @param id
+     * @param id of teacher
      * @return teacher entity by ID in the database.
-     * @throws Exception if there is no value
+     * @throws EntityNotFoundException if there is no value
      */
     @GetMapping("/{id}")
     public Teacher getById(@PathVariable Long id, @RequestHeader(value = "Accept-language", defaultValue = "en") Locale locale) throws EntityNotFoundException {
@@ -48,7 +48,7 @@ public class TeacherController {
     }
 
     /**
-     * @param teacher
+     * @param teacher entity
      * @return added teacher entity in the database.
      */
     @PostMapping("")
@@ -57,10 +57,10 @@ public class TeacherController {
     }
 
     /**
-     * @param teacher
-     * @param id
+     * @param teacher entity
+     * @param id      of teacher
      * @return updated teacher entity in the database.
-     * @throws Exception if there is no value
+     * @throws EntityNotFoundException if there is no value
      */
     @PutMapping("/{id}")
     public Teacher updateById(@RequestBody Teacher teacher, @PathVariable Long id, @RequestHeader(value = "Accept-language", defaultValue = "en") Locale locale) throws EntityNotFoundException {

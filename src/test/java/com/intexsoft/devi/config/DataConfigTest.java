@@ -18,13 +18,19 @@ import javax.persistence.EntityManagerFactory;
 import java.util.Properties;
 
 /**
+ * Initialization of components for Data Jpa
+ *
  * @author DEVIAPHAN on 17.12.2018
- * @project SpringRESTDataJPA
  */
 @Configuration
 @ComponentScan(basePackages = "com.intexsoft.devi")
 @EnableJpaRepositories(value = "com.intexsoft.devi.repository")
 public class DataConfigTest {
+    /**
+     * method for connection to database
+     *
+     * @return datasource
+     */
     @Bean
     javax.sql.DataSource dataSource() {
         EmbeddedDatabaseBuilder builder = new EmbeddedDatabaseBuilder();
@@ -32,6 +38,13 @@ public class DataConfigTest {
                 .addScript("sql/start.sql")
                 .build();
     }
+
+    /**
+     * Interacts with the database.
+     * Create Manager Factory
+     *
+     * @return entity manager factory
+     */
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
@@ -46,6 +59,11 @@ public class DataConfigTest {
         return em;
     }
 
+    /**
+     * Transaction template
+     *
+     * @return transactionTemplate
+     */
     @Bean
     public TransactionTemplate transactionTemplate() {
         TransactionTemplate template = new TransactionTemplate();
@@ -53,6 +71,11 @@ public class DataConfigTest {
         return template;
     }
 
+    /**
+     * Transaction manager (Jpa)
+     *
+     * @return transactionManager
+     */
     @Bean
     public JpaTransactionManager transactionManager(EntityManagerFactory emf) {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
@@ -61,12 +84,17 @@ public class DataConfigTest {
         return transactionManager;
     }
 
+    /**
+     * for throws exception
+     *
+     * @return exceptionTranslation
+     */
     @Bean
     public PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
         return new PersistenceExceptionTranslationPostProcessor();
     }
 
-    Properties additionalProperties() {
+    private Properties additionalProperties() {
         Properties properties = new Properties();
         properties.setProperty("hibernate.hbm2ddl.auto", "validate");
         properties.setProperty("hibernate.jdbc.batch_size", "2");
