@@ -1,13 +1,18 @@
 apply plugin: 'java'
 apply plugin: 'war'
 
-group 'com.intexsoft.devi'
-version '1.0-SNAPSHOT'
-
 sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
+}
+
+
+group 'com.intexsoft.devi'
+
+war {
+    version = '1.0'
+    archiveName = "${rootProject.name}-${version}.war"
 }
 
 dependencies {
@@ -20,7 +25,7 @@ dependencies {
     testCompile group: 'com.github.springtestdbunit', name: 'spring-test-dbunit', version: '1.2.1'
     testCompile group: 'org.dbunit', name: 'dbunit', version: '2.6.0'
     testCompile group: 'com.h2database', name: 'h2', version: '1.4.197'
-    
+
     // Spring MVC
     compile group: 'org.springframework', name: 'spring-core', version: '5.1.2.RELEASE'
     compile group: 'org.springframework.data', name: 'spring-data-jpa', version: '2.0.0.RELEASE'

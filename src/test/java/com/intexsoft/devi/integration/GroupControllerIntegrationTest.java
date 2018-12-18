@@ -121,7 +121,7 @@ public class GroupControllerIntegrationTest {
     @Test
     public void update() throws Exception {
         Group group = new Group();
-        group.setNumber("POIT-23");
+        group.setNumber("POIT-12");
 
         mockMvc.perform(put("/university/groups/{id}", 2)
                 .header("Accept-language", "en")
@@ -133,7 +133,7 @@ public class GroupControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andExpect(jsonPath("$.id", is(2)))
-                .andExpect(jsonPath("$.number", is("POIT-23")));
+                .andExpect(jsonPath("$.number", is("POIT-12")));
     }
 
     /**
