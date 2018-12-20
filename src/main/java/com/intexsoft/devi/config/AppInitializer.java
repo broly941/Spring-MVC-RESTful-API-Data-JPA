@@ -1,6 +1,9 @@
 package com.intexsoft.devi.config;
 
+import com.intexsoft.devi.filter.LocaleResolverRequestFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
+
+import javax.servlet.Filter;
 
 /**
  * @author DEVIAPHAN
@@ -22,5 +25,10 @@ public class AppInitializer extends AbstractAnnotationConfigDispatcherServletIni
     @Override
     protected String[] getServletMappings() {
         return new String[]{"/"};
+    }
+
+    @Override
+    protected Filter[] getServletFilters() {
+        return new Filter[]{new LocaleResolverRequestFilter()};
     }
 }

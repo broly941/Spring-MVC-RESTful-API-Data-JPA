@@ -12,8 +12,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
-import java.util.Locale;
-
 /**
  * @author DEVIAPHAN
  * Specifies that the class contains the definitions and dependencies of the Bean components.
@@ -37,19 +35,19 @@ public class WebConfig implements WebMvcConfigurer {
     }
 
     /**
-     * Describes bean for messages source
+     * Describes bean for Locale
      *
      * @return slr
      */
     @Bean
     public LocaleResolver localeResolver() {
-        SessionLocaleResolver slr = new SessionLocaleResolver();
-        slr.setDefaultLocale(Locale.ENGLISH);
-        return slr;
+        SessionLocaleResolver localeResolver = new SessionLocaleResolver();
+//        localeResolver.setDefaultLocale(Locale.FRANCE);
+        return localeResolver;
     }
 
     /**
-     * Describes bean for messages source
+     * Describes bean for Locale
      *
      * @return lci
      */

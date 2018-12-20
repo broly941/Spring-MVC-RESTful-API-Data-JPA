@@ -22,8 +22,8 @@ public class GroupController {
     /**
      * @return getAll group entities in the database.
      */
-    @GetMapping("")
-    public List<Group> getAll(@RequestHeader(value = "Accept-language", defaultValue = "en") Locale locale) {
+    @GetMapping
+    public List<Group> getAll(Locale locale) {
         return groupService.getAll(locale);
     }
 
@@ -33,7 +33,7 @@ public class GroupController {
      * @throws EntityNotFoundException if there is no value
      */
     @GetMapping("/{id}")
-    public Group getById(@PathVariable Long id, @RequestHeader(value = "Accept-language", defaultValue = "en") Locale locale) throws EntityNotFoundException {
+    public Group getById(@PathVariable Long id, Locale locale) throws EntityNotFoundException {
         return groupService.getById(id, locale);
     }
 
@@ -44,8 +44,8 @@ public class GroupController {
      * @return added group entity in the database.
      * @throws EntityNotFoundException if there is no value
      */
-    @PostMapping("")
-    public Group save(@RequestBody Group group, @RequestParam Long curatorId, @RequestParam Long[] teacherIdList, @RequestHeader(value = "Accept-language", defaultValue = "en") Locale locale) throws EntityNotFoundException {
+    @PostMapping
+    public Group save(@RequestBody Group group, @RequestParam Long curatorId, @RequestParam Long[] teacherIdList, Locale locale) throws EntityNotFoundException {
         return groupService.save(group, curatorId, teacherIdList, locale);
     }
 
@@ -58,7 +58,7 @@ public class GroupController {
      * @throws EntityNotFoundException if there is no value
      */
     @PutMapping("/{groupId}")
-    public Group updateById(@RequestBody Group group, @PathVariable Long groupId, @RequestParam Long curatorId, @RequestParam Long[] teacherIdList, @RequestHeader(value = "Accept-language", defaultValue = "en") Locale locale) throws EntityNotFoundException {
+    public Group updateById(@RequestBody Group group, @PathVariable Long groupId, @RequestParam Long curatorId, @RequestParam Long[] teacherIdList, Locale locale) throws EntityNotFoundException {
         return groupService.updateById(group, groupId, curatorId, teacherIdList, locale);
     }
 
@@ -66,7 +66,7 @@ public class GroupController {
      * @param id the group entity to be removed from the database
      */
     @DeleteMapping("/{id}")
-    public void deleteById(@PathVariable Long id, @RequestHeader(value = "Accept-language", defaultValue = "en") Locale locale) {
+    public void deleteById(@PathVariable Long id, Locale locale) {
         groupService.deleteById(id, locale);
     }
 }

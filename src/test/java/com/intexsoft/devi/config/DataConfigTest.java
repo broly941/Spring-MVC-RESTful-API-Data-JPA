@@ -26,6 +26,7 @@ import java.util.Properties;
 @ComponentScan(basePackages = "com.intexsoft.devi")
 @EnableJpaRepositories(value = "com.intexsoft.devi.repository")
 public class DataConfigTest {
+
     /**
      * method for connection to database
      *

@@ -128,7 +128,7 @@ public class GroupServiceTest {
 
     private Group initializeGroup(long id) {
         Group group = new Group();
-        group.setNumber("ПОИТ-" + id);
+        group.setNumber("POIT-" + id);
         group.setId(id);
 
         return group;

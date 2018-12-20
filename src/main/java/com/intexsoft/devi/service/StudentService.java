@@ -20,6 +20,16 @@ import java.util.Optional;
  */
 @Service
 public class StudentService {
+    private static final String ENTITY_NOT_FOUND_EXCEPTION = "EntityNotFoundException";
+    private static final String STUDENT = "student";
+    private static final String STUDENTS = "students";
+    private static final String UPDATE_STUDENT_BY_ID = "Update student by id";
+    private static final String UPDATE_BY_ID = "updateById";
+    private static final String DELETED_BY_ID = "deletedById";
+    private static final String ADD = "add";
+    private static final String GET_STUDENT_BY_ID = "Get student by id";
+    private static final String GET_BY_ID = "getById";
+    private static final String GET_ALL = "getAll";
     @Autowired
     StudentsRepository studentsRepository;
 
@@ -37,7 +47,7 @@ public class StudentService {
      * @return getAll student entities in the database.
      */
     public List<Student> getAll(Locale locale) {
-        LOGGER.info(messageSource.getMessage("getAll", new Object[]{"students"}, locale));
+        LOGGER.info(messageSource.getMessage(GET_ALL, new Object[]{STUDENTS}, locale));
         return studentsRepository.findAll();
     }
 
@@ -49,10 +59,10 @@ public class StudentService {
     public Student getById(Long id, Locale locale) throws EntityNotFoundException {
         Optional<Student> studentsOptional = studentsRepository.findById(id);
         if (studentsOptional.isPresent()) {
-            LOGGER.info(messageSource.getMessage("getById", new Object[]{"student", id}, locale));
+            LOGGER.info(messageSource.getMessage(GET_BY_ID, new Object[]{STUDENT, id}, locale));
             return studentsOptional.get();
         }
-        LOGGER.error(messageSource.getMessage("EntityNotFoundException", new Object[]{"Get student by id", id}, locale));
+        LOGGER.error(messageSource.getMessage(ENTITY_NOT_FOUND_EXCEPTION, new Object[]{GET_STUDENT_BY_ID, id}, locale));
         throw new EntityNotFoundException();
     }
 
@@ -65,7 +75,7 @@ public class StudentService {
     @Transactional
     public Student save(Student student, Long groupId, Locale locale) {
         student.setGroup(groupService.getById(groupId, locale));
-        LOGGER.info(messageSource.getMessage("add", new Object[]{"student"}, locale));
+        LOGGER.info(messageSource.getMessage(ADD, new Object[]{STUDENT}, locale));
         return studentsRepository.save(student);
     }
 
@@ -81,7 +91,7 @@ public class StudentService {
     public Student updateById(Student student, Long studentId, Long groupId, Locale locale) throws EntityNotFoundException {
         Optional<Student> studentsOptional = studentsRepository.findById(studentId);
         if (!studentsOptional.isPresent()) {
-            LOGGER.error(messageSource.getMessage("EntityNotFoundException", new Object[]{"Update student by id", studentId}, locale));
+            LOGGER.error(messageSource.getMessage(ENTITY_NOT_FOUND_EXCEPTION, new Object[]{UPDATE_STUDENT_BY_ID, studentId}, locale));
             throw new EntityNotFoundException();
         }
 
@@ -89,7 +99,7 @@ public class StudentService {
         currentStudent.setFirstName(student.getFirstName());
         currentStudent.setLastName(student.getLastName());
         currentStudent.setGroup(groupService.getById(groupId, locale));
-        LOGGER.info(messageSource.getMessage("updateById", new Object[]{"student", studentId}, locale));
+        LOGGER.info(messageSource.getMessage(UPDATE_BY_ID, new Object[]{STUDENT, studentId}, locale));
         return studentsRepository.save(currentStudent);
     }
 
@@ -98,7 +108,7 @@ public class StudentService {
      * @param id     the student entity to be removed from the database
      */
     public void deleteById(Long id, Locale locale) {
-        LOGGER.info(messageSource.getMessage("deletedById", new Object[]{"student", id}, locale));
+        LOGGER.info(messageSource.getMessage(DELETED_BY_ID, new Object[]{STUDENT, id}, locale));
         studentsRepository.deleteById(id);
     }
 }

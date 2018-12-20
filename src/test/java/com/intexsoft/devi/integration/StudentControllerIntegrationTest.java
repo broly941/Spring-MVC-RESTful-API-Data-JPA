@@ -41,6 +41,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 })
 public class StudentControllerIntegrationTest {
 
+    private static final String ACCEPT_LANGUAGE = "Accept-language";
+    private static final String APPLICATION_JSON_CHARSET_UTF_8 = "application/json;charset=UTF-8";
+    private static final String EN = "en";
+
+    private static final String STUDENTS = "/students";
+    private static final String STUDENTS_ID = "/students/{id}";
+    private static final String $_ID = "$.id";
+    private static final String $_FIRST_NAME = "$.firstName";
+    private static final String $_LAST_NAME = "$.lastName";
+    private static final String GROUP_ID = "groupId";
+
     private MockMvc mockMvc;
 
     @Autowired
@@ -61,11 +72,11 @@ public class StudentControllerIntegrationTest {
      */
     @Test
     public void getAll() throws Exception {
-        mockMvc.perform(get("/students")
-                .header("Accept-language", "en")
+        mockMvc.perform(get(STUDENTS)
+                .header(ACCEPT_LANGUAGE, EN)
         )
                 .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andExpect(content().contentType(APPLICATION_JSON_CHARSET_UTF_8))
                 .andExpect(jsonPath("$[1].id", is(2)))
                 .andExpect(jsonPath("$[1].firstName", is("Thomas")))
                 .andExpect(jsonPath("$[1].lastName", is("Moore")));
@@ -78,14 +89,14 @@ public class StudentControllerIntegrationTest {
      */
     @Test
     public void getById() throws Exception {
-        mockMvc.perform(get("/students/{id}", 1)
-                .header("Accept-language", "en")
+        mockMvc.perform(get(STUDENTS_ID, 1)
+                .header(ACCEPT_LANGUAGE, EN)
         )
                 .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json;charset=UTF-8"))
-                .andExpect(jsonPath("$.id", is(1)))
-                .andExpect(jsonPath("$.firstName", is("Lee")))
-                .andExpect(jsonPath("$.lastName", is("Walker")));
+                .andExpect(content().contentType(APPLICATION_JSON_CHARSET_UTF_8))
+                .andExpect(jsonPath($_ID, is(1)))
+                .andExpect(jsonPath($_FIRST_NAME, is("Lee")))
+                .andExpect(jsonPath($_LAST_NAME, is("Walker")));
     }
 
     /**
@@ -99,17 +110,17 @@ public class StudentControllerIntegrationTest {
         student.setFirstName("Tony");
         student.setLastName("Hawk");
 
-        mockMvc.perform(post("/students/")
-                .header("Accept-language", "en")
-                .param("groupId", "1")
-                .contentType("application/json;charset=UTF-8")
+        mockMvc.perform(post(STUDENTS)
+                .header(ACCEPT_LANGUAGE, EN)
+                .param(GROUP_ID, "1")
+                .contentType(APPLICATION_JSON_CHARSET_UTF_8)
                 .content(json(student))
         )
                 .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json;charset=UTF-8"))
-                .andExpect(jsonPath("$.id", is(4)))
-                .andExpect(jsonPath("$.firstName", is("Tony")))
-                .andExpect(jsonPath("$.lastName", is("Hawk")));
+                .andExpect(content().contentType(APPLICATION_JSON_CHARSET_UTF_8))
+                .andExpect(jsonPath($_ID, is(4)))
+                .andExpect(jsonPath($_FIRST_NAME, is("Tony")))
+                .andExpect(jsonPath($_LAST_NAME, is("Hawk")));
     }
 
     /**
@@ -123,17 +134,17 @@ public class StudentControllerIntegrationTest {
         student.setFirstName("Donald");
         student.setLastName("Trump");
 
-        mockMvc.perform(put("/students/{id}", 2)
-                .header("Accept-language", "en")
-                .param("groupId", "2")
-                .contentType("application/json;charset=UTF-8")
+        mockMvc.perform(put(STUDENTS_ID, 2)
+                .header(ACCEPT_LANGUAGE, EN)
+                .param(GROUP_ID, "2")
+                .contentType(APPLICATION_JSON_CHARSET_UTF_8)
                 .content(json(student))
         )
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(2)))
-                .andExpect(content().contentType("application/json;charset=UTF-8"))
-                .andExpect(jsonPath("$.firstName", is("Donald")))
-                .andExpect(jsonPath("$.lastName", is("Trump")));
+                .andExpect(jsonPath($_ID, is(2)))
+                .andExpect(content().contentType(APPLICATION_JSON_CHARSET_UTF_8))
+                .andExpect(jsonPath($_FIRST_NAME, is("Donald")))
+                .andExpect(jsonPath($_LAST_NAME, is("Trump")));
     }
 
     /**
@@ -143,8 +154,8 @@ public class StudentControllerIntegrationTest {
      */
     @Test
     public void remove() throws Exception {
-        mockMvc.perform(delete("/students/{id}", 3)
-                .header("Accept-language", "en")
+        mockMvc.perform(delete(STUDENTS_ID, 3)
+                .header(ACCEPT_LANGUAGE, EN)
         )
                 .andExpect(status().isOk());
     }

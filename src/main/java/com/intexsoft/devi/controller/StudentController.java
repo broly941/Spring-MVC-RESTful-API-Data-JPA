@@ -22,8 +22,8 @@ public class StudentController {
     /**
      * @return getAll student entities in the database.
      */
-    @GetMapping("")
-    public List<Student> getAll(@RequestHeader(value = "Accept-language", defaultValue = "en") Locale locale) {
+    @GetMapping
+    public List<Student> getAll(Locale locale) {
         return studentService.getAll(locale);
     }
 
@@ -32,7 +32,7 @@ public class StudentController {
      * @return student entity by ID in the database.
      */
     @GetMapping("/{id}")
-    public Student getById(@PathVariable Long id, @RequestHeader(value = "Accept-language", defaultValue = "en") Locale locale) throws EntityNotFoundException {
+    public Student getById(@PathVariable Long id, Locale locale) throws EntityNotFoundException {
         return studentService.getById(id, locale);
     }
 
@@ -42,8 +42,8 @@ public class StudentController {
      * @return added student entity in the database.
      * @throws EntityNotFoundException if there is no value
      */
-    @PostMapping("")
-    public Student save(@RequestBody Student student, @RequestParam Long groupId, @RequestHeader(value = "Accept-language", defaultValue = "en") Locale locale) throws EntityNotFoundException {
+    @PostMapping
+    public Student save(@RequestBody Student student, @RequestParam Long groupId, Locale locale) throws EntityNotFoundException {
         return studentService.save(student, groupId, locale);
     }
 
@@ -55,7 +55,7 @@ public class StudentController {
      * @throws EntityNotFoundException if there is no value
      */
     @PutMapping("/{studentId}")
-    public Student updateById(@RequestBody Student student, @PathVariable Long studentId, @RequestParam Long groupId, @RequestHeader(value = "Accept-language", defaultValue = "en") Locale locale) throws EntityNotFoundException {
+    public Student updateById(@RequestBody Student student, @PathVariable Long studentId, @RequestParam Long groupId, Locale locale) throws EntityNotFoundException {
         return studentService.updateById(student, studentId, groupId, locale);
     }
 
@@ -63,7 +63,7 @@ public class StudentController {
      * @param id the student entity to be removed from the database
      */
     @DeleteMapping("/{id}")
-    public void deleteById(@PathVariable Long id, @RequestHeader(value = "Accept-language", defaultValue = "en") Locale locale) {
+    public void deleteById(@PathVariable Long id, Locale locale) {
         studentService.deleteById(id, locale);
     }
 }
