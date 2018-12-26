@@ -2,7 +2,7 @@ package com.intexsoft.devi.unit;
 
 import com.intexsoft.devi.entity.Teacher;
 import com.intexsoft.devi.repository.TeacherRepository;
-import com.intexsoft.devi.service.TeacherService;
+import com.intexsoft.devi.service.TeacherServiceImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -27,7 +27,7 @@ import static org.mockito.Mockito.when;
 public class TeacherServiceTest {
 
     @InjectMocks
-    TeacherService teacherService;
+    TeacherServiceImpl teacherService;
 
     @Mock
     TeacherRepository teacherRepository;

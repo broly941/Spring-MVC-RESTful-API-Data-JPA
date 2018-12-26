@@ -2,8 +2,8 @@ package com.intexsoft.devi.unit;
 
 import com.intexsoft.devi.entity.Student;
 import com.intexsoft.devi.repository.StudentsRepository;
-import com.intexsoft.devi.service.GroupService;
-import com.intexsoft.devi.service.StudentService;
+import com.intexsoft.devi.service.GroupServiceImpl;
+import com.intexsoft.devi.service.StudentServiceImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -28,10 +28,10 @@ import static org.mockito.Mockito.when;
 public class StudentServiceTest {
 
     @InjectMocks
-    StudentService studentService;
+    StudentServiceImpl studentService;
 
     @Mock
-    GroupService groupService;
+    GroupServiceImpl groupService;
 
     @Mock
     StudentsRepository studentsRepository;

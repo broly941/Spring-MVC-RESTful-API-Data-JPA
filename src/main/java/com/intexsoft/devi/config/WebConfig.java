@@ -12,6 +12,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
+import java.nio.charset.StandardCharsets;
+
 /**
  * @author DEVIAPHAN
  * Specifies that the class contains the definitions and dependencies of the Bean components.
@@ -20,6 +22,10 @@ import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 @EnableWebMvc
 @ComponentScan("com.intexsoft.devi")
 public class WebConfig implements WebMvcConfigurer {
+
+    private static final String CLASSPATH_MESSAGES = "classpath:messages";
+    private static final String LANG = "lang";
+
     /**
      * Describes bean for message source, used to logger
      *
@@ -27,10 +33,9 @@ public class WebConfig implements WebMvcConfigurer {
      */
     @Bean
     public MessageSource messageSource() {
-        ReloadableResourceBundleMessageSource messageSource
-                = new ReloadableResourceBundleMessageSource();
-        messageSource.setBasename("classpath:messages");
-        messageSource.setDefaultEncoding("UTF-8");
+        ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
+        messageSource.setBasename(CLASSPATH_MESSAGES);
+        messageSource.setDefaultEncoding(StandardCharsets.UTF_8.name());
         return messageSource;
     }
 
@@ -41,9 +46,7 @@ public class WebConfig implements WebMvcConfigurer {
      */
     @Bean
     public LocaleResolver localeResolver() {
-        SessionLocaleResolver localeResolver = new SessionLocaleResolver();
-//        localeResolver.setDefaultLocale(Locale.FRANCE);
-        return localeResolver;
+        return new SessionLocaleResolver();
     }
 
     /**
@@ -54,7 +57,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Bean
     public LocaleChangeInterceptor localeChangeInterceptor() {
         LocaleChangeInterceptor lci = new LocaleChangeInterceptor();
-        lci.setParamName("lang");
+        lci.setParamName(LANG);
         return lci;
     }
 

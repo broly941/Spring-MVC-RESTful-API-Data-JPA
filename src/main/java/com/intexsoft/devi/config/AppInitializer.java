@@ -8,7 +8,7 @@ import javax.servlet.Filter;
 /**
  * @author DEVIAPHAN
  * Configure the Dispatcher Servlet.
- * Reference to class implementing interface WebMvcConfigurer.
+ * Reference to class implementing interfaceDirectory WebMvcConfigurer.
  * Specifying the request URL to Handler Mapping.
  */
 public class AppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {

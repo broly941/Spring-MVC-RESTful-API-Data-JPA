@@ -26,6 +26,7 @@ import java.util.Properties;
 @PropertySource("classpath:database.properties")
 public class DataConfig {
 
+    private static final String ENTITY_PACKAGE = "com.intexsoft.devi.entity";
     private final String PROPERTY_DRIVER = "driver";
     private final String PROPERTY_URL = "url";
     private final String PROPERTY_USERNAME = "user";
@@ -47,7 +48,7 @@ public class DataConfig {
         LocalContainerEntityManagerFactoryBean lfb = new LocalContainerEntityManagerFactoryBean();
         lfb.setDataSource(dataSource());
         lfb.setPersistenceProviderClass(HibernatePersistenceProvider.class);
-        lfb.setPackagesToScan("com.intexsoft.devi.entity");
+        lfb.setPackagesToScan(ENTITY_PACKAGE);
         lfb.setJpaProperties(hibernateProps());
         return lfb;
     }

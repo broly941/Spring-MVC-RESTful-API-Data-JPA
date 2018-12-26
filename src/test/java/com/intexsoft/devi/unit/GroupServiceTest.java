@@ -2,8 +2,8 @@ package com.intexsoft.devi.unit;
 
 import com.intexsoft.devi.entity.Group;
 import com.intexsoft.devi.repository.GroupRepository;
-import com.intexsoft.devi.service.GroupService;
-import com.intexsoft.devi.service.TeacherService;
+import com.intexsoft.devi.service.GroupServiceImpl;
+import com.intexsoft.devi.service.TeacherServiceImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -17,7 +17,7 @@ import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 /**
  * @author DEVIAPHAN
@@ -27,13 +27,13 @@ import static org.mockito.Mockito.*;
 @WebAppConfiguration
 public class GroupServiceTest {
     @InjectMocks
-    GroupService groupService;
+    GroupServiceImpl groupService;
 
     @Mock
     GroupRepository groupRepository;
 
     @Mock
-    TeacherService teacherService;
+    TeacherServiceImpl teacherService;
 
     @Mock
     MessageSource messageSource;

@@ -27,12 +27,6 @@ public class Student {
     public Student() {
     }
 
-    public Student(String firstName, String lastName, Group group) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.group = group;
-    }
-
     public Long getId() {
         return id;
     }
@@ -64,5 +58,4 @@ public class Student {
     public void setGroup(Group group) {
         this.group = group;
     }
-
 }
