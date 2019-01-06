@@ -6,6 +6,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * @author DEVIAPHAN on 21.12.2018
@@ -16,6 +18,8 @@ public interface TeacherService {
 
     Teacher getById(Long id, Locale locale) throws EntityNotFoundException;
 
+    List<Teacher> getTeachersOfGroupById(Long id, Locale locale) throws EntityNotFoundException;
+
     @Transactional
     Teacher save(Teacher teacher, Locale locale);
 
@@ -23,4 +27,12 @@ public interface TeacherService {
     Teacher updateById(Teacher teacher, Long teacherId, Locale locale) throws EntityNotFoundException;
 
     void deleteById(Long id, Locale locale);
+
+    //String addGroupToTeacher(MultipartFile file, Locale locale) throws IOException, InvalidFormatException;
+
+    Optional<Teacher> getTeacherByName(String firstName, String lastName);
+
+    boolean fileValidation(Map<Integer, List<Object>> excelMap, StringBuilder insertStatus);
+
+    void fileSave(Map<Integer, List<Object>> map, Locale locale);
 }

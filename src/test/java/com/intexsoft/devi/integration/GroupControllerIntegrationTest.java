@@ -59,7 +59,7 @@ public class GroupControllerIntegrationTest {
 
 
     /**
-     * initialization mockMvc
+     * addGroupsToTeacher mockMvc
      */
     @Before
     public void init() {

@@ -4,8 +4,7 @@ import com.intexsoft.devi.entity.Group;
 import com.intexsoft.devi.entity.Teacher;
 import com.intexsoft.devi.generic.GenericServiceImpl;
 import com.intexsoft.devi.repository.GroupRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
@@ -15,6 +14,7 @@ import javax.persistence.EntityNotFoundException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -33,17 +33,23 @@ public class GroupServiceImpl extends GenericServiceImpl<Group> implements Group
     private static final String ADD = "add";
     private static final String UPDATE_BY_ID = "updateById";
     private static final String DELETED_BY_ID = "deletedById";
+    private static final String GET_GROUPS_BY_TEACHER_ID = "getGroupsByTeacherId";
+    private static final String GET_GROUPS_BY_TEACHER_ID1 = "Get groups by teacher id";
 
     @Autowired
-    GroupRepository groupRepository;
+    private GroupRepository groupRepository;
 
     @Autowired
-    TeacherService teacherService;
+    private TeacherService teacherService;
 
     @Autowired
-    MessageSource messageSource;
+    private ModelMapper modelMapper;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(GroupServiceImpl.class);
+    @Autowired
+    private MessageSource messageSource;
+
+    @Autowired
+    private StudentService studentService;
 
     /**
      * @param locale of messages
@@ -62,7 +68,27 @@ public class GroupServiceImpl extends GenericServiceImpl<Group> implements Group
      */
     @Override
     public Group getById(Long id, Locale locale) throws EntityNotFoundException {
-        return getById(id, groupRepository::findById, locale, GET_BY_ID, GROUP, GET_GROUP_BY_ID);
+        return get(id, groupRepository::findById, locale, GET_BY_ID, GROUP, GET_GROUP_BY_ID);
+    }
+
+    /**
+     * @param groupName
+     * @return
+     */
+    @Override
+    public Optional<Group> getByNumber(String groupName) {
+        return groupRepository.findByNumber(groupName);
+    }
+
+    /**
+     *
+     * @param id
+     * @param locale
+     * @return
+     */
+    @Override
+    public List<Group> getGroupsOfTeacherById(Long id, Locale locale) {
+        return getList(id, groupRepository::findAllGroupsOfTeacherById, locale, GET_GROUPS_BY_TEACHER_ID, GROUPS, GET_GROUPS_BY_TEACHER_ID1);
     }
 
     /**
@@ -92,7 +118,7 @@ public class GroupServiceImpl extends GenericServiceImpl<Group> implements Group
     @Override
     @Transactional
     public Group updateById(Group group, Long groupId, Long curatorId, Long[] teacherIdList, Locale locale) throws EntityNotFoundException {
-        Group currentGroup = getById(groupId, groupRepository::findById, locale, UPDATE_BY_ID, GROUP, UPDATE_GROUP_BY_ID);
+        Group currentGroup = get(groupId, groupRepository::findById, locale, UPDATE_BY_ID, GROUP, UPDATE_GROUP_BY_ID);
         currentGroup.setNumber(group.getNumber());
         currentGroup.setTeacher(teacherService.getById(curatorId, locale));
         currentGroup.setTeachers(getTeacherList(teacherIdList, locale));
@@ -110,7 +136,6 @@ public class GroupServiceImpl extends GenericServiceImpl<Group> implements Group
 
     private List<Teacher> getTeacherList(Long[] teacherIdList, Locale locale) throws EntityNotFoundException {
         return Arrays.stream(teacherIdList)
-                .parallel()
                 .map(id -> teacherService.getById(id, locale))
                 .collect(Collectors.toList());
     }

@@ -2,6 +2,8 @@ package com.intexsoft.devi.entity;
 
 import javax.persistence.*;
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 /**
  * @author DEVIAPHAN
  * The class that stores the state of the entity.
@@ -10,7 +12,7 @@ import javax.persistence.*;
 @Table(name = "Student")
 public class Student {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = IDENTITY)
     @Column(name = "StudentId")
     private Long id;
 
@@ -20,11 +22,22 @@ public class Student {
     @Column(name = "LastName")
     private String lastName;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "GroupId", referencedColumnName = "GroupId")
     private Group group;
 
     public Student() {
+    }
+
+    public Student(String firstName, String lastName, Group group) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.group = group;
+    }
+
+    public Student(String firstName, String lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
     }
 
     public Long getId() {

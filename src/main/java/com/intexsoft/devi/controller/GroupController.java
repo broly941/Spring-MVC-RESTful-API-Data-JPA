@@ -1,13 +1,16 @@
 package com.intexsoft.devi.controller;
 
+import com.intexsoft.devi.dto.GroupDTO;
 import com.intexsoft.devi.entity.Group;
 import com.intexsoft.devi.service.GroupService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 /**
  * @author DEVIAPHAN
@@ -19,12 +22,17 @@ public class GroupController {
     @Autowired
     GroupService groupService;
 
+    @Autowired
+    ModelMapper modelMapper;
+
     /**
      * @return getAll group entities in the database.
      */
     @GetMapping
-    public List<Group> getAll(Locale locale) {
-        return groupService.getAll(locale);
+    public List<GroupDTO> getAll(Locale locale) {
+        return groupService.getAll(locale).stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -33,24 +41,39 @@ public class GroupController {
      * @throws EntityNotFoundException if there is no value
      */
     @GetMapping("/{id}")
-    public Group getById(@PathVariable Long id, Locale locale) throws EntityNotFoundException {
-        return groupService.getById(id, locale);
+    public GroupDTO getById(@PathVariable Long id, Locale locale) throws EntityNotFoundException {
+        return convertToDto(groupService.getById(id, locale));
     }
 
     /**
-     * @param group         entity
+     *
+     * @param id
+     * @param locale
+     * @return
+     * @throws EntityNotFoundException
+     */
+    @GetMapping("/getByTeacherId/{id}")
+    public List<GroupDTO> getGroupsOfTeacherById(@PathVariable Long id, Locale locale) throws EntityNotFoundException {
+        return groupService.getGroupsOfTeacherById(id, locale).stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * @param groupDTO      entity
      * @param curatorId     of teacher
      * @param teacherIdList consist of teachers
      * @return added group entity in the database.
      * @throws EntityNotFoundException if there is no value
      */
     @PostMapping
-    public Group save(@RequestBody Group group, @RequestParam Long curatorId, @RequestParam Long[] teacherIdList, Locale locale) throws EntityNotFoundException {
-        return groupService.save(group, curatorId, teacherIdList, locale);
+    public GroupDTO save(@RequestBody GroupDTO groupDTO, @RequestParam Long curatorId, @RequestParam Long[] teacherIdList, Locale locale) throws EntityNotFoundException {
+        Group group = groupService.save(convertToEntity(groupDTO), curatorId, teacherIdList, locale);
+        return convertToDto(group);
     }
 
     /**
-     * @param group         entity
+     * @param groupDTO      entity
      * @param groupId       of group
      * @param curatorId     of teacher
      * @param teacherIdList consist of teachers
@@ -58,8 +81,9 @@ public class GroupController {
      * @throws EntityNotFoundException if there is no value
      */
     @PutMapping("/{groupId}")
-    public Group updateById(@RequestBody Group group, @PathVariable Long groupId, @RequestParam Long curatorId, @RequestParam Long[] teacherIdList, Locale locale) throws EntityNotFoundException {
-        return groupService.updateById(group, groupId, curatorId, teacherIdList, locale);
+    public GroupDTO updateById(@RequestBody GroupDTO groupDTO, @PathVariable Long groupId, @RequestParam Long curatorId, @RequestParam Long[] teacherIdList, Locale locale) throws EntityNotFoundException {
+        Group group = groupService.updateById(convertToEntity(groupDTO), groupId, curatorId, teacherIdList, locale);
+        return convertToDto(group);
     }
 
     /**
@@ -68,5 +92,13 @@ public class GroupController {
     @DeleteMapping("/{id}")
     public void deleteById(@PathVariable Long id, Locale locale) {
         groupService.deleteById(id, locale);
+    }
+
+    private GroupDTO convertToDto(Group group) {
+        return modelMapper.map(group, GroupDTO.class);
+    }
+
+    private Group convertToEntity(GroupDTO groupDTO) {
+        return modelMapper.map(groupDTO, Group.class);
     }
 }

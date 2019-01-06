@@ -1,10 +1,9 @@
 package com.intexsoft.devi.service;
 
+import com.intexsoft.devi.entity.Group;
 import com.intexsoft.devi.entity.Student;
 import com.intexsoft.devi.generic.GenericServiceImpl;
-import com.intexsoft.devi.repository.StudentsRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.intexsoft.devi.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
@@ -13,13 +12,17 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Predicate;
 
 /**
  * @author DEVIAPHAN
  * Business Logic Service Class
  */
 @Service
-public class StudentServiceImpl extends GenericServiceImpl<Student> implements StudentService{
+public class StudentServiceImpl extends GenericServiceImpl<Student> implements StudentService {
     private static final String STUDENT = "student";
     private static final String STUDENTS = "students";
     private static final String UPDATE_STUDENT_BY_ID = "Update student by id";
@@ -29,17 +32,28 @@ public class StudentServiceImpl extends GenericServiceImpl<Student> implements S
     private static final String GET_STUDENT_BY_ID = "Get student by id";
     private static final String GET_BY_ID = "getById";
     private static final String GET_ALL = "getAll";
+    private static final String GET_STUDENTS_OF_GROUP_BY_ID = "getStudentsOfGroupById";
+    private static final String GET_STUDENTS_BY_GROUP_ID = "Get students by group id";
+
+    private static final String ROW = "Row: ";
+    private static final String EXCEEDED_ALLOWABLE_COLUMN_SIZE = " exceeded allowable column size.\n";
+    private static final String SOME_TYPE_IS_NOT_A_STRING = " some type is not a string.\n";
+    private static final String ALREADY_EXISTS = " already exists.\n";
+    private static final String GROUP = " group ";
+    private static final String DOES_NOT_EXIST = " does not exist.\n";
+    private static final String STUDENT_ALREADY_EXISTS = " student already exists.\n";
 
     @Autowired
-    StudentsRepository studentsRepository;
+    private StudentRepository studentRepository;
 
     @Autowired
-    GroupService groupService;
+    private GroupService groupService;
 
     @Autowired
-    MessageSource messageSource;
+    private MessageSource messageSource;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(StudentServiceImpl.class);
+    private static final Predicate<List<Object>> allowableColumnPredicate = value -> value.size() > 3;
+    private static final Predicate<List<Object>> instanceStringPredicate = value -> (value.get(0) instanceof String && value.get(1) instanceof String && value.get(2) instanceof String);
 
     /**
      * @param locale of messages
@@ -47,7 +61,7 @@ public class StudentServiceImpl extends GenericServiceImpl<Student> implements S
      */
     @Override
     public List<Student> getAll(Locale locale) {
-        return getAll(studentsRepository::findAll, locale, GET_ALL, STUDENTS);
+        return getAll(studentRepository::findAll, locale, GET_ALL, STUDENTS);
     }
 
     /**
@@ -57,7 +71,27 @@ public class StudentServiceImpl extends GenericServiceImpl<Student> implements S
      */
     @Override
     public Student getById(Long id, Locale locale) throws EntityNotFoundException {
-        return getById(id, studentsRepository::findById, locale, GET_BY_ID, STUDENT, GET_STUDENT_BY_ID);
+        return get(id, studentRepository::findById, locale, GET_BY_ID, STUDENT, GET_STUDENT_BY_ID);
+    }
+
+    /**
+     * @param id
+     * @param locale
+     * @return
+     */
+    @Override
+    public List<Student> getStudentsOfGroupById(Long id, Locale locale) {
+        return getList(id, studentRepository::findAllByGroup_Id, locale, GET_STUDENTS_OF_GROUP_BY_ID, STUDENTS, GET_STUDENTS_BY_GROUP_ID);
+    }
+
+    /**
+     * @param firstName
+     * @return
+     * @param lastName
+     */
+    @Override
+    public Optional<Student> getByName(String firstName, String lastName) {
+        return studentRepository.findByFirstNameAndLastName(firstName, lastName);
     }
 
     /**
@@ -70,7 +104,18 @@ public class StudentServiceImpl extends GenericServiceImpl<Student> implements S
     @Transactional
     public Student save(Student student, Long groupId, Locale locale) {
         student.setGroup(groupService.getById(groupId, locale));
-        return save(student, studentsRepository::save, locale, ADD, STUDENT);
+        return save(student, studentRepository::save, locale, ADD, STUDENT);
+    }
+
+    /**
+     * @param student entity
+     * @param locale  of messages
+     * @return added student entity in the database.
+     */
+    @Override
+    @Transactional
+    public Student save(Student student, Locale locale) {
+        return save(student, studentRepository::save, locale, ADD, STUDENT);
     }
 
     /**
@@ -84,11 +129,11 @@ public class StudentServiceImpl extends GenericServiceImpl<Student> implements S
     @Override
     @Transactional
     public Student updateById(Student student, Long studentId, Long groupId, Locale locale) throws EntityNotFoundException {
-        Student currentStudent = getById(studentId, studentsRepository::findById, locale, UPDATE_BY_ID, STUDENT, UPDATE_STUDENT_BY_ID);
+        Student currentStudent = get(studentId, studentRepository::findById, locale, UPDATE_BY_ID, STUDENT, UPDATE_STUDENT_BY_ID);
         currentStudent.setFirstName(student.getFirstName());
         currentStudent.setLastName(student.getLastName());
         currentStudent.setGroup(groupService.getById(groupId, locale));
-        return save(currentStudent, studentsRepository::save, locale, UPDATE_BY_ID, STUDENT, studentId);
+        return save(currentStudent, studentRepository::save, locale, UPDATE_BY_ID, STUDENT, studentId);
     }
 
     /**
@@ -97,6 +142,63 @@ public class StudentServiceImpl extends GenericServiceImpl<Student> implements S
      */
     @Override
     public void deleteById(Long id, Locale locale) {
-        deleteById(id, studentsRepository::deleteById, locale, DELETED_BY_ID, STUDENT);
+        deleteById(id, studentRepository::deleteById, locale, DELETED_BY_ID, STUDENT);
+    }
+
+    /**
+     * @param firstName
+     * @param lastName
+     * @param groupName
+     * @return
+     */
+    @Override
+    public boolean isStudentGroupExist(String firstName, String lastName, String groupName) {
+        return studentRepository.findByFirstNameAndLastNameAndGroup_Number(firstName, lastName, groupName).isPresent();
+    }
+
+    /**
+     * @param map
+     * @param validationStatus
+     * @return
+     */
+    @Override
+    public boolean fileValidation(Map<Integer, List<Object>> map, StringBuilder validationStatus) {
+        AtomicBoolean isValid = new AtomicBoolean(true);
+        map.forEach((key, value) -> {
+            if (allowableColumnPredicate.test(value)) {
+                validationStatus.append(ROW + key + EXCEEDED_ALLOWABLE_COLUMN_SIZE);
+                isValid.set(false);
+            } else if (!instanceStringPredicate.test(value)) {
+                validationStatus.append(ROW + key + SOME_TYPE_IS_NOT_A_STRING);
+                isValid.set(false);
+            } else if (isStudentGroupExist(value.get(0).toString(), value.get(1).toString(), value.get(2).toString())) {
+                validationStatus.append(ROW + key + ALREADY_EXISTS);
+                isValid.set(false);
+            } else if (!groupService.getByNumber(value.get(2).toString()).isPresent()) {
+                validationStatus.append(ROW + key + GROUP + value.get(2).toString() + DOES_NOT_EXIST);
+                isValid.set(false);
+            } else if (getByName(value.get(0).toString(), value.get(1).toString()).isPresent()) {
+                validationStatus.append(ROW + key + STUDENT_ALREADY_EXISTS);
+                isValid.set(false);
+            }
+        });
+        return isValid.get();
+    }
+
+    /**
+     * @param map
+     * @param locale
+     */
+    @Override
+    public void fileSave(Map<Integer, List<Object>> map, Locale locale) {
+        map.forEach((key, value) -> {
+            String firstName = value.get(0).toString();
+            String lastName = value.get(1).toString();
+            String groupName = value.get(2).toString();
+
+            Group group = groupService.getByNumber(groupName).get();
+            Student student = new Student(firstName, lastName, group);
+            save(student, locale);
+        });
     }
 }

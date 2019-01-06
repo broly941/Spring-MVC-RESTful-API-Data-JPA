@@ -1,7 +1,7 @@
 package com.intexsoft.devi.unit;
 
 import com.intexsoft.devi.entity.Student;
-import com.intexsoft.devi.repository.StudentsRepository;
+import com.intexsoft.devi.repository.StudentRepository;
 import com.intexsoft.devi.service.GroupServiceImpl;
 import com.intexsoft.devi.service.StudentServiceImpl;
 import org.junit.Test;
@@ -15,8 +15,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import javax.persistence.EntityNotFoundException;
 import java.util.*;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 /**
@@ -34,7 +33,7 @@ public class StudentServiceTest {
     GroupServiceImpl groupService;
 
     @Mock
-    StudentsRepository studentsRepository;
+    StudentRepository studentRepository;
 
     @Mock
     MessageSource messageSource;
@@ -45,7 +44,7 @@ public class StudentServiceTest {
     @Test
     public void getAll() {
         List<Student> studentList = initializeStudentList();
-        when(studentsRepository.findAll())
+        when(studentRepository.findAll())
                 .thenReturn(studentList);
         assertSame(studentList, studentService.getAll(Locale.ENGLISH));
     }
@@ -55,7 +54,7 @@ public class StudentServiceTest {
      */
     @Test
     public void getAll_NotFoundStudents() {
-        when(studentsRepository.findAll())
+        when(studentRepository.findAll())
                 .thenReturn(Collections.emptyList());
         assertEquals(Collections.emptyList(), studentService.getAll(Locale.ENGLISH));
     }
@@ -66,7 +65,7 @@ public class StudentServiceTest {
     @Test
     public void getById() {
         Student student = initializeStudent((long) 1);
-        when(studentsRepository.findById((long) 1))
+        when(studentRepository.findById((long) 1))
                 .thenReturn(Optional.ofNullable(student));
         assertSame(student, studentService.getById((long) 1, Locale.ENGLISH));
     }
@@ -76,9 +75,31 @@ public class StudentServiceTest {
      */
     @Test(expected = EntityNotFoundException.class)
     public void getById_NotFoundTeacher() {
-        when(studentsRepository.findById((long) 2))
+        when(studentRepository.findById((long) 2))
                 .thenThrow(EntityNotFoundException.class);
         studentService.getById((long) 2, Locale.ENGLISH);
+    }
+
+    /**
+     * Will return a list of records by group id
+     */
+    @Test
+    public void getStudentsOfGroupById() {
+        List<Student> studentList = initializeStudentList();
+        when(studentRepository.findAllByGroup_Id((long) 1))
+                .thenReturn(studentList);
+        assertSame(studentList, studentService.getStudentsOfGroupById((long) 1, Locale.ENGLISH));
+    }
+
+    /**
+     * Will return a record by name
+     */
+    @Test
+    public void getByName() {
+        Optional<Student> studentOptional = Optional.of(initializeStudent((long) 1));
+        when(studentRepository.findByFirstNameAndLastName("First", "Last"))
+                .thenReturn(studentOptional);
+        assertSame(studentOptional, studentService.getByName("First", "Last"));
     }
 
     /**
@@ -89,9 +110,20 @@ public class StudentServiceTest {
         Student student = initializeStudent((long) 1);
         when(groupService.getById(null, Locale.ENGLISH))
                 .thenReturn(null);
-        when(studentsRepository.save(student))
+        when(studentRepository.save(student))
                 .thenReturn(student);
         assertSame(student, studentService.save(student, null, Locale.ENGLISH));
+    }
+
+    /**
+     * Will return boolean value depending exist entity or not
+     */
+    @Test
+    public void isStudentGroupExist() {
+        Student student = initializeStudent((long) 1);
+        when(studentRepository.findByFirstNameAndLastNameAndGroup_Number("first", "last", "group"))
+                .thenReturn(Optional.ofNullable(student));
+        assertTrue(studentService.isStudentGroupExist("first", "last", "group"));
     }
 
     /**
@@ -100,11 +132,11 @@ public class StudentServiceTest {
     @Test
     public void updateById() {
         Student student = initializeStudent((long) 1);
-        when(studentsRepository.findById((long) 1))
+        when(studentRepository.findById((long) 1))
                 .thenReturn(Optional.ofNullable(student));
         when(groupService.getById(null, Locale.ENGLISH))
                 .thenReturn(null);
-        when(studentsRepository.save(student))
+        when(studentRepository.save(student))
                 .thenReturn(student);
         assertSame(student, studentService.updateById(student, (long) 1, null, Locale.ENGLISH));
     }
@@ -114,7 +146,7 @@ public class StudentServiceTest {
      */
     @Test(expected = EntityNotFoundException.class)
     public void updateById_NotFoundId() {
-        when(studentsRepository.findById((long) 2))
+        when(studentRepository.findById((long) 2))
                 .thenThrow(EntityNotFoundException.class);
         studentService.updateById(initializeStudent((long) 1), (long) 2, null, Locale.ENGLISH);
     }

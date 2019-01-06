@@ -1,7 +1,5 @@
 package com.intexsoft.devi.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
 import java.util.List;
 
@@ -23,15 +21,27 @@ public class Teacher {
     @Column(name = "LastName")
     private String lastName;
 
-    @JsonIgnore
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "teacher")
+    @OneToOne(
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            }, mappedBy = "teacher")
     private Group group;
 
-    @JsonIgnore
-    @ManyToMany(mappedBy = "teachers")
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            })
+    @JoinTable(name = "GroupTeacher", joinColumns = @JoinColumn(name = "TeacherId"), inverseJoinColumns = @JoinColumn(name = "GroupId"))
     private List<Group> groups;
 
     public Teacher() {
+    }
+
+    public Teacher(String firstName, String lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
     }
 
     public Long getId() {

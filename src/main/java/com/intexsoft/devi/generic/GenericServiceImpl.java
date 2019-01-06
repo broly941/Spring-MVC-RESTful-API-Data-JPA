@@ -20,7 +20,7 @@ import java.util.function.UnaryOperator;
  * @author DEVIAPHAN on 21.12.2018
  * @project university
  */
-public class GenericServiceImpl<T> implements GenericService<T> {
+public abstract class GenericServiceImpl<T> implements GenericService<T> {
 
     @Autowired
     MessageSource messageSource;
@@ -48,16 +48,46 @@ public class GenericServiceImpl<T> implements GenericService<T> {
      * @throws EntityNotFoundException
      */
     @Override
-    public T getById(Long id, Function<Long, Optional<T>> function, Locale locale, String message, String par1, String excPar1) throws EntityNotFoundException {
+    public T get(Long id, Function<Long, Optional<T>> function, Locale locale, String message, String par1, String excPar1) throws EntityNotFoundException {
         Optional<T> optional = function.apply(id);
         if (optional.isPresent()) {
             LOGGER.info(messageSource.getMessage(message, new Object[]{par1, id}, locale));
             return optional.get();
         } else {
-            return throwEntityException(excPar1, id, locale);
+            LOGGER.error(messageSource.getMessage(ENTITY_NOT_FOUND_EXCEPTION, new Object[]{par1, id}, locale));
+            throw new EntityNotFoundException();
         }
     }
 
+
+    /**
+     * @param id
+     * @param function
+     * @param locale
+     * @return
+     * @throws EntityNotFoundException
+     */
+    @Override
+    public List<T> getList(Long id, Function<Long, List<T>> function, Locale locale, String message, String par1, String excPar1) throws EntityNotFoundException {
+        List<T> list = function.apply(id);
+        if (!list.isEmpty()) {
+            LOGGER.info(messageSource.getMessage(message, new Object[]{par1, id}, locale));
+            return list;
+        } else {
+            LOGGER.error(messageSource.getMessage(ENTITY_NOT_FOUND_EXCEPTION, new Object[]{par1, id}, locale));
+            throw new EntityNotFoundException();
+        }
+    }
+
+    /**
+     *
+     * @param entity
+     * @param function
+     * @param locale
+     * @param message
+     * @param par1
+     * @return
+     */
     @Override
     @Transactional
     public T save(T entity, UnaryOperator<T> function, Locale locale, String message, String par1) {
@@ -65,6 +95,16 @@ public class GenericServiceImpl<T> implements GenericService<T> {
         return function.apply(entity);
     }
 
+    /**
+     *
+     * @param entity
+     * @param function
+     * @param locale
+     * @param message
+     * @param par1
+     * @param par2
+     * @return
+     */
     @Override
     @Transactional
     public T save(T entity, UnaryOperator<T> function, Locale locale, String message, String par1, Long par2) {
@@ -72,15 +112,17 @@ public class GenericServiceImpl<T> implements GenericService<T> {
         return function.apply(entity);
     }
 
+    /**
+     *
+     * @param id
+     * @param function
+     * @param locale
+     * @param message
+     * @param par1
+     */
     @Override
     public void deleteById(Long id, Consumer<Long> function, Locale locale, String message, String par1) {
         LOGGER.info(messageSource.getMessage(message, new Object[]{par1, id}, locale));
         function.accept(id);
     }
-
-    private T throwEntityException(String par1, Long id, Locale locale) throws EntityNotFoundException {
-        LOGGER.error(messageSource.getMessage(ENTITY_NOT_FOUND_EXCEPTION, new Object[]{par1, id}, locale));
-        throw new EntityNotFoundException();
-    }
-
 }

@@ -1,8 +1,7 @@
 package com.intexsoft.devi.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -11,7 +10,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "GroupOfUniversity")
-public class Group {
+public class Group implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "GroupId")
@@ -20,15 +19,27 @@ public class Group {
     @Column(name = "Number")
     private String number;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            })
     @JoinColumn(name = "TeacherId")
     private Teacher teacher;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            },
+            mappedBy = "group")
     private List<Student> students;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            })
     @JoinTable(name = "GroupTeacher", joinColumns = @JoinColumn(name = "GroupId"), inverseJoinColumns = @JoinColumn(name = "TeacherId"))
     private List<Teacher> teachers;
 

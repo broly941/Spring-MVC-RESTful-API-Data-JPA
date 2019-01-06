@@ -82,6 +82,17 @@ public class GroupServiceTest {
     }
 
     /**
+     * Will return a record by name
+     */
+    @Test
+    public void getByNumber() {
+        Optional<Group> groupOptional = Optional.of(initializeGroup((long) 1));
+        when(groupRepository.findByNumber("POIT-1"))
+                .thenReturn(groupOptional);
+        assertSame(groupOptional, groupService.getByNumber("POIT-1"));
+    }
+
+    /**
      * Will save a record if all parameters are correct
      */
     @Test

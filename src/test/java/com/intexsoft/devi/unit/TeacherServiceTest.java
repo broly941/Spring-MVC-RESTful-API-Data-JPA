@@ -78,6 +78,28 @@ public class TeacherServiceTest {
     }
 
     /**
+     * Will return the list if all parameters are correct
+     */
+    @Test
+    public void getTeachersOfGroupById() {
+        List<Teacher> teacherList = initializeTeacherList();
+        when(teacherRepository.findAllTeachersOfGroupById((long) 1))
+                .thenReturn(teacherList);
+        assertSame(teacherList, teacherService.getTeachersOfGroupById((long) 1, Locale.ENGLISH));
+    }
+
+    /**
+     * Will return a record by name
+     */
+    @Test
+    public void getTeacherByName() {
+        Optional<Teacher> teacherOptional = Optional.of(initializeTeacher((long) 1));
+        when(teacherRepository.findByFirstNameAndLastName("First", "Last"))
+                .thenReturn(teacherOptional);
+        assertSame(teacherOptional, teacherService.getTeacherByName("First", "Last"));
+    }
+
+    /**
      * Will save a record if all parameters are correct
      */
     @Test
