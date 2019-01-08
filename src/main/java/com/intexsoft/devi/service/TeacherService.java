@@ -28,11 +28,9 @@ public interface TeacherService {
 
     void deleteById(Long id, Locale locale);
 
-    //String addGroupToTeacher(MultipartFile file, Locale locale) throws IOException, InvalidFormatException;
-
     Optional<Teacher> getTeacherByName(String firstName, String lastName);
 
-    boolean fileValidation(Map<Integer, List<Object>> excelMap, StringBuilder insertStatus);
+    boolean fileValidation(Map<Integer, List<Object>> map, StringBuilder validationStatus, Locale locale);
 
     void fileSave(Map<Integer, List<Object>> map, Locale locale);
 }

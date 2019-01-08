@@ -6,7 +6,6 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,7 +14,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 import java.util.function.BiConsumer;
-import java.util.function.BiPredicate;
 
 /**
  * @author DEVIAPHAN
@@ -30,14 +28,11 @@ public class ExcelFileServiceImpl implements ExcelFileService {
     @Autowired
     private MessageSource messageSource;
 
-    @Autowired
-    private TaskExecutor taskExecutor;
-
     @Override
-    public String createEntity(Locale locale, MultipartFile file, Integer page, BiPredicate<Map<Integer, List<Object>>, StringBuilder> validation, BiConsumer<Map<Integer, List<Object>>, Locale> save) throws IOException {
+    public String createEntity(Locale locale, MultipartFile file, Integer page, ThreePridicate<Map<Integer, List<Object>>, StringBuilder, Locale> validation, BiConsumer<Map<Integer, List<Object>>, Locale> save) throws IOException {
         StringBuilder validationStatus = new StringBuilder(messageSource.getMessage(VALIDATION_STATUS, null, locale) + "\n");
         Map<Integer, List<Object>> map = parser(file, page);
-        if (validation.test(map, validationStatus)) {
+        if (validation.test(map, validationStatus, locale)) {
             validationStatus.append(DATA_SAVED_SUCCESSFULLY);
             save.accept(map, locale);
         }

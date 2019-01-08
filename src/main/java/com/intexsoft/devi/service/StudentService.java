@@ -35,7 +35,7 @@ public interface StudentService {
 
     List<Student> getStudentsOfGroupById(Long id, Locale locale);
 
-    boolean fileValidation(Map<Integer, List<Object>> map, StringBuilder validationStatus);
+    boolean fileValidation(Map<Integer, List<Object>> map, StringBuilder validationStatus, Locale locale);
 
     void fileSave(Map<Integer, List<Object>> map, Locale locale);
 }

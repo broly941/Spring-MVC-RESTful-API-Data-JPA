@@ -103,7 +103,7 @@ public class StudentController {
      * @throws InvalidFormatException
      */
     @PostMapping("/fileload")
-    public String createStudent(@RequestParam("file") MultipartFile file, @RequestParam Integer page, Locale locale) throws IOException, InvalidFormatException, org.apache.poi.openxml4j.exceptions.InvalidFormatException {
+    public String createStudent(@RequestParam("file") MultipartFile file, @RequestParam Integer page, Locale locale) throws IOException, InvalidFormatException {
         if (file.isEmpty()) {
             return "Unable to upload. File is empty.";
         } else {

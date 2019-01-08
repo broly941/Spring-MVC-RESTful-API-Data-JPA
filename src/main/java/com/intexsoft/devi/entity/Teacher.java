@@ -24,14 +24,12 @@ public class Teacher {
     @OneToOne(
             cascade = {
                     CascadeType.PERSIST,
-                    CascadeType.MERGE
             }, mappedBy = "teacher")
     private Group group;
 
     @ManyToMany(fetch = FetchType.LAZY,
             cascade = {
                     CascadeType.PERSIST,
-                    CascadeType.MERGE
             })
     @JoinTable(name = "GroupTeacher", joinColumns = @JoinColumn(name = "TeacherId"), inverseJoinColumns = @JoinColumn(name = "GroupId"))
     private List<Group> groups;

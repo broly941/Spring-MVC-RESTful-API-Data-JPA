@@ -35,14 +35,6 @@ public class StudentServiceImpl extends GenericServiceImpl<Student> implements S
     private static final String GET_STUDENTS_OF_GROUP_BY_ID = "getStudentsOfGroupById";
     private static final String GET_STUDENTS_BY_GROUP_ID = "Get students by group id";
 
-    private static final String ROW = "Row: ";
-    private static final String EXCEEDED_ALLOWABLE_COLUMN_SIZE = " exceeded allowable column size.\n";
-    private static final String SOME_TYPE_IS_NOT_A_STRING = " some type is not a string.\n";
-    private static final String ALREADY_EXISTS = " already exists.\n";
-    private static final String GROUP = " group ";
-    private static final String DOES_NOT_EXIST = " does not exist.\n";
-    private static final String STUDENT_ALREADY_EXISTS = " student already exists.\n";
-
     @Autowired
     private StudentRepository studentRepository;
 
@@ -81,7 +73,7 @@ public class StudentServiceImpl extends GenericServiceImpl<Student> implements S
      */
     @Override
     public List<Student> getStudentsOfGroupById(Long id, Locale locale) {
-        return getList(id, studentRepository::findAllByGroup_Id, locale, GET_STUDENTS_OF_GROUP_BY_ID, STUDENTS, GET_STUDENTS_BY_GROUP_ID);
+        return getAll(id, studentRepository::findAllByGroup_Id, locale, GET_STUDENTS_OF_GROUP_BY_ID, STUDENTS, GET_STUDENTS_BY_GROUP_ID);
     }
 
     /**
@@ -162,23 +154,23 @@ public class StudentServiceImpl extends GenericServiceImpl<Student> implements S
      * @return
      */
     @Override
-    public boolean fileValidation(Map<Integer, List<Object>> map, StringBuilder validationStatus) {
+    public boolean fileValidation(Map<Integer, List<Object>> map, StringBuilder validationStatus, Locale locale) {
         AtomicBoolean isValid = new AtomicBoolean(true);
         map.forEach((key, value) -> {
             if (allowableColumnPredicate.test(value)) {
-                validationStatus.append(ROW + key + EXCEEDED_ALLOWABLE_COLUMN_SIZE);
+                validationStatus.append(messageSource.getMessage("EXCEEDED_ALLOWABLE_COLUMN_SIZE", new Object[]{key}, locale) + "\n");
                 isValid.set(false);
             } else if (!instanceStringPredicate.test(value)) {
-                validationStatus.append(ROW + key + SOME_TYPE_IS_NOT_A_STRING);
+                validationStatus.append(messageSource.getMessage("SOME_TYPE_IS_NOT_A_STRING", new Object[]{key}, locale) + "\n");
                 isValid.set(false);
             } else if (isStudentGroupExist(value.get(0).toString(), value.get(1).toString(), value.get(2).toString())) {
-                validationStatus.append(ROW + key + ALREADY_EXISTS);
+                validationStatus.append(messageSource.getMessage("ALREADY_EXISTS", new Object[]{key}, locale) + "\n");
                 isValid.set(false);
             } else if (!groupService.getByNumber(value.get(2).toString()).isPresent()) {
-                validationStatus.append(ROW + key + GROUP + value.get(2).toString() + DOES_NOT_EXIST);
+                validationStatus.append(messageSource.getMessage("DOES_NOT_EXIST", new Object[]{key, value.get(2).toString()}, locale) + "\n");
                 isValid.set(false);
             } else if (getByName(value.get(0).toString(), value.get(1).toString()).isPresent()) {
-                validationStatus.append(ROW + key + STUDENT_ALREADY_EXISTS);
+                validationStatus.append(messageSource.getMessage("STUDENT_ALREADY_EXISTS", new Object[]{key}, locale) + "\n");
                 isValid.set(false);
             }
         });

@@ -34,11 +34,6 @@ public class TeacherServiceImpl extends GenericServiceImpl<Teacher> implements T
     private static final String GET_TEACHERS_OF_GROUP_BY_ID = "getTeachersOfGroupById";
     private static final String GET_TEACHERS_OF_GROUP_BY_ID1 = "Get teachers of group by id";
 
-    private static final String ROW = "Row: ";
-    private static final String AT_LEAST_3_COLUMNS_REQUIRED = " at least 3 columns required.\n";
-    private static final String SOME_TYPE_IS_NOT_A_STRING = " some type is not a string.\n";
-    private static final String TEACHER_DOES_NOT_EXIST = " teacher does not exist.\n";
-    private static final String TEACHER_ALREADY_EXISTS_WITH_GROUP = " teacher already exists with group ";
     private static final String GROUP = " group ";
     private static final String DOES_NOT_EXIST = " does not exist.\n";
 
@@ -84,7 +79,7 @@ public class TeacherServiceImpl extends GenericServiceImpl<Teacher> implements T
      */
     @Override
     public List<Teacher> getTeachersOfGroupById(Long id, Locale locale) throws EntityNotFoundException {
-        return getList(id, teacherRepository::findAllTeachersOfGroupById, locale, GET_TEACHERS_OF_GROUP_BY_ID, TEACHERS, GET_TEACHERS_OF_GROUP_BY_ID1);
+        return getAll(id, teacherRepository::findAllTeachersOfGroupById, locale, GET_TEACHERS_OF_GROUP_BY_ID, TEACHERS, GET_TEACHERS_OF_GROUP_BY_ID1);
     }
 
     /**
@@ -137,21 +132,21 @@ public class TeacherServiceImpl extends GenericServiceImpl<Teacher> implements T
      * @param validationStatus
      */
     @Override
-    public boolean fileValidation(Map<Integer, List<Object>> map, StringBuilder validationStatus) {
+    public boolean fileValidation(Map<Integer, List<Object>> map, StringBuilder validationStatus, Locale locale) {
         AtomicBoolean isValid = new AtomicBoolean(true);
         map.forEach((key, value) -> {
             if (leastRequaredColumnPredicate.test(value)) {
-                validationStatus.append(ROW + key + AT_LEAST_3_COLUMNS_REQUIRED);
+                validationStatus.append(messageSource.getMessage("AT_LEAST_3_COLUMNS_REQUIRED", new Object[]{key}, locale) + "\n");
                 isValid.set(false);
             } else if (!instanceStringPredicate.test(value)) {
-                validationStatus.append(ROW + key + SOME_TYPE_IS_NOT_A_STRING);
+                validationStatus.append(messageSource.getMessage("SOME_TYPE_IS_NOT_A_STRING", new Object[]{key}, locale) + "\n");
                 isValid.set(false);
             } else {
                 Optional<Teacher> teacher = getTeacherByName(value.get(0).toString(), value.get(1).toString());
                 if (teacher.isPresent()) {
-                    checkExists(validationStatus, isValid, key, value, teacher);
+                    checkExists(validationStatus, isValid, key, value, teacher, locale);
                 } else {
-                    validationStatus.append(ROW + key + TEACHER_DOES_NOT_EXIST);
+                    validationStatus.append(messageSource.getMessage("TEACHER_DOES_NOT_EXIST", new Object[]{key}, locale) + "\n");
                     isValid.set(false);
                 }
             }
@@ -159,17 +154,17 @@ public class TeacherServiceImpl extends GenericServiceImpl<Teacher> implements T
         return isValid.get();
     }
 
-    private void checkExists(StringBuilder validationStatus, AtomicBoolean isValid, Integer key, List<Object> value, Optional<Teacher> teacher) {
+    private void checkExists(StringBuilder validationStatus, AtomicBoolean isValid, Integer key, List<Object> value, Optional<Teacher> teacher, Locale locale) {
         for (int i = 2; i < value.size(); i++) {
             Optional<Group> group = groupService.getByNumber(value.get(i).toString());
             if (group.isPresent()) {
                 if (!isGroupTeacherExist(group.get().getId(), teacher.get().getId())) {
-                    validationStatus.append(ROW + key + TEACHER_ALREADY_EXISTS_WITH_GROUP + group.get().getNumber() + ".\n");
+                    validationStatus.append(messageSource.getMessage("TEACHER_ALREADY_EXISTS_WITH_GROUP", new Object[]{key, group.get().getNumber() }, locale) + "\n");
                     isValid.set(false);
                     break;
                 }
             } else {
-                validationStatus.append(ROW + key + GROUP + value.get(i).toString() + DOES_NOT_EXIST);
+                validationStatus.append(messageSource.getMessage("DOES_NOT_EXIST", new Object[]{key, value.get(i).toString()}, locale) + "\n");
                 isValid.set(false);
                 break;
             }

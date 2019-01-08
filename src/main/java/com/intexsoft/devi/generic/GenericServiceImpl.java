@@ -29,6 +29,7 @@ public abstract class GenericServiceImpl<T> implements GenericService<T> {
             LoggerFactory.getLogger(GroupService.class);
 
     private static final String ENTITY_NOT_FOUND_EXCEPTION = "EntityNotFoundException";
+    private static final String CAN_NOT_FIND_WITH_ID = "Can_not_find_with_id";
 
     /**
      * @param locale of messages
@@ -48,14 +49,14 @@ public abstract class GenericServiceImpl<T> implements GenericService<T> {
      * @throws EntityNotFoundException
      */
     @Override
-    public T get(Long id, Function<Long, Optional<T>> function, Locale locale, String message, String par1, String excPar1) throws EntityNotFoundException {
+    public T get(Long id, Function<Long, Optional<T>> function, Locale locale, String message, String par1, String excPar1) {
         Optional<T> optional = function.apply(id);
         if (optional.isPresent()) {
             LOGGER.info(messageSource.getMessage(message, new Object[]{par1, id}, locale));
             return optional.get();
         } else {
             LOGGER.error(messageSource.getMessage(ENTITY_NOT_FOUND_EXCEPTION, new Object[]{par1, id}, locale));
-            throw new EntityNotFoundException();
+            throw new EntityNotFoundException(messageSource.getMessage(CAN_NOT_FIND_WITH_ID, new Object[] {id}, locale));
         }
     }
 
@@ -68,19 +69,18 @@ public abstract class GenericServiceImpl<T> implements GenericService<T> {
      * @throws EntityNotFoundException
      */
     @Override
-    public List<T> getList(Long id, Function<Long, List<T>> function, Locale locale, String message, String par1, String excPar1) throws EntityNotFoundException {
+    public List<T> getAll(Long id, Function<Long, List<T>> function, Locale locale, String message, String par1, String excPar1) throws EntityNotFoundException {
         List<T> list = function.apply(id);
-        if (!list.isEmpty()) {
-            LOGGER.info(messageSource.getMessage(message, new Object[]{par1, id}, locale));
-            return list;
-        } else {
+        if (list.isEmpty()) {
             LOGGER.error(messageSource.getMessage(ENTITY_NOT_FOUND_EXCEPTION, new Object[]{par1, id}, locale));
             throw new EntityNotFoundException();
+        } else {
+            LOGGER.info(messageSource.getMessage(message, new Object[]{par1, id}, locale));
+            return list;
         }
     }
 
     /**
-     *
      * @param entity
      * @param function
      * @param locale
@@ -96,7 +96,6 @@ public abstract class GenericServiceImpl<T> implements GenericService<T> {
     }
 
     /**
-     *
      * @param entity
      * @param function
      * @param locale
@@ -113,7 +112,6 @@ public abstract class GenericServiceImpl<T> implements GenericService<T> {
     }
 
     /**
-     *
      * @param id
      * @param function
      * @param locale

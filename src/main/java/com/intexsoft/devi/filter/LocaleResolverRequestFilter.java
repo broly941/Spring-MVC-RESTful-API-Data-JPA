@@ -40,6 +40,7 @@ public class LocaleResolverRequestFilter extends OncePerRequestFilter {
     private static final String PROPERTIES = ".properties";
     private static final String HTTP_STATUS_400_LANGUAGE_NOT_SUPPORTED = "HTTP Status 400 – Language not supported: ";
     private static final String REGEX = "(?<=\\_).+?(?=\\.)";
+    private static final String UTF_8 = "UTF-8";
 
     private List<String> langList;
 
@@ -54,8 +55,9 @@ public class LocaleResolverRequestFilter extends OncePerRequestFilter {
     private static final Logger LOGGER = LoggerFactory.getLogger(GroupServiceImpl.class);
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
         String acceptLanguage = request.getHeader(ACCEPT_LANGUAGE);
+
         try {
             if (langList.contains(acceptLanguage)) {
                 setLocale(request, response, filterChain, acceptLanguage);
@@ -67,10 +69,12 @@ public class LocaleResolverRequestFilter extends OncePerRequestFilter {
             }
         } catch (IOException | ServletException e) {
             LocaleContextHolder.resetLocaleContext();
+            filterChain.doFilter(request, response);
         }
     }
 
-    private void setLocale(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain, String acceptLanguage) throws IOException, ServletException {
+    private void setLocale(HttpServletRequest request, HttpServletResponse response, FilterChain
+            filterChain, String acceptLanguage) throws IOException, ServletException {
         Locale locale = new Locale.Builder().setLanguage(acceptLanguage).build();
         LocaleContextHolder.setLocale(locale);
         WebUtils.setSessionAttribute(request, SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME, locale);

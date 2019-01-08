@@ -51,6 +51,11 @@ public class GroupControllerIntegrationTest {
     private static final String $_NUMBER = "$.number";
     private static final String CURATOR_ID = "curatorId";
     private static final String TEACHER_ID_LIST = "teacherIdList";
+    private static final String $_2_ID = "$[2].id";
+    private static final String $_2_NUMBER = "$[2].number";
+    private static final String POIT_21 = "POIT-21";
+    private static final String POIT_161 = "POIT-161";
+    private static final String POIT_12 = "POIT-12";
 
     private MockMvc mockMvc;
 
@@ -78,8 +83,8 @@ public class GroupControllerIntegrationTest {
         )
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(APPLICATION_JSON_CHARSET_UTF_8))
-                .andExpect(jsonPath("$[2].id", is(3)))
-                .andExpect(jsonPath("$[2].number", is("POIT-21")));
+                .andExpect(jsonPath($_2_ID, is(3)))
+                .andExpect(jsonPath($_2_NUMBER, is(POIT_21)));
     }
 
     /**
@@ -95,7 +100,7 @@ public class GroupControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(APPLICATION_JSON_CHARSET_UTF_8))
                 .andExpect(jsonPath($_ID, is(1)))
-                .andExpect(jsonPath($_NUMBER, is("POIT-161")));
+                .andExpect(jsonPath($_NUMBER, is(POIT_161)));
     }
 
     /**
@@ -106,7 +111,7 @@ public class GroupControllerIntegrationTest {
     @Test
     public void save() throws Exception {
         Group group = new Group();
-        group.setNumber("POIT-12");
+        group.setNumber(POIT_12);
 
         ResultActions performSave = mockMvc.perform(post(GROUPS)
                 .header(ACCEPT_LANGUAGE, EN)
@@ -120,7 +125,7 @@ public class GroupControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(APPLICATION_JSON_CHARSET_UTF_8))
                 .andExpect(jsonPath($_ID, is(4)))
-                .andExpect(jsonPath($_NUMBER, is("POIT-12")));
+                .andExpect(jsonPath($_NUMBER, is(POIT_12)));
     }
 
     /**
@@ -131,7 +136,7 @@ public class GroupControllerIntegrationTest {
     @Test
     public void update() throws Exception {
         Group group = new Group();
-        group.setNumber("POIT-12");
+        group.setNumber(POIT_12);
 
         mockMvc.perform(put(GROUPS_ID, 2)
                 .header(ACCEPT_LANGUAGE, EN)
@@ -143,7 +148,7 @@ public class GroupControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(APPLICATION_JSON_CHARSET_UTF_8))
                 .andExpect(jsonPath($_ID, is(2)))
-                .andExpect(jsonPath($_NUMBER, is("POIT-12")));
+                .andExpect(jsonPath($_NUMBER, is(POIT_12)));
     }
 
     /**

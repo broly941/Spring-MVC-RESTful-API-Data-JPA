@@ -7,10 +7,13 @@ import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.github.springtestdbunit.annotation.DatabaseSetups;
 import com.intexsoft.devi.config.DataConfigTest;
 import com.intexsoft.devi.entity.Student;
+import org.apache.commons.compress.utils.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -19,6 +22,11 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Objects;
 
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -47,18 +55,43 @@ public class StudentControllerIntegrationTest {
 
     private static final String STUDENTS = "/students";
     private static final String STUDENTS_ID = "/students/{id}";
+
     private static final String $_ID = "$.id";
+
     private static final String $_FIRST_NAME = "$.firstName";
     private static final String $_LAST_NAME = "$.lastName";
     private static final String GROUP_ID = "groupId";
+    private static final String $_1_ID = "$[1].id";
+    private static final String $_1_FIRST_NAME = "$[1].firstName";
+    private static final String $_1_LAST_NAME = "$[1].lastName";
+    private static final String THOMAS = "Thomas";
+    private static final String MOORE = "Moore";
+    private static final String LEE = "Lee";
+    private static final String WALKER = "Walker";
+    private static final String TONY = "Tony";
+    private static final String HAWK = "Hawk";
+    private static final String DONALD = "Donald";
+    private static final String TRUMP = "Trump";
+    private static final String VALIDATION_STATUS = "..::: validation status :::..\n";
+    private static final String DATA_SAVED_SUCCESSFULLY = "Data saved successfully.";
+    private static final String STUDENTS_FILELOAD = "/students/fileload";
+    private static final String PAGE = "page";
+    private static final String ROW_1_SOME_TYPE_IS_NOT_A_STRING = "Row 1: some type is not a string.\n";
+    private static final String ROW_2_EXCEEDED_ALLOWABLE_COLUMN_SIZE = "Row 2: exceeded allowable column size.\n";
+    private static final String ROW_3_GROUP_123_DOES_NOT_EXIST = "Row 3: group ????-123 does not exist.\n";
+    private static final String FILE = "file";
+    private static final String FILE_XLSX = "file/xlsx";
 
     private MockMvc mockMvc;
+
+    private String workspace = "C:\\Users\\DEVIAPHAN\\IdeaProjects\\University\\src\\test\\resources\\";
+    private String filename = "IntegrationTest.xlsx";
 
     @Autowired
     private WebApplicationContext webApplicationContext;
 
     /**
-     * initialization mockMvc
+     * addGroupsToTeacher mockMvc
      */
     @Before
     public void init() {
@@ -77,9 +110,9 @@ public class StudentControllerIntegrationTest {
         )
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(APPLICATION_JSON_CHARSET_UTF_8))
-                .andExpect(jsonPath("$[1].id", is(2)))
-                .andExpect(jsonPath("$[1].firstName", is("Thomas")))
-                .andExpect(jsonPath("$[1].lastName", is("Moore")));
+                .andExpect(jsonPath($_1_ID, is(2)))
+                .andExpect(jsonPath($_1_FIRST_NAME, is(THOMAS)))
+                .andExpect(jsonPath($_1_LAST_NAME, is(MOORE)));
     }
 
     /**
@@ -95,8 +128,8 @@ public class StudentControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(APPLICATION_JSON_CHARSET_UTF_8))
                 .andExpect(jsonPath($_ID, is(1)))
-                .andExpect(jsonPath($_FIRST_NAME, is("Lee")))
-                .andExpect(jsonPath($_LAST_NAME, is("Walker")));
+                .andExpect(jsonPath($_FIRST_NAME, is(LEE)))
+                .andExpect(jsonPath($_LAST_NAME, is(WALKER)));
     }
 
     /**
@@ -107,8 +140,8 @@ public class StudentControllerIntegrationTest {
     @Test
     public void save() throws Exception {
         Student student = new Student();
-        student.setFirstName("Tony");
-        student.setLastName("Hawk");
+        student.setFirstName(TONY);
+        student.setLastName(HAWK);
 
         mockMvc.perform(post(STUDENTS)
                 .header(ACCEPT_LANGUAGE, EN)
@@ -119,8 +152,8 @@ public class StudentControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(APPLICATION_JSON_CHARSET_UTF_8))
                 .andExpect(jsonPath($_ID, is(4)))
-                .andExpect(jsonPath($_FIRST_NAME, is("Tony")))
-                .andExpect(jsonPath($_LAST_NAME, is("Hawk")));
+                .andExpect(jsonPath($_FIRST_NAME, is(TONY)))
+                .andExpect(jsonPath($_LAST_NAME, is(HAWK)));
     }
 
     /**
@@ -131,8 +164,8 @@ public class StudentControllerIntegrationTest {
     @Test
     public void update() throws Exception {
         Student student = new Student();
-        student.setFirstName("Donald");
-        student.setLastName("Trump");
+        student.setFirstName(DONALD);
+        student.setLastName(TRUMP);
 
         mockMvc.perform(put(STUDENTS_ID, 2)
                 .header(ACCEPT_LANGUAGE, EN)
@@ -143,8 +176,8 @@ public class StudentControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath($_ID, is(2)))
                 .andExpect(content().contentType(APPLICATION_JSON_CHARSET_UTF_8))
-                .andExpect(jsonPath($_FIRST_NAME, is("Donald")))
-                .andExpect(jsonPath($_LAST_NAME, is("Trump")));
+                .andExpect(jsonPath($_FIRST_NAME, is(DONALD)))
+                .andExpect(jsonPath($_LAST_NAME, is(TRUMP)));
     }
 
     /**
@@ -158,6 +191,44 @@ public class StudentControllerIntegrationTest {
                 .header(ACCEPT_LANGUAGE, EN)
         )
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    public void createStudent() throws Exception {
+        StringBuilder validationStatus = new StringBuilder(VALIDATION_STATUS);
+        validationStatus.append(DATA_SAVED_SUCCESSFULLY);
+
+        MockMultipartFile file = getMultipartFile();
+        mockMvc.perform(multipart(STUDENTS_FILELOAD)
+                .file(file)
+                .param(PAGE, "1")
+                .contentType(MediaType.MULTIPART_FORM_DATA))
+                .andExpect(status().isOk())
+                .andExpect(content().string(validationStatus.toString()));
+    }
+
+    @Test
+    public void createStudent_Fall() throws Exception {
+        StringBuilder validationStatus = new StringBuilder(VALIDATION_STATUS);
+        validationStatus.append(ROW_1_SOME_TYPE_IS_NOT_A_STRING);
+        validationStatus.append(ROW_2_EXCEEDED_ALLOWABLE_COLUMN_SIZE);
+        validationStatus.append(ROW_3_GROUP_123_DOES_NOT_EXIST);
+
+        MockMultipartFile file = getMultipartFile();
+        mockMvc.perform(multipart(STUDENTS_FILELOAD)
+                .file(file)
+                .param(PAGE, "0")
+                .contentType(MediaType.MULTIPART_FORM_DATA))
+                .andExpect(status().isOk())
+                .andExpect(content().string(validationStatus.toString()));
+    }
+
+    private MockMultipartFile getMultipartFile() throws IOException {
+        ClassLoader classLoader = getClass().getClassLoader();
+        File file = new File(Objects.requireNonNull(classLoader.getResource("IntegrationTest.xlsx")).getFile());
+        FileInputStream input = new FileInputStream(file);
+        return new MockMultipartFile("file",
+                file.getName(), "file/xlsx", IOUtils.toByteArray(input));
     }
 
     private String json(Object o) throws JsonProcessingException {

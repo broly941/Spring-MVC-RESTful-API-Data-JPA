@@ -4,9 +4,7 @@ import com.intexsoft.devi.entity.Group;
 import com.intexsoft.devi.entity.Teacher;
 import com.intexsoft.devi.generic.GenericServiceImpl;
 import com.intexsoft.devi.repository.GroupRepository;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,15 +39,6 @@ public class GroupServiceImpl extends GenericServiceImpl<Group> implements Group
 
     @Autowired
     private TeacherService teacherService;
-
-    @Autowired
-    private ModelMapper modelMapper;
-
-    @Autowired
-    private MessageSource messageSource;
-
-    @Autowired
-    private StudentService studentService;
 
     /**
      * @param locale of messages
@@ -88,7 +77,7 @@ public class GroupServiceImpl extends GenericServiceImpl<Group> implements Group
      */
     @Override
     public List<Group> getGroupsOfTeacherById(Long id, Locale locale) {
-        return getList(id, groupRepository::findAllGroupsOfTeacherById, locale, GET_GROUPS_BY_TEACHER_ID, GROUPS, GET_GROUPS_BY_TEACHER_ID1);
+        return getAll(id, groupRepository::findAllGroupsOfTeacherById, locale, GET_GROUPS_BY_TEACHER_ID, GROUPS, GET_GROUPS_BY_TEACHER_ID1);
     }
 
     /**
