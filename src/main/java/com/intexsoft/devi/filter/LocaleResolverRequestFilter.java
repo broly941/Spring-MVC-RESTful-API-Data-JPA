@@ -21,7 +21,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Locale;
-import java.util.MissingResourceException;
 import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
@@ -37,16 +36,16 @@ import static org.springframework.http.HttpHeaders.ACCEPT_LANGUAGE;
  */
 public class LocaleResolverRequestFilter extends OncePerRequestFilter {
 
-    private static final Predicate<Integer> indexValidPredicate = index -> index != -1;
+    private final Predicate<Integer> indexValidPredicate = index -> index != -1;
 
     private static final String LANGUAGE_NOT_SUPPORTED = "Language not supported: ";
-    private static final String LOCALE_EN = "en";
+    private static final String LOCALE_EN = "en-US";
     private static final String PROPERTIES = ".properties";
     private static final String HTTP_STATUS_400_LANGUAGE_NOT_SUPPORTED = "HTTP Status 400 – Language not supported: ";
     private static final String REGEX = "(?<=\\_).+?(?=\\.)";
-    private static final String UTF_8 = "UTF-8";
     private static final String COMMA = ",";
     private static final String MINUS = "-";
+    private static final String UNDERSCORE = "_";
 
     private List<String> langList;
 
@@ -62,46 +61,18 @@ public class LocaleResolverRequestFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
-        String acceptLanguage = substring(request.getHeader(ACCEPT_LANGUAGE), COMMA);
+        String acceptLanguage = request.getHeader(ACCEPT_LANGUAGE);
         if (acceptLanguage == null) {
-            acceptLanguage = LOCALE_EN;
-        }
-        try {
-            setLanguage(request, response, filterChain, acceptLanguage);
-        } catch (IOException | ServletException e) {
-            LocaleContextHolder.resetLocaleContext();
-            filterChain.doFilter(request, response);
-        }
-    }
-
-    private void setLanguage(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain, String acceptLanguage) throws IOException, ServletException {
-        if (langList.contains(acceptLanguage)) {
-            setLocale(request, response, filterChain, acceptLanguage);
+            setLocale(request, response, filterChain, LOCALE_EN);
         } else {
-            String language = substring(acceptLanguage, MINUS);
-            if (isValidLanguage(language)) {
-                setLocale(request, response, filterChain, language);
-            } else {
-                LOGGER.error(HTTP_STATUS_400_LANGUAGE_NOT_SUPPORTED + language);
-                response.sendError(400, LANGUAGE_NOT_SUPPORTED + language);
+            acceptLanguage = substring(request.getHeader(ACCEPT_LANGUAGE), COMMA);
+            try {
+                setLanguage(request, response, filterChain, acceptLanguage);
+            } catch (IOException | ServletException e) {
+                LocaleContextHolder.resetLocaleContext();
+                filterChain.doFilter(request, response);
             }
         }
-    }
-
-    //TODO выровнять методы по приоритету
-    private boolean isValidLanguage(String language) {
-        Locale locale = new Locale(language);
-        try {
-            locale.getISO3Language();
-        } catch (final MissingResourceException ex) {
-            return false;
-        }
-        return true;
-    }
-
-    private String substring(String value, String delimiter) {
-        int index = value.indexOf(delimiter);
-        return indexValidPredicate.test(index) ? value.substring(0, index) : value;
     }
 
     private void setLocale(HttpServletRequest request, HttpServletResponse response, FilterChain
@@ -110,6 +81,31 @@ public class LocaleResolverRequestFilter extends OncePerRequestFilter {
         LocaleContextHolder.setLocale(locale);
         WebUtils.setSessionAttribute(request, SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME, locale);
         filterChain.doFilter(request, response);
+    }
+
+    private String substring(String value, String delimiter) {
+        int index = value.indexOf(delimiter);
+        return indexValidPredicate.test(index) ? value.substring(0, index) : value;
+    }
+
+    private void setLanguage(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain, String acceptLanguage) throws IOException, ServletException {
+        if (langList.contains(acceptLanguage.replace('-', '_'))) {
+            setLocale(request, response, filterChain, acceptLanguage);
+        } else if (!getLocaleByLanguage(request, response, filterChain, acceptLanguage)) {
+            LOGGER.error(HTTP_STATUS_400_LANGUAGE_NOT_SUPPORTED + acceptLanguage);
+            response.sendError(400, LANGUAGE_NOT_SUPPORTED + acceptLanguage);
+        }
+    }
+
+    private boolean getLocaleByLanguage(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain, String acceptLanguage) throws IOException, ServletException {
+        String language = substring(acceptLanguage, MINUS);
+        for (String value : langList) {
+            if (substring(value, UNDERSCORE).contains(language)) {
+                setLocale(request, response, filterChain, value.replace("_", "-"));
+                return true;
+            }
+        }
+        return false;
     }
 
     private List<String> loadLanguageList() {

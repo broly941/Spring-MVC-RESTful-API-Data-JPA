@@ -30,7 +30,7 @@ public class GroupServiceImpl extends GenericServiceImpl<Group> implements Group
     private static final String GET_ALL = "getAll";
     private static final String ADD = "add";
     private static final String UPDATE_BY_ID = "updateById";
-    private static final String DELETED_BY_ID = "deletedById";
+    private static final String DELETED_BY_ID = "deleteById";
     private static final String GET_GROUPS_BY_TEACHER_ID = "getGroupsByTeacherId";
     private static final String GET_GROUPS_BY_TEACHER_ID1 = "Get groups by teacher id";
 

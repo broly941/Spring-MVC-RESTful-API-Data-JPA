@@ -1,5 +1,6 @@
 package com.intexsoft.devi.service;
 
+import com.intexsoft.devi.beans.ValidationStatus;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -9,6 +10,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.EntityNotFoundException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,21 +24,23 @@ import java.util.function.BiConsumer;
 @Service
 public class ExcelFileServiceImpl implements ExcelFileService {
 
-    private static final String DATA_SAVED_SUCCESSFULLY = "Data saved successfully.";
-    private static final String VALIDATION_STATUS = "VALIDATION_STATUS";
 
     @Autowired
     private MessageSource messageSource;
 
     @Override
-    public String createEntity(Locale locale, MultipartFile file, Integer page, ThreePridicate<Map<Integer, List<Object>>, StringBuilder, Locale> validation, BiConsumer<Map<Integer, List<Object>>, Locale> save) throws IOException {
-        StringBuilder validationStatus = new StringBuilder(messageSource.getMessage(VALIDATION_STATUS, null, locale) + "\n");
+    public ValidationStatus createEntity(Locale locale, MultipartFile file, Integer page, ThreePridicate<Map<Integer, List<Object>>, ValidationStatus, Locale> validation, BiConsumer<Map<Integer, List<Object>>, Locale> save) throws IOException, EntityNotFoundException {
+        if (file.isEmpty()) {
+            throw new EntityNotFoundException("Unable to upload. File is empty.");
+        }
+        ValidationStatus validationStatus = new ValidationStatus();
+        validationStatus.append(messageSource.getMessage("VALIDATION_STATUS", null, locale));
         Map<Integer, List<Object>> map = parser(file, page);
         if (validation.test(map, validationStatus, locale)) {
-            validationStatus.append(DATA_SAVED_SUCCESSFULLY);
+            validationStatus.append(messageSource.getMessage("DATA_SAVED_SUCCESSFULLY", null, locale));
             save.accept(map, locale);
         }
-        return validationStatus.toString();
+        return validationStatus;
     }
 
     private Map<Integer, List<Object>> parser(MultipartFile file, Integer page) throws IOException {

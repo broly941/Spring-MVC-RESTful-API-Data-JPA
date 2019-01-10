@@ -1,12 +1,15 @@
 package com.intexsoft.devi.controller;
 
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import com.intexsoft.devi.beans.ValidationStatus;
 import com.intexsoft.devi.dto.TeacherDTO;
 import com.intexsoft.devi.entity.Teacher;
 import com.intexsoft.devi.service.ExcelFileService;
 import com.intexsoft.devi.service.TeacherService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -48,7 +51,7 @@ public class TeacherController {
      * @throws EntityNotFoundException if there is no value
      */
     @GetMapping("/{id}")
-    public TeacherDTO getById(@PathVariable Long id, Locale locale) throws EntityNotFoundException{
+    public TeacherDTO getById(@PathVariable Long id, Locale locale) throws EntityNotFoundException {
         return convertToDto(teacherService.getById(id, locale));
     }
 
@@ -103,12 +106,8 @@ public class TeacherController {
      * @throws InvalidFormatException
      */
     @PostMapping("/fileload")
-    public String addGroupsToTeacher(@RequestParam(value = "file") MultipartFile file, @RequestParam Integer page, Locale locale) throws IOException, InvalidFormatException, org.apache.poi.openxml4j.exceptions.InvalidFormatException {
-        if (file.isEmpty()) {
-            return "Unable to upload. File is empty.";
-        } else {
-            return excelFileService.createEntity(locale, file, page, teacherService::fileValidation, teacherService::fileSave);
-        }
+    public ResponseEntity<ValidationStatus> addGroupsToTeacher(@RequestParam(value = "file") MultipartFile file, @RequestParam Integer page, Locale locale) throws IOException, InvalidFormatException {
+        return new ResponseEntity<>(excelFileService.createEntity(locale, file, page, teacherService::fileValidation, teacherService::fileSave), HttpStatus.OK);
     }
 
     private TeacherDTO convertToDto(Teacher teacher) {

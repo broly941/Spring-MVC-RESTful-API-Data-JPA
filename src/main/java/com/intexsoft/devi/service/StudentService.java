@@ -1,5 +1,6 @@
 package com.intexsoft.devi.service;
 
+import com.intexsoft.devi.beans.ValidationStatus;
 import com.intexsoft.devi.entity.Student;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,7 +36,7 @@ public interface StudentService {
 
     List<Student> getStudentsOfGroupById(Long id, Locale locale);
 
-    boolean fileValidation(Map<Integer, List<Object>> map, StringBuilder validationStatus, Locale locale);
+    boolean fileValidation(Map<Integer, List<Object>> map, ValidationStatus validationStatus, Locale locale);
 
     void fileSave(Map<Integer, List<Object>> map, Locale locale);
 }

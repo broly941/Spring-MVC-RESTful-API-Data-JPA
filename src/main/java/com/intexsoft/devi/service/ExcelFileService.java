@@ -1,5 +1,6 @@
 package com.intexsoft.devi.service;
 
+import com.intexsoft.devi.beans.ValidationStatus;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -13,5 +14,5 @@ import java.util.function.BiConsumer;
  * @project university
  */
 public interface ExcelFileService {
-    String createEntity(Locale locale, MultipartFile file, Integer page, ThreePridicate<Map<Integer, List<Object>>, StringBuilder, Locale> validation, BiConsumer<Map<Integer, List<Object>>, Locale> save) throws IOException;
+    ValidationStatus createEntity(Locale locale, MultipartFile file, Integer page, ThreePridicate<Map<Integer, List<Object>>, ValidationStatus, Locale> validation, BiConsumer<Map<Integer, List<Object>>, Locale> save) throws IOException;
 }

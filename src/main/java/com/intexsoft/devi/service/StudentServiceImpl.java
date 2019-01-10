@@ -1,5 +1,6 @@
 package com.intexsoft.devi.service;
 
+import com.intexsoft.devi.beans.ValidationStatus;
 import com.intexsoft.devi.entity.Group;
 import com.intexsoft.devi.entity.Student;
 import com.intexsoft.devi.generic.GenericServiceImpl;
@@ -15,6 +16,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 
 /**
@@ -27,7 +29,7 @@ public class StudentServiceImpl extends GenericServiceImpl<Student> implements S
     private static final String STUDENTS = "students";
     private static final String UPDATE_STUDENT_BY_ID = "Update student by id";
     private static final String UPDATE_BY_ID = "updateById";
-    private static final String DELETED_BY_ID = "deletedById";
+    private static final String DELETED_BY_ID = "deleteById";
     private static final String ADD = "add";
     private static final String GET_STUDENT_BY_ID = "Get student by id";
     private static final String GET_BY_ID = "getById";
@@ -154,27 +156,35 @@ public class StudentServiceImpl extends GenericServiceImpl<Student> implements S
      * @return
      */
     @Override
-    public boolean fileValidation(Map<Integer, List<Object>> map, StringBuilder validationStatus, Locale locale) {
+    public boolean fileValidation(Map<Integer, List<Object>> map, ValidationStatus validationStatus, Locale locale) {
         AtomicBoolean isValid = new AtomicBoolean(true);
+        AtomicInteger errorCount = new AtomicInteger(0);
         map.forEach((key, value) -> {
             if (allowableColumnPredicate.test(value)) {
-                validationStatus.append(messageSource.getMessage("EXCEEDED_ALLOWABLE_COLUMN_SIZE", new Object[]{key}, locale) + "\n");
-                isValid.set(false);
+                validationStatus.append(messageSource.getMessage("EXCEEDED_ALLOWABLE_COLUMN_SIZE", new Object[]{key}, locale));
+                setValidationFalse(errorCount, isValid);
             } else if (!instanceStringPredicate.test(value)) {
-                validationStatus.append(messageSource.getMessage("SOME_TYPE_IS_NOT_A_STRING", new Object[]{key}, locale) + "\n");
-                isValid.set(false);
+                validationStatus.append(messageSource.getMessage("EXCEEDED_ALLOWABLE_COLUMN_SIZE", new Object[]{key}, locale));
+                setValidationFalse(errorCount, isValid);
             } else if (isStudentGroupExist(value.get(0).toString(), value.get(1).toString(), value.get(2).toString())) {
-                validationStatus.append(messageSource.getMessage("ALREADY_EXISTS", new Object[]{key}, locale) + "\n");
-                isValid.set(false);
+                validationStatus.append(messageSource.getMessage("ALREADY_EXISTS", new Object[]{key}, locale));
+                setValidationFalse(errorCount, isValid);
             } else if (!groupService.getByNumber(value.get(2).toString()).isPresent()) {
-                validationStatus.append(messageSource.getMessage("DOES_NOT_EXIST", new Object[]{key, value.get(2).toString()}, locale) + "\n");
-                isValid.set(false);
+                validationStatus.append(messageSource.getMessage("DOES_NOT_EXIST", new Object[]{key, value.get(2).toString()}, locale));
+                setValidationFalse(errorCount, isValid);
             } else if (getByName(value.get(0).toString(), value.get(1).toString()).isPresent()) {
-                validationStatus.append(messageSource.getMessage("STUDENT_ALREADY_EXISTS", new Object[]{key}, locale) + "\n");
-                isValid.set(false);
+                validationStatus.append(messageSource.getMessage("STUDENT_ALREADY_EXISTS", new Object[]{key}, locale));
+                setValidationFalse(errorCount, isValid);
             }
         });
+
+        if (!isValid.get()) { validationStatus.setErrorCount(errorCount.get()); }
         return isValid.get();
+    }
+
+    private void setValidationFalse(AtomicInteger errorCount, AtomicBoolean isValid) {
+        errorCount.getAndIncrement();
+        isValid.set(false);
     }
 
     /**

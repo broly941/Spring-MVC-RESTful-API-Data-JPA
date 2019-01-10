@@ -1,5 +1,6 @@
 package com.intexsoft.devi.service;
 
+import com.intexsoft.devi.beans.ValidationStatus;
 import com.intexsoft.devi.entity.Teacher;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,7 +31,7 @@ public interface TeacherService {
 
     Optional<Teacher> getTeacherByName(String firstName, String lastName);
 
-    boolean fileValidation(Map<Integer, List<Object>> map, StringBuilder validationStatus, Locale locale);
+    boolean fileValidation(Map<Integer, List<Object>> map, ValidationStatus validationStatus, Locale locale);
 
     void fileSave(Map<Integer, List<Object>> map, Locale locale);
 }

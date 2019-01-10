@@ -1,5 +1,6 @@
 package com.intexsoft.devi.service;
 
+import com.intexsoft.devi.beans.ValidationStatus;
 import com.intexsoft.devi.entity.Group;
 import com.intexsoft.devi.entity.Teacher;
 import com.intexsoft.devi.generic.GenericServiceImpl;
@@ -14,6 +15,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityNotFoundException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 
 /**
@@ -26,7 +28,7 @@ public class TeacherServiceImpl extends GenericServiceImpl<Teacher> implements T
     private static final String TEACHERS = "teachers";
     private static final String GET_TEACHER_BY_ID = "Get teacher by id";
     private static final String UPDATE_TEACHER_BY_ID = "Update teacher by id";
-    private static final String DELETED_BY_ID = "deletedById";
+    private static final String DELETED_BY_ID = "deleteById";
     private static final String UPDATE_BY_ID = "updateById";
     private static final String ADD = "add";
     private static final String GET_BY_ID = "getById";
@@ -132,40 +134,50 @@ public class TeacherServiceImpl extends GenericServiceImpl<Teacher> implements T
      * @param validationStatus
      */
     @Override
-    public boolean fileValidation(Map<Integer, List<Object>> map, StringBuilder validationStatus, Locale locale) {
+    public boolean fileValidation(Map<Integer, List<Object>> map, ValidationStatus validationStatus, Locale locale) {
         AtomicBoolean isValid = new AtomicBoolean(true);
+        AtomicInteger errorCount = new AtomicInteger(0);
         map.forEach((key, value) -> {
             if (leastRequaredColumnPredicate.test(value)) {
-                validationStatus.append(messageSource.getMessage("AT_LEAST_3_COLUMNS_REQUIRED", new Object[]{key}, locale) + "\n");
-                isValid.set(false);
+                validationStatus.append(messageSource.getMessage("AT_LEAST_3_COLUMNS_REQUIRED", new Object[]{key}, locale));
+                setValidationFalse(errorCount, isValid);
             } else if (!instanceStringPredicate.test(value)) {
-                validationStatus.append(messageSource.getMessage("SOME_TYPE_IS_NOT_A_STRING", new Object[]{key}, locale) + "\n");
-                isValid.set(false);
+                validationStatus.append(messageSource.getMessage("SOME_TYPE_IS_NOT_A_STRING", new Object[]{key}, locale));
+                setValidationFalse(errorCount, isValid);
             } else {
                 Optional<Teacher> teacher = getTeacherByName(value.get(0).toString(), value.get(1).toString());
                 if (teacher.isPresent()) {
-                    checkExists(validationStatus, isValid, key, value, teacher, locale);
+                    checkExists(validationStatus, isValid, key, value, teacher, locale, errorCount);
                 } else {
-                    validationStatus.append(messageSource.getMessage("TEACHER_DOES_NOT_EXIST", new Object[]{key}, locale) + "\n");
-                    isValid.set(false);
+                    validationStatus.append(messageSource.getMessage("TEACHER_DOES_NOT_EXIST", new Object[]{key}, locale));
+                    setValidationFalse(errorCount, isValid);
                 }
             }
         });
+
+        if (isValid.get() == false) {
+            validationStatus.setErrorCount(errorCount.get());
+        }
         return isValid.get();
     }
 
-    private void checkExists(StringBuilder validationStatus, AtomicBoolean isValid, Integer key, List<Object> value, Optional<Teacher> teacher, Locale locale) {
+    private void setValidationFalse(AtomicInteger errorCount, AtomicBoolean isValid) {
+        errorCount.getAndIncrement();
+        isValid.set(false);
+    }
+
+    private void checkExists(ValidationStatus validationStatus, AtomicBoolean isValid, Integer key, List<Object> value, Optional<Teacher> teacher, Locale locale, AtomicInteger errorCount) {
         for (int i = 2; i < value.size(); i++) {
             Optional<Group> group = groupService.getByNumber(value.get(i).toString());
             if (group.isPresent()) {
                 if (!isGroupTeacherExist(group.get().getId(), teacher.get().getId())) {
-                    validationStatus.append(messageSource.getMessage("TEACHER_ALREADY_EXISTS_WITH_GROUP", new Object[]{key, group.get().getNumber() }, locale) + "\n");
-                    isValid.set(false);
+                    validationStatus.append(messageSource.getMessage("TEACHER_ALREADY_EXISTS_WITH_GROUP", new Object[]{key, group.get().getNumber()}, locale));
+                    setValidationFalse(errorCount, isValid);
                     break;
                 }
             } else {
-                validationStatus.append(messageSource.getMessage("DOES_NOT_EXIST", new Object[]{key, value.get(i).toString()}, locale) + "\n");
-                isValid.set(false);
+                validationStatus.append(messageSource.getMessage("DOES_NOT_EXIST", new Object[]{key, value.get(i).toString()}, locale));
+                setValidationFalse(errorCount, isValid);
                 break;
             }
         }

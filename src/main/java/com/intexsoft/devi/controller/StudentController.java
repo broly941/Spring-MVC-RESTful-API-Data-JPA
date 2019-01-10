@@ -1,12 +1,15 @@
 package com.intexsoft.devi.controller;
 
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import com.intexsoft.devi.beans.ValidationStatus;
 import com.intexsoft.devi.dto.StudentDTO;
 import com.intexsoft.devi.entity.Student;
 import com.intexsoft.devi.service.ExcelFileService;
 import com.intexsoft.devi.service.StudentService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -103,12 +106,8 @@ public class StudentController {
      * @throws InvalidFormatException
      */
     @PostMapping("/fileload")
-    public String createStudent(@RequestParam("file") MultipartFile file, @RequestParam Integer page, Locale locale) throws IOException, InvalidFormatException {
-        if (file.isEmpty()) {
-            return "Unable to upload. File is empty.";
-        } else {
-            return excelFileService.createEntity(locale, file, page, studentService::fileValidation, studentService::fileSave);
-        }
+    public ResponseEntity<ValidationStatus> createStudent(@RequestParam("file") MultipartFile file, @RequestParam Integer page, Locale locale) throws IOException, InvalidFormatException {
+        return new ResponseEntity<>(excelFileService.createEntity(locale, file, page, studentService::fileValidation, studentService::fileSave), HttpStatus.OK);
     }
 
     private StudentDTO convertToDto(Student student) {
