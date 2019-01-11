@@ -106,7 +106,7 @@ public class TeacherController {
      * @throws InvalidFormatException
      */
     @PostMapping("/fileload")
-    public ResponseEntity<ValidationStatus> addGroupsToTeacher(@RequestParam(value = "file") MultipartFile file, @RequestParam Integer page, Locale locale) throws IOException, InvalidFormatException {
+    public ResponseEntity<ValidationStatus> addGroupsToTeacher(@RequestParam(value = "file", required = false) MultipartFile file, @RequestParam Integer page, Locale locale) throws IOException, InvalidFormatException {
         return new ResponseEntity<>(excelFileService.createEntity(locale, file, page, teacherService::fileValidation, teacherService::fileSave), HttpStatus.OK);
     }
 

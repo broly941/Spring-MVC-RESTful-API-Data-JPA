@@ -3,9 +3,8 @@ package com.intexsoft.devi.filter;
 import com.intexsoft.devi.service.GroupServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.core.annotation.Order;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.springframework.web.util.WebUtils;
@@ -34,6 +33,7 @@ import static org.springframework.http.HttpHeaders.ACCEPT_LANGUAGE;
  * @project university
  * If the request has the wrong Accept-Language or Locale is not available then throw 404 error.
  */
+@Order(1)
 public class LocaleResolverRequestFilter extends OncePerRequestFilter {
 
     private final Predicate<Integer> indexValidPredicate = index -> index != -1;
@@ -46,6 +46,7 @@ public class LocaleResolverRequestFilter extends OncePerRequestFilter {
     private static final String COMMA = ",";
     private static final String MINUS = "-";
     private static final String UNDERSCORE = "_";
+    private static final String EMPTY = "";
 
     private List<String> langList;
 
@@ -53,9 +54,6 @@ public class LocaleResolverRequestFilter extends OncePerRequestFilter {
     protected void initFilterBean() {
         langList = loadLanguageList();
     }
-
-    @Autowired
-    MessageSource messageSource;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GroupServiceImpl.class);
 
@@ -89,7 +87,7 @@ public class LocaleResolverRequestFilter extends OncePerRequestFilter {
     }
 
     private void setLanguage(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain, String acceptLanguage) throws IOException, ServletException {
-        if (langList.contains(acceptLanguage.replace('-', '_'))) {
+        if (langList.contains(acceptLanguage.replace(MINUS, UNDERSCORE))) {
             setLocale(request, response, filterChain, acceptLanguage);
         } else if (!getLocaleByLanguage(request, response, filterChain, acceptLanguage)) {
             LOGGER.error(HTTP_STATUS_400_LANGUAGE_NOT_SUPPORTED + acceptLanguage);
@@ -101,7 +99,7 @@ public class LocaleResolverRequestFilter extends OncePerRequestFilter {
         String language = substring(acceptLanguage, MINUS);
         for (String value : langList) {
             if (substring(value, UNDERSCORE).contains(language)) {
-                setLocale(request, response, filterChain, value.replace("_", "-"));
+                setLocale(request, response, filterChain, value.replace(UNDERSCORE, MINUS));
                 return true;
             }
         }
@@ -111,7 +109,7 @@ public class LocaleResolverRequestFilter extends OncePerRequestFilter {
     private List<String> loadLanguageList() {
         Pattern pattern = Pattern.compile(REGEX);
         try {
-            Path paths = Paths.get(Objects.requireNonNull(this.getClass().getClassLoader().getResource("")).toURI());
+            Path paths = Paths.get(Objects.requireNonNull(this.getClass().getClassLoader().getResource(EMPTY)).toURI());
 
             return Files.list(paths)
                     .filter(path -> path.getFileName().toString().endsWith(PROPERTIES))

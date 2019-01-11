@@ -11,10 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
@@ -36,6 +33,10 @@ public class StudentServiceImpl extends GenericServiceImpl<Student> implements S
     private static final String GET_ALL = "getAll";
     private static final String GET_STUDENTS_OF_GROUP_BY_ID = "getStudentsOfGroupById";
     private static final String GET_STUDENTS_BY_GROUP_ID = "Get students by group id";
+    private static final String EXCEEDED_ALLOWABLE_COLUMN_SIZE = "EXCEEDED_ALLOWABLE_COLUMN_SIZE";
+    private static final String ALREADY_EXISTS = "ALREADY_EXISTS";
+    private static final String GROUP_DOES_NOT_EXIST = "GROUP_DOES_NOT_EXIST";
+    private static final String STUDENT_ALREADY_EXISTS = "STUDENT_ALREADY_EXISTS";
 
     @Autowired
     private StudentRepository studentRepository;
@@ -69,9 +70,9 @@ public class StudentServiceImpl extends GenericServiceImpl<Student> implements S
     }
 
     /**
-     * @param id
-     * @param locale
-     * @return
+     * @param id     of entity
+     * @param locale of messages
+     * @return List of student
      */
     @Override
     public List<Student> getStudentsOfGroupById(Long id, Locale locale) {
@@ -79,9 +80,9 @@ public class StudentServiceImpl extends GenericServiceImpl<Student> implements S
     }
 
     /**
-     * @param firstName
-     * @return
-     * @param lastName
+     * @param firstName of entity
+     * @param lastName  of entity
+     * @return Optional student
      */
     @Override
     public Optional<Student> getByName(String firstName, String lastName) {
@@ -140,10 +141,10 @@ public class StudentServiceImpl extends GenericServiceImpl<Student> implements S
     }
 
     /**
-     * @param firstName
-     * @param lastName
-     * @param groupName
-     * @return
+     * @param firstName of entity
+     * @param lastName  of entity
+     * @param groupName of entity group
+     * @return answer is group exist or not
      */
     @Override
     public boolean isStudentGroupExist(String firstName, String lastName, String groupName) {
@@ -151,45 +152,46 @@ public class StudentServiceImpl extends GenericServiceImpl<Student> implements S
     }
 
     /**
-     * @param map
-     * @param validationStatus
-     * @return
+     * @param map              of entity in file
+     * @param validationStatus An object that contains validation information.
+     * @return validation status
      */
     @Override
     public boolean fileValidation(Map<Integer, List<Object>> map, ValidationStatus validationStatus, Locale locale) {
         AtomicBoolean isValid = new AtomicBoolean(true);
-        AtomicInteger errorCount = new AtomicInteger(0);
+        AtomicInteger validRow = new AtomicInteger(0);
+        AtomicInteger errorsCount = new AtomicInteger(0);
         map.forEach((key, value) -> {
-            if (allowableColumnPredicate.test(value)) {
-                validationStatus.append(messageSource.getMessage("EXCEEDED_ALLOWABLE_COLUMN_SIZE", new Object[]{key}, locale));
-                setValidationFalse(errorCount, isValid);
-            } else if (!instanceStringPredicate.test(value)) {
-                validationStatus.append(messageSource.getMessage("EXCEEDED_ALLOWABLE_COLUMN_SIZE", new Object[]{key}, locale));
-                setValidationFalse(errorCount, isValid);
-            } else if (isStudentGroupExist(value.get(0).toString(), value.get(1).toString(), value.get(2).toString())) {
-                validationStatus.append(messageSource.getMessage("ALREADY_EXISTS", new Object[]{key}, locale));
-                setValidationFalse(errorCount, isValid);
-            } else if (!groupService.getByNumber(value.get(2).toString()).isPresent()) {
-                validationStatus.append(messageSource.getMessage("DOES_NOT_EXIST", new Object[]{key, value.get(2).toString()}, locale));
-                setValidationFalse(errorCount, isValid);
-            } else if (getByName(value.get(0).toString(), value.get(1).toString()).isPresent()) {
-                validationStatus.append(messageSource.getMessage("STUDENT_ALREADY_EXISTS", new Object[]{key}, locale));
-                setValidationFalse(errorCount, isValid);
+            String rowNumber = messageSource.getMessage(ROW, new Object[]{key}, locale);
+            List<String> row = new ArrayList<>();
+            setErrorAlowableColumns(allowableColumnPredicate, value, locale, row, EXCEEDED_ALLOWABLE_COLUMN_SIZE);
+            setErrorIfValueNotString(instanceStringPredicate, value, locale, row);
+
+            if (isStudentGroupExist(value.get(0).toString(), value.get(1).toString(), value.get(2).toString())) {
+                row.add(messageSource.getMessage(ALREADY_EXISTS, new Object[]{}, locale));
+            }
+            if (!groupService.getByNumber(value.get(2).toString()).isPresent()) {
+                row.add(messageSource.getMessage(GROUP_DOES_NOT_EXIST, new Object[]{value.get(2).toString()}, locale));
+            }
+            if (getByName(value.get(0).toString(), value.get(1).toString()).isPresent()) {
+                row.add(messageSource.getMessage(STUDENT_ALREADY_EXISTS, new Object[]{}, locale));
+            }
+            if (row.isEmpty()) {
+                validRow.getAndIncrement();
+            } else {
+                errorsCount.getAndIncrement();
+                validationStatus.append(rowNumber + row);
             }
         });
 
-        if (!isValid.get()) { validationStatus.setErrorCount(errorCount.get()); }
-        return isValid.get();
-    }
-
-    private void setValidationFalse(AtomicInteger errorCount, AtomicBoolean isValid) {
-        errorCount.getAndIncrement();
-        isValid.set(false);
+        return returnValidationStatus(map, validationStatus, isValid, validRow, errorsCount);
     }
 
     /**
-     * @param map
-     * @param locale
+     * Method save entity in db.
+     *
+     * @param map    of entity in file.
+     * @param locale of messages.
      */
     @Override
     public void fileSave(Map<Integer, List<Object>> map, Locale locale) {

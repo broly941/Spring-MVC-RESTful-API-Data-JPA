@@ -36,8 +36,10 @@ public class TeacherServiceImpl extends GenericServiceImpl<Teacher> implements T
     private static final String GET_TEACHERS_OF_GROUP_BY_ID = "getTeachersOfGroupById";
     private static final String GET_TEACHERS_OF_GROUP_BY_ID1 = "Get teachers of group by id";
 
-    private static final String GROUP = " group ";
-    private static final String DOES_NOT_EXIST = " does not exist.\n";
+    private static final String AT_LEAST_3_COLUMNS_REQUIRED = "AT_LEAST_3_COLUMNS_REQUIRED";
+    private static final String TEACHER_DOES_NOT_EXIST = "TEACHER_DOES_NOT_EXIST";
+    private static final String TEACHER_ALREADY_EXISTS_WITH_GROUP = "TEACHER_ALREADY_EXISTS_WITH_GROUP";
+    private static final String GROUP_DOES_NOT_EXIST = "GROUP_DOES_NOT_EXIST";
 
     @Autowired
     private TeacherRepository teacherRepository;
@@ -75,9 +77,9 @@ public class TeacherServiceImpl extends GenericServiceImpl<Teacher> implements T
     }
 
     /**
-     * @param id
-     * @param locale
-     * @return
+     * @param id     of entity
+     * @param locale of messages
+     * @return List of teachers
      */
     @Override
     public List<Teacher> getTeachersOfGroupById(Long id, Locale locale) throws EntityNotFoundException {
@@ -85,9 +87,9 @@ public class TeacherServiceImpl extends GenericServiceImpl<Teacher> implements T
     }
 
     /**
-     * @param firstName
-     * @param lastName
-     * @return
+     * @param firstName of entity
+     * @param lastName  of entity
+     * @return Optional teacher
      */
     @Override
     public Optional<Teacher> getTeacherByName(String firstName, String lastName) {
@@ -130,62 +132,57 @@ public class TeacherServiceImpl extends GenericServiceImpl<Teacher> implements T
     }
 
     /**
-     * @param map
-     * @param validationStatus
+     * @param map              of entity in file
+     * @param validationStatus An object that contains validation information.
+     * @param locale           of messages
+     * @return validation status
      */
     @Override
     public boolean fileValidation(Map<Integer, List<Object>> map, ValidationStatus validationStatus, Locale locale) {
         AtomicBoolean isValid = new AtomicBoolean(true);
-        AtomicInteger errorCount = new AtomicInteger(0);
+        AtomicInteger validRow = new AtomicInteger(0);
+        AtomicInteger errorsCount = new AtomicInteger(0);
         map.forEach((key, value) -> {
-            if (leastRequaredColumnPredicate.test(value)) {
-                validationStatus.append(messageSource.getMessage("AT_LEAST_3_COLUMNS_REQUIRED", new Object[]{key}, locale));
-                setValidationFalse(errorCount, isValid);
-            } else if (!instanceStringPredicate.test(value)) {
-                validationStatus.append(messageSource.getMessage("SOME_TYPE_IS_NOT_A_STRING", new Object[]{key}, locale));
-                setValidationFalse(errorCount, isValid);
+            String rowNumber = messageSource.getMessage(ROW, new Object[]{key}, locale);
+            List<String> row = new ArrayList<>();
+            setErrorAlowableColumns(leastRequaredColumnPredicate, value, locale, row, AT_LEAST_3_COLUMNS_REQUIRED);
+            setErrorIfValueNotString(instanceStringPredicate, value, locale, row);
+
+            Optional<Teacher> teacher = getTeacherByName(value.get(0).toString(), value.get(1).toString());
+            if (teacher.isPresent()) {
+                checkTeacherGroupExists(value, teacher, locale, row);
             } else {
-                Optional<Teacher> teacher = getTeacherByName(value.get(0).toString(), value.get(1).toString());
-                if (teacher.isPresent()) {
-                    checkExists(validationStatus, isValid, key, value, teacher, locale, errorCount);
-                } else {
-                    validationStatus.append(messageSource.getMessage("TEACHER_DOES_NOT_EXIST", new Object[]{key}, locale));
-                    setValidationFalse(errorCount, isValid);
-                }
+                row.add(messageSource.getMessage(TEACHER_DOES_NOT_EXIST, new Object[]{}, locale));
+            }
+            if (row.isEmpty()) {
+                validRow.getAndIncrement();
+            } else {
+                errorsCount.getAndIncrement();
+                validationStatus.append(rowNumber + row);
             }
         });
 
-        if (isValid.get() == false) {
-            validationStatus.setErrorCount(errorCount.get());
-        }
-        return isValid.get();
+        return returnValidationStatus(map, validationStatus, isValid, validRow, errorsCount);
     }
 
-    private void setValidationFalse(AtomicInteger errorCount, AtomicBoolean isValid) {
-        errorCount.getAndIncrement();
-        isValid.set(false);
-    }
-
-    private void checkExists(ValidationStatus validationStatus, AtomicBoolean isValid, Integer key, List<Object> value, Optional<Teacher> teacher, Locale locale, AtomicInteger errorCount) {
+    private void checkTeacherGroupExists(List<Object> value, Optional<Teacher> teacher, Locale locale, List<String> row) {
         for (int i = 2; i < value.size(); i++) {
             Optional<Group> group = groupService.getByNumber(value.get(i).toString());
             if (group.isPresent()) {
                 if (!isGroupTeacherExist(group.get().getId(), teacher.get().getId())) {
-                    validationStatus.append(messageSource.getMessage("TEACHER_ALREADY_EXISTS_WITH_GROUP", new Object[]{key, group.get().getNumber()}, locale));
-                    setValidationFalse(errorCount, isValid);
-                    break;
+                    row.add(messageSource.getMessage(TEACHER_ALREADY_EXISTS_WITH_GROUP, new Object[]{group.get().getNumber()}, locale));
                 }
             } else {
-                validationStatus.append(messageSource.getMessage("DOES_NOT_EXIST", new Object[]{key, value.get(i).toString()}, locale));
-                setValidationFalse(errorCount, isValid);
-                break;
+                row.add(messageSource.getMessage(GROUP_DOES_NOT_EXIST, new Object[]{value.get(i).toString()}, locale));
             }
         }
     }
 
     /**
-     * @param map
-     * @param locale
+     * Method save entity in db
+     *
+     * @param map    of entity in file
+     * @param locale of messages
      */
     @Override
     public void fileSave(Map<Integer, List<Object>> map, Locale locale) {

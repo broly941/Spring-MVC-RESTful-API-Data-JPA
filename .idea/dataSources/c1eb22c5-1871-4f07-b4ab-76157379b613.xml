@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dataSource name="university_v2@localhost">
-  <database-model serializer="dbm" rdbms="MYSQL" format-version="4.11">
+  <database-model serializer="dbm" dbms="MYSQL" family-id="MYSQL" format-version="4.14">
     <root id="1">
       <ServerVersion>8.0.13</ServerVersion>
       <DefaultEngine>InnoDB</DefaultEngine>
@@ -17,14 +17,13 @@
     <schema id="4" parent="1" name="mysql">
       <Collation>utf8mb4_0900_ai_ci</Collation>
     </schema>
-    <schema id="5" parent="1" name="performance_schema">
+    <schema id="5" parent="1" name="oauth2">
       <Collation>utf8mb4_0900_ai_ci</Collation>
     </schema>
-    <schema id="6" parent="1" name="sys">
+    <schema id="6" parent="1" name="performance_schema">
       <Collation>utf8mb4_0900_ai_ci</Collation>
     </schema>
-    <schema id="7" parent="1" name="university">
-      <Current>1</Current>
+    <schema id="7" parent="1" name="sys">
       <Collation>utf8mb4_0900_ai_ci</Collation>
     </schema>
     <schema id="8" parent="1" name="university_v2">
@@ -1113,83 +1112,80 @@
       <DefaultForCharset>0</DefaultForCharset>
     </collation>
     <table id="279" parent="8" name="groupofuniversity"/>
-    <table id="280" parent="8" name="student"/>
-    <table id="281" parent="8" name="teacher"/>
-    <column id="282" parent="279" name="GroupId">
+    <table id="280" parent="8" name="groupteacher"/>
+    <table id="281" parent="8" name="student"/>
+    <table id="282" parent="8" name="teacher"/>
+    <column id="283" parent="279" name="GroupId">
       <Position>1</Position>
       <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="283" parent="279" name="Number">
+    <column id="284" parent="279" name="Number">
       <Position>2</Position>
       <DataType>varchar(8)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="284" parent="279" name="TeacherId">
+    <column id="285" parent="279" name="TeacherId">
       <Position>3</Position>
       <DataType>int(11)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="285" parent="279" name="TeacherId">
+    <index id="286" parent="279" name="TeacherId">
       <ColNames>TeacherId</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="286" parent="279" name="PRIMARY">
+    <key id="287" parent="279" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>GroupId</ColNames>
       <Primary>1</Primary>
     </key>
-    <foreign-key id="287" parent="279" name="groupofuniversity_ibfk_1">
+    <foreign-key id="288" parent="279" name="groupofuniversity_ibfk_1">
       <ColNames>TeacherId</ColNames>
       <RefSchemaName>university_v2</RefSchemaName>
       <RefTableName>teacher</RefTableName>
       <RefColNames>teacherid</RefColNames>
-      <OnDelete>set-null</OnDelete>
+      <OnDelete>cascade</OnDelete>
     </foreign-key>
-    <column id="288" parent="280" name="StudentId">
+    <column id="289" parent="280" name="GroupId">
       <Position>1</Position>
       <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
-      <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="289" parent="280" name="FirstName">
+    <column id="290" parent="280" name="TeacherId">
       <Position>2</Position>
-      <DataType>varchar(20)|0s</DataType>
-      <NotNull>1</NotNull>
-      <ColumnKind>normal</ColumnKind>
-    </column>
-    <column id="290" parent="280" name="LastName">
-      <Position>3</Position>
-      <DataType>varchar(20)|0s</DataType>
-      <NotNull>1</NotNull>
-      <ColumnKind>normal</ColumnKind>
-    </column>
-    <column id="291" parent="280" name="GroupId">
-      <Position>4</Position>
       <DataType>int(11)|0s</DataType>
+      <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="292" parent="280" name="GroupId">
-      <ColNames>GroupId</ColNames>
+    <index id="291" parent="280" name="TeacherId">
+      <ColNames>TeacherId</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="293" parent="280" name="PRIMARY">
+    <key id="292" parent="280" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
-      <ColNames>StudentId</ColNames>
+      <ColNames>GroupId
+TeacherId</ColNames>
       <Primary>1</Primary>
     </key>
-    <foreign-key id="294" parent="280" name="student_ibfk_1">
+    <foreign-key id="293" parent="280" name="groupteacher_ibfk_1">
       <ColNames>GroupId</ColNames>
       <RefSchemaName>university_v2</RefSchemaName>
       <RefTableName>groupofuniversity</RefTableName>
       <RefColNames>groupid</RefColNames>
       <OnDelete>cascade</OnDelete>
     </foreign-key>
-    <column id="295" parent="281" name="TeacherId">
+    <foreign-key id="294" parent="280" name="groupteacher_ibfk_2">
+      <ColNames>TeacherId</ColNames>
+      <RefSchemaName>university_v2</RefSchemaName>
+      <RefTableName>teacher</RefTableName>
+      <RefColNames>teacherid</RefColNames>
+      <OnDelete>cascade</OnDelete>
+    </foreign-key>
+    <column id="295" parent="281" name="StudentId">
       <Position>1</Position>
       <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
@@ -1208,7 +1204,47 @@
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <key id="298" parent="281" name="PRIMARY">
+    <column id="298" parent="281" name="GroupId">
+      <Position>4</Position>
+      <DataType>int(11)|0s</DataType>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <index id="299" parent="281" name="GroupId">
+      <ColNames>GroupId</ColNames>
+      <Type>btree</Type>
+    </index>
+    <key id="300" parent="281" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>StudentId</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="301" parent="281" name="student_ibfk_1">
+      <ColNames>GroupId</ColNames>
+      <RefSchemaName>university_v2</RefSchemaName>
+      <RefTableName>groupofuniversity</RefTableName>
+      <RefColNames>groupid</RefColNames>
+      <OnDelete>cascade</OnDelete>
+    </foreign-key>
+    <column id="302" parent="282" name="TeacherId">
+      <Position>1</Position>
+      <DataType>int(11)|0s</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="303" parent="282" name="FirstName">
+      <Position>2</Position>
+      <DataType>varchar(20)|0s</DataType>
+      <NotNull>1</NotNull>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="304" parent="282" name="LastName">
+      <Position>3</Position>
+      <DataType>varchar(20)|0s</DataType>
+      <NotNull>1</NotNull>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <key id="305" parent="282" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>TeacherId</ColNames>
       <Primary>1</Primary>

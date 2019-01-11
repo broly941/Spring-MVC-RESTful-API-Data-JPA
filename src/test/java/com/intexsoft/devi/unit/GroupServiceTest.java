@@ -38,7 +38,6 @@ public class GroupServiceTest {
     @Mock
     MessageSource messageSource;
 
-
     /**
      * Will return the list if all parameters are correct
      */

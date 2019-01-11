@@ -61,8 +61,8 @@ public class GroupServiceImpl extends GenericServiceImpl<Group> implements Group
     }
 
     /**
-     * @param groupName
-     * @return
+     * @param groupName of entity
+     * @return Optional group
      */
     @Override
     public Optional<Group> getByNumber(String groupName) {
@@ -70,10 +70,9 @@ public class GroupServiceImpl extends GenericServiceImpl<Group> implements Group
     }
 
     /**
-     *
-     * @param id
-     * @param locale
-     * @return
+     * @param id     of entity
+     * @param locale of messages
+     * @return list of groups
      */
     @Override
     public List<Group> getGroupsOfTeacherById(Long id, Locale locale) {

@@ -72,20 +72,14 @@ public class StudentControllerIntegrationTest {
     private static final String HAWK = "Hawk";
     private static final String DONALD = "Donald";
     private static final String TRUMP = "Trump";
-    private static final String VALIDATION_STATUS = "..::: validation status :::..\n";
-    private static final String DATA_SAVED_SUCCESSFULLY = "Data saved successfully.";
     private static final String STUDENTS_FILELOAD = "/students/fileload";
     private static final String PAGE = "page";
-    private static final String ROW_1_SOME_TYPE_IS_NOT_A_STRING = "Row 1: some type is not a string.\n";
-    private static final String ROW_2_EXCEEDED_ALLOWABLE_COLUMN_SIZE = "Row 2: exceeded allowable column size.\n";
-    private static final String ROW_3_GROUP_123_DOES_NOT_EXIST = "Row 3: group ????-123 does not exist.\n";
-    private static final String FILE = "file";
+    private static final String CREATE_STUDENT_SUCCESSUL = "{\"rowCount\":3,\"validRow\":3,\"errorsCount\":0,\"errors\":[]}";
+    private static final String FILE = "IntegrationTest.xlsx";
+    private static final String FILE_WORD = "file";
     private static final String FILE_XLSX = "file/xlsx";
 
     private MockMvc mockMvc;
-
-    private String workspace = "C:\\Users\\DEVIAPHAN\\IdeaProjects\\University\\src\\test\\resources\\";
-    private String filename = "IntegrationTest.xlsx";
 
     @Autowired
     private WebApplicationContext webApplicationContext;
@@ -193,42 +187,28 @@ public class StudentControllerIntegrationTest {
                 .andExpect(status().isOk());
     }
 
+    /**
+     * Will save a new entity and return validation status
+     *
+     * @throws Exception
+     */
     @Test
     public void createStudent() throws Exception {
-        StringBuilder validationStatus = new StringBuilder(VALIDATION_STATUS);
-        validationStatus.append(DATA_SAVED_SUCCESSFULLY);
-
         MockMultipartFile file = getMultipartFile();
         mockMvc.perform(multipart(STUDENTS_FILELOAD)
                 .file(file)
                 .param(PAGE, "1")
                 .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isOk())
-                .andExpect(content().string(validationStatus.toString()));
-    }
-
-    @Test
-    public void createStudent_Fall() throws Exception {
-        StringBuilder validationStatus = new StringBuilder(VALIDATION_STATUS);
-        validationStatus.append(ROW_1_SOME_TYPE_IS_NOT_A_STRING);
-        validationStatus.append(ROW_2_EXCEEDED_ALLOWABLE_COLUMN_SIZE);
-        validationStatus.append(ROW_3_GROUP_123_DOES_NOT_EXIST);
-
-        MockMultipartFile file = getMultipartFile();
-        mockMvc.perform(multipart(STUDENTS_FILELOAD)
-                .file(file)
-                .param(PAGE, "0")
-                .contentType(MediaType.MULTIPART_FORM_DATA))
-                .andExpect(status().isOk())
-                .andExpect(content().string(validationStatus.toString()));
+                .andExpect(content().string(CREATE_STUDENT_SUCCESSUL));
     }
 
     private MockMultipartFile getMultipartFile() throws IOException {
         ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(Objects.requireNonNull(classLoader.getResource("IntegrationTest.xlsx")).getFile());
+        File file = new File(Objects.requireNonNull(classLoader.getResource(FILE)).getFile());
         FileInputStream input = new FileInputStream(file);
-        return new MockMultipartFile("file",
-                file.getName(), "file/xlsx", IOUtils.toByteArray(input));
+        return new MockMultipartFile(FILE_WORD,
+                file.getName(), FILE_XLSX, IOUtils.toByteArray(input));
     }
 
     private String json(Object o) throws JsonProcessingException {

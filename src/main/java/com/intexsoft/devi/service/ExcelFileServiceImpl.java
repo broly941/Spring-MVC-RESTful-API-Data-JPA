@@ -8,6 +8,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
@@ -19,25 +20,46 @@ import java.util.function.BiConsumer;
 
 /**
  * @author DEVIAPHAN
+ * <p>
  * Business Logic Excel File Class
+ * <p>
+ * The class is engaged in parsing, validating
+ * and saving records from a file in the database.
  */
 @Service
 public class ExcelFileServiceImpl implements ExcelFileService {
 
+    private static final String UNABLE_TO_UPLOAD_FILE_IS_EMPTY = "UNABLE_TO_UPLOAD_FILE_IS_EMPTY";
+    private static final String VALIDATION_STATUS = "validationStatus";
 
     @Autowired
-    private MessageSource messageSource;
+    MessageSource messageSource;
 
+    @Autowired
+    private WebApplicationContext webAppContext;
+
+    /**
+     * The method accepts a file and returns the status
+     * of successfully completed validation and storage
+     * or a list of errors that need to be fixed.
+     *
+     * @param locale     of messages
+     * @param file       input
+     * @param page       of file
+     * @param validation Method for file validation
+     * @param save       Method for file save
+     * @return validation status
+     * @throws IOException
+     * @throws EntityNotFoundException
+     */
     @Override
     public ValidationStatus createEntity(Locale locale, MultipartFile file, Integer page, ThreePridicate<Map<Integer, List<Object>>, ValidationStatus, Locale> validation, BiConsumer<Map<Integer, List<Object>>, Locale> save) throws IOException, EntityNotFoundException {
-        if (file.isEmpty()) {
-            throw new EntityNotFoundException("Unable to upload. File is empty.");
+        if (file == null || file.isEmpty()) {
+            throw new EntityNotFoundException(messageSource.getMessage(UNABLE_TO_UPLOAD_FILE_IS_EMPTY, new Object[]{}, locale));
         }
-        ValidationStatus validationStatus = new ValidationStatus();
-        validationStatus.append(messageSource.getMessage("VALIDATION_STATUS", null, locale));
+        ValidationStatus validationStatus = webAppContext.getBean(VALIDATION_STATUS, ValidationStatus.class);
         Map<Integer, List<Object>> map = parser(file, page);
         if (validation.test(map, validationStatus, locale)) {
-            validationStatus.append(messageSource.getMessage("DATA_SAVED_SUCCESSFULLY", null, locale));
             save.accept(map, locale);
         }
         return validationStatus;
