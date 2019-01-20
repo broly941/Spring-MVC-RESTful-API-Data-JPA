@@ -35,9 +35,7 @@ public class TeacherServiceImpl implements TeacherService {
     private static final String GET_TEACHERS_OF_GROUP_BY_ID = "getTeachersOfGroupById";
     private static final String GET_TEACHERS_OF_GROUP_BY_ID1 = "Get teachers of group by id";
 
-    private static final String TEACHER_DOES_NOT_EXIST = "TEACHER_DOES_NOT_EXIST";
     private static final String TEACHER_ALREADY_EXISTS = "TEACHER_ALREADY_EXISTS";
-    private static final String TEACHER_ALREADY_EXISTS_WITH_GROUP = "TEACHER_ALREADY_EXISTS_WITH_GROUP";
     private static final String GROUP_DOES_NOT_EXIST = "GROUP_DOES_NOT_EXIST";
 
     @Autowired

@@ -34,10 +34,8 @@ public class StudentServiceImpl implements StudentService {
     private static final String GET_ALL = "getAll";
     private static final String GET_STUDENTS_OF_GROUP_BY_ID = "getStudentsOfGroupById";
     private static final String GET_STUDENTS_BY_GROUP_ID = "Get students by group id";
-    private static final String ALREADY_EXISTS = "ALREADY_EXISTS";
     private static final String GROUP_DOES_NOT_EXIST = "GROUP_DOES_NOT_EXIST";
     private static final String STUDENT_ALREADY_EXISTS = "STUDENT_ALREADY_EXISTS";
-    private static final String ROW = "ROW";
 
     @Autowired
     private StudentRepository studentRepository;
