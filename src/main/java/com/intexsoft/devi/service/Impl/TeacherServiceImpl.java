@@ -211,7 +211,6 @@ public class TeacherServiceImpl implements TeacherService {
      * @param validEntities of entity in file.
      * @param locale        of messages.
      */
-    //TODO if entity has two equals record
     @Override
     @Transactional
     public void save(Map<Integer, Object> validEntities, Locale locale) {

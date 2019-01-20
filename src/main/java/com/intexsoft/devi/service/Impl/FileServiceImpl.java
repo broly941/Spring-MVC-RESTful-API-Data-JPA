@@ -26,7 +26,7 @@ import java.util.function.BiConsumer;
  * and saving records from a file in the database.
  */
 @Service
-public class ExcelFileServiceImpl implements FileService {
+public class FileServiceImpl implements FileService {
 
     private static final String FORMAT_NOT_SUPPORTED = "FORMAT_NOT_SUPPORTED";
     @Autowired
