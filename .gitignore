@@ -1,3 +1,6 @@
 .gradle/
 build/
 out/
+.idea/encodings.xml
+.idea/workspace.xml
+
