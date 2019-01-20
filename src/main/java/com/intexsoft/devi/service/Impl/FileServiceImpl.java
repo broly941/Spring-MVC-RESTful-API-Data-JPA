@@ -1,5 +1,8 @@
 package com.intexsoft.devi.service.Impl;
 
+import com.fasterxml.jackson.databind.MappingIterator;
+import com.fasterxml.jackson.dataformat.csv.CsvMapper;
+import com.fasterxml.jackson.dataformat.csv.CsvParser.Feature;
 import com.intexsoft.devi.controller.response.ValidationStatus;
 import com.intexsoft.devi.funcInterface.TriFunction;
 import com.intexsoft.devi.service.FileService;
@@ -16,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 import java.util.function.BiConsumer;
+import java.util.function.Predicate;
 
 /**
  * @author DEVIAPHAN
@@ -32,7 +36,16 @@ public class FileServiceImpl implements FileService {
     @Autowired
     MessageSource messageSource;
 
+    private static final String SEMICOLON = ";";
     private static final String UNABLE_TO_UPLOAD_FILE_IS_EMPTY = "UNABLE_TO_UPLOAD_FILE_IS_EMPTY";
+    private final String numericStrRegex = "^(?:(?:\\-{1})?\\d+(?:\\.{1}\\d+)?)$";
+    private final String booleanRegex = "^(?i)(true|false)$";
+    private final String spacesRegex = "^\\s\\s+$";
+
+    private final Predicate<String> boolPredicate = (str) -> str.matches(booleanRegex);
+    private final Predicate<String> numStrPredicate = (str) -> str.matches(numericStrRegex);
+    private final Predicate<String> emptyPredicate = (str) -> str.isEmpty();
+    private final Predicate<String> spacesPredicate = (str) -> str.matches(spacesRegex);
     /**
      * The method accepts a file and returns the status
      * of successfully completed validation and storage
@@ -64,10 +77,44 @@ public class FileServiceImpl implements FileService {
         Map<Integer, List<Object>> parsedEntities;
         if (fileExtension.equals("xlsx")) {
             parsedEntities = parseXlsx(file, locale);
+        } else if (fileExtension.equals("csv")) {
+            parsedEntities = parseCsv(file, locale);
         } else {
             throw new EntityNotFoundException(messageSource.getMessage(FORMAT_NOT_SUPPORTED, new Object[]{fileExtension}, locale));
         }
         return parsedEntities;
+    }
+
+    private Map<Integer, List<Object>> parseCsv(InputStream file, Locale locale) throws IOException {
+        int rowIndex = 1;
+        Map<Integer, List<Object>> parsedEntities = new HashMap<>();
+        CsvMapper mapper = new CsvMapper();
+        mapper.enable(Feature.WRAP_AS_ARRAY);
+        MappingIterator<String[]> it = mapper.readerFor(String[].class).readValues(file);
+        it.next();
+        while (it.hasNext()) {
+            String[] values = it.next()[0].split(SEMICOLON);
+            List<Object> objectList = getParameterizedList(values);
+            parsedEntities.put(rowIndex, objectList);
+            rowIndex++;
+        }
+        return returnParsedEntitiesIfNotEmpty(locale, parsedEntities);
+    }
+
+    private List<Object> getParameterizedList(String[] values) {
+        List<Object> objectList = new ArrayList<>();
+        for (String value : values) {
+            if(numStrPredicate.test(value)) {
+                objectList.add(Double.valueOf(value));
+            } else if (boolPredicate.test(value)) {
+                objectList.add(Boolean.valueOf(value));
+            } else if (emptyPredicate.test(value) || spacesPredicate.test(value)) {
+                continue;
+            } else {
+                objectList.add(value);
+            }
+        }
+        return objectList;
     }
 
     private Map<Integer, List<Object>> returnParsedEntitiesIfNotEmpty(Locale locale, Map<Integer, List<Object>> parsedEntities) {
