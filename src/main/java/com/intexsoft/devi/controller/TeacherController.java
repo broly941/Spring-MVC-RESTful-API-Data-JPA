@@ -18,7 +18,6 @@ import java.util.stream.Collectors;
  * @author DEVIAPHAN
  * Processes the request and returns the response as JSON.
  */
-@CrossOrigin
 @RestController
 @RequestMapping("/teachers")
 public class TeacherController {
