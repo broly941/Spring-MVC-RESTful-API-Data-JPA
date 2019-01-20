@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.intexsoft.devi.unit.StudentServiceTest" tests="11" skipped="0" failures="0" errors="0" timestamp="2019-01-20T15:07:52" hostname="DESKTOP-VULFVHS" time="0.029">
+  <properties/>
+  <testcase name="validate" classname="com.intexsoft.devi.unit.StudentServiceTest" time="0.013"/>
+  <testcase name="updateById_NotFoundId" classname="com.intexsoft.devi.unit.StudentServiceTest" time="0.001"/>
+  <testcase name="getAll" classname="com.intexsoft.devi.unit.StudentServiceTest" time="0.001"/>
+  <testcase name="getById_NotFoundStudent" classname="com.intexsoft.devi.unit.StudentServiceTest" time="0.0"/>
+  <testcase name="getStudentByNameAndGroupName" classname="com.intexsoft.devi.unit.StudentServiceTest" time="0.001"/>
+  <testcase name="updateById" classname="com.intexsoft.devi.unit.StudentServiceTest" time="0.001"/>
+  <testcase name="getById" classname="com.intexsoft.devi.unit.StudentServiceTest" time="0.001"/>
+  <testcase name="save" classname="com.intexsoft.devi.unit.StudentServiceTest" time="0.0"/>
+  <testcase name="getAll_NotFoundStudents" classname="com.intexsoft.devi.unit.StudentServiceTest" time="0.0"/>
+  <testcase name="getByName" classname="com.intexsoft.devi.unit.StudentServiceTest" time="0.0"/>
+  <testcase name="getStudentsOfGroupById" classname="com.intexsoft.devi.unit.StudentServiceTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

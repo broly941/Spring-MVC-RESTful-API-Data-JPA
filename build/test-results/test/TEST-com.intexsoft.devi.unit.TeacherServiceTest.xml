@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.intexsoft.devi.unit.TeacherServiceTest" tests="10" skipped="0" failures="0" errors="0" timestamp="2019-01-20T15:07:52" hostname="DESKTOP-VULFVHS" time="0.013">
+  <properties/>
+  <testcase name="getTeachersOfGroupById" classname="com.intexsoft.devi.unit.TeacherServiceTest" time="0.001"/>
+  <testcase name="validate" classname="com.intexsoft.devi.unit.TeacherServiceTest" time="0.0"/>
+  <testcase name="updateById_NotFoundId" classname="com.intexsoft.devi.unit.TeacherServiceTest" time="0.001"/>
+  <testcase name="getAll" classname="com.intexsoft.devi.unit.TeacherServiceTest" time="0.0"/>
+  <testcase name="getById_NotFoundTeacher" classname="com.intexsoft.devi.unit.TeacherServiceTest" time="0.001"/>
+  <testcase name="updateById" classname="com.intexsoft.devi.unit.TeacherServiceTest" time="0.0"/>
+  <testcase name="getTeacherByName" classname="com.intexsoft.devi.unit.TeacherServiceTest" time="0.001"/>
+  <testcase name="getById" classname="com.intexsoft.devi.unit.TeacherServiceTest" time="0.001"/>
+  <testcase name="save" classname="com.intexsoft.devi.unit.TeacherServiceTest" time="0.001"/>
+  <testcase name="getAll_NotFoundTeachers" classname="com.intexsoft.devi.unit.TeacherServiceTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

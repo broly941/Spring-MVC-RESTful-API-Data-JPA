@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=edge"/>
+<title>Test results - Class com.intexsoft.devi.integration.StudentControllerIntegrationTest</title>
+<link href="../css/base-style.css" rel="stylesheet" type="text/css"/>
+<link href="../css/style.css" rel="stylesheet" type="text/css"/>
+<script src="../js/report.js" type="text/javascript"></script>
+</head>
+<body>
+<div id="content">
+<h1>Class com.intexsoft.devi.integration.StudentControllerIntegrationTest</h1>
+<div class="breadcrumbs">
+<a href="../index.html">all</a> &gt; 
+<a href="../packages/com.intexsoft.devi.integration.html">com.intexsoft.devi.integration</a> &gt; StudentControllerIntegrationTest</div>
+<div id="summary">
+<table>
+<tr>
+<td>
+<div class="summaryGroup">
+<table>
+<tr>
+<td>
+<div class="infoBox" id="tests">
+<div class="counter">6</div>
+<p>tests</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="failures">
+<div class="counter">0</div>
+<p>failures</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="ignored">
+<div class="counter">0</div>
+<p>ignored</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="duration">
+<div class="counter">2.156s</div>
+<p>duration</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</td>
+<td>
+<div class="infoBox success" id="successRate">
+<div class="percent">100%</div>
+<p>successful</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="tabs">
+<ul class="tabLinks">
+<li>
+<a href="#tab0">Tests</a>
+</li>
+<li>
+<a href="#tab1">Standard output</a>
+</li>
+</ul>
+<div id="tab0" class="tab">
+<h2>Tests</h2>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>Duration</th>
+<th>Result</th>
+</tr>
+</thead>
+<tr>
+<td class="success">addStudentToGroup_Failed</td>
+<td class="success">1.673s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">getAll</td>
+<td class="success">0.115s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">getById</td>
+<td class="success">0.070s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">remove</td>
+<td class="success">0.102s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">save</td>
+<td class="success">0.096s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">update</td>
+<td class="success">0.100s</td>
+<td class="success">passed</td>
+</tr>
+</table>
+</div>
+<div id="tab1" class="tab">
+<h2>Standard output</h2>
+<span class="code">
+<pre>Hibernate: select student0_.StudentId as StudentI1_2_, student0_.FirstName as FirstNam2_2_, student0_.GroupId as GroupId4_2_, student0_.LastName as LastName3_2_ from Student student0_ where student0_.FirstName=? and student0_.LastName=?
+Hibernate: select group0_.GroupId as GroupId1_0_, group0_.Number as Number2_0_, group0_.TeacherId as TeacherI3_0_ from GroupOfUniversity group0_ where group0_.Number=?
+Hibernate: select teacher0_.TeacherId as TeacherI1_3_0_, teacher0_.FirstName as FirstNam2_3_0_, teacher0_.LastName as LastName3_3_0_, group1_.GroupId as GroupId1_0_1_, group1_.Number as Number2_0_1_, group1_.TeacherId as TeacherI3_0_1_ from Teacher teacher0_ left outer join GroupOfUniversity group1_ on teacher0_.TeacherId=group1_.TeacherId where teacher0_.TeacherId=?
+Hibernate: select group0_.GroupId as GroupId1_0_1_, group0_.Number as Number2_0_1_, group0_.TeacherId as TeacherI3_0_1_, teacher1_.TeacherId as TeacherI1_3_0_, teacher1_.FirstName as FirstNam2_3_0_, teacher1_.LastName as LastName3_3_0_ from GroupOfUniversity group0_ left outer join Teacher teacher1_ on group0_.TeacherId=teacher1_.TeacherId where group0_.TeacherId=?
+Hibernate: select student0_.StudentId as StudentI1_2_, student0_.FirstName as FirstNam2_2_, student0_.GroupId as GroupId4_2_, student0_.LastName as LastName3_2_ from Student student0_ where student0_.FirstName=? and student0_.LastName=?
+Hibernate: select group0_.GroupId as GroupId1_0_, group0_.Number as Number2_0_, group0_.TeacherId as TeacherI3_0_ from GroupOfUniversity group0_ where group0_.Number=?
+Hibernate: select teacher0_.TeacherId as TeacherI1_3_0_, teacher0_.FirstName as FirstNam2_3_0_, teacher0_.LastName as LastName3_3_0_, group1_.GroupId as GroupId1_0_1_, group1_.Number as Number2_0_1_, group1_.TeacherId as TeacherI3_0_1_ from Teacher teacher0_ left outer join GroupOfUniversity group1_ on teacher0_.TeacherId=group1_.TeacherId where teacher0_.TeacherId=?
+Hibernate: select group0_.GroupId as GroupId1_0_1_, group0_.Number as Number2_0_1_, group0_.TeacherId as TeacherI3_0_1_, teacher1_.TeacherId as TeacherI1_3_0_, teacher1_.FirstName as FirstNam2_3_0_, teacher1_.LastName as LastName3_3_0_ from GroupOfUniversity group0_ left outer join Teacher teacher1_ on group0_.TeacherId=teacher1_.TeacherId where group0_.TeacherId=?
+Hibernate: select student0_.StudentId as StudentI1_2_, student0_.FirstName as FirstNam2_2_, student0_.GroupId as GroupId4_2_, student0_.LastName as LastName3_2_ from Student student0_ where student0_.FirstName=? and student0_.LastName=?
+Hibernate: select group0_.GroupId as GroupId1_0_, group0_.Number as Number2_0_, group0_.TeacherId as TeacherI3_0_ from GroupOfUniversity group0_ where group0_.Number=?
+Hibernate: select teacher0_.TeacherId as TeacherI1_3_0_, teacher0_.FirstName as FirstNam2_3_0_, teacher0_.LastName as LastName3_3_0_, group1_.GroupId as GroupId1_0_1_, group1_.Number as Number2_0_1_, group1_.TeacherId as TeacherI3_0_1_ from Teacher teacher0_ left outer join GroupOfUniversity group1_ on teacher0_.TeacherId=group1_.TeacherId where teacher0_.TeacherId=?
+Hibernate: select group0_.GroupId as GroupId1_0_1_, group0_.Number as Number2_0_1_, group0_.TeacherId as TeacherI3_0_1_, teacher1_.TeacherId as TeacherI1_3_0_, teacher1_.FirstName as FirstNam2_3_0_, teacher1_.LastName as LastName3_3_0_ from GroupOfUniversity group0_ left outer join Teacher teacher1_ on group0_.TeacherId=teacher1_.TeacherId where group0_.TeacherId=?
+Hibernate: insert into Student (StudentId, FirstName, GroupId, LastName) values (null, ?, ?, ?)
+Hibernate: insert into Student (StudentId, FirstName, GroupId, LastName) values (null, ?, ?, ?)
+Hibernate: insert into Student (StudentId, FirstName, GroupId, LastName) values (null, ?, ?, ?)
+Hibernate: select student0_.StudentId as StudentI1_2_, student0_.FirstName as FirstNam2_2_, student0_.GroupId as GroupId4_2_, student0_.LastName as LastName3_2_ from Student student0_
+Hibernate: select group0_.GroupId as GroupId1_0_0_, group0_.Number as Number2_0_0_, group0_.TeacherId as TeacherI3_0_0_, teacher1_.TeacherId as TeacherI1_3_1_, teacher1_.FirstName as FirstNam2_3_1_, teacher1_.LastName as LastName3_3_1_ from GroupOfUniversity group0_ left outer join Teacher teacher1_ on group0_.TeacherId=teacher1_.TeacherId where group0_.GroupId=?
+Hibernate: select group0_.GroupId as GroupId1_0_0_, group0_.Number as Number2_0_0_, group0_.TeacherId as TeacherI3_0_0_, teacher1_.TeacherId as TeacherI1_3_1_, teacher1_.FirstName as FirstNam2_3_1_, teacher1_.LastName as LastName3_3_1_ from GroupOfUniversity group0_ left outer join Teacher teacher1_ on group0_.TeacherId=teacher1_.TeacherId where group0_.GroupId=?
+Hibernate: select group0_.GroupId as GroupId1_0_0_, group0_.Number as Number2_0_0_, group0_.TeacherId as TeacherI3_0_0_, teacher1_.TeacherId as TeacherI1_3_1_, teacher1_.FirstName as FirstNam2_3_1_, teacher1_.LastName as LastName3_3_1_ from GroupOfUniversity group0_ left outer join Teacher teacher1_ on group0_.TeacherId=teacher1_.TeacherId where group0_.GroupId=?
+Hibernate: select student0_.StudentId as StudentI1_2_0_, student0_.FirstName as FirstNam2_2_0_, student0_.GroupId as GroupId4_2_0_, student0_.LastName as LastName3_2_0_, group1_.GroupId as GroupId1_0_1_, group1_.Number as Number2_0_1_, group1_.TeacherId as TeacherI3_0_1_, teacher2_.TeacherId as TeacherI1_3_2_, teacher2_.FirstName as FirstNam2_3_2_, teacher2_.LastName as LastName3_3_2_ from Student student0_ left outer join GroupOfUniversity group1_ on student0_.GroupId=group1_.GroupId left outer join Teacher teacher2_ on group1_.TeacherId=teacher2_.TeacherId where student0_.StudentId=?
+Hibernate: delete from Student where StudentId=?
+Hibernate: select student0_.StudentId as StudentI1_2_0_, student0_.FirstName as FirstNam2_2_0_, student0_.GroupId as GroupId4_2_0_, student0_.LastName as LastName3_2_0_, group1_.GroupId as GroupId1_0_1_, group1_.Number as Number2_0_1_, group1_.TeacherId as TeacherI3_0_1_, teacher2_.TeacherId as TeacherI1_3_2_, teacher2_.FirstName as FirstNam2_3_2_, teacher2_.LastName as LastName3_3_2_ from Student student0_ left outer join GroupOfUniversity group1_ on student0_.GroupId=group1_.GroupId left outer join Teacher teacher2_ on group1_.TeacherId=teacher2_.TeacherId where student0_.StudentId=?
+Hibernate: update Student set FirstName=?, GroupId=?, LastName=? where StudentId=?
+Hibernate: select student0_.StudentId as StudentI1_2_0_, student0_.FirstName as FirstNam2_2_0_, student0_.GroupId as GroupId4_2_0_, student0_.LastName as LastName3_2_0_, group1_.GroupId as GroupId1_0_1_, group1_.Number as Number2_0_1_, group1_.TeacherId as TeacherI3_0_1_, teacher2_.TeacherId as TeacherI1_3_2_, teacher2_.FirstName as FirstNam2_3_2_, teacher2_.LastName as LastName3_3_2_ from Student student0_ left outer join GroupOfUniversity group1_ on student0_.GroupId=group1_.GroupId left outer join Teacher teacher2_ on group1_.TeacherId=teacher2_.TeacherId where student0_.StudentId=?
+Hibernate: select group0_.GroupId as GroupId1_0_0_, group0_.Number as Number2_0_0_, group0_.TeacherId as TeacherI3_0_0_, teacher1_.TeacherId as TeacherI1_3_1_, teacher1_.FirstName as FirstNam2_3_1_, teacher1_.LastName as LastName3_3_1_ from GroupOfUniversity group0_ left outer join Teacher teacher1_ on group0_.TeacherId=teacher1_.TeacherId where group0_.GroupId=?
+Hibernate: insert into Student (StudentId, FirstName, GroupId, LastName) values (null, ?, ?, ?)
+</pre>
+</span>
+</div>
+</div>
+<div id="footer">
+<p>
+<div>
+<label class="hidden" id="label-for-line-wrapping-toggle" for="line-wrapping-toggle">Wrap lines
+<input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
+</label>
+</div>Generated by 
+<a href="http://www.gradle.org">Gradle 4.10.2</a> at 20 янв. 2019 г., 18:07:52</p>
+</div>
+</div>
+</body>
+</html>
