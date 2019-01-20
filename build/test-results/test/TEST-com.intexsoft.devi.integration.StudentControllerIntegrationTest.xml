@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<<<<<<< HEAD
 <testsuite name="com.intexsoft.devi.integration.StudentControllerIntegrationTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2019-01-20T15:07:48" hostname="DESKTOP-VULFVHS" time="2.161">
   <properties/>
   <testcase name="addStudentToGroup_Failed" classname="com.intexsoft.devi.integration.StudentControllerIntegrationTest" time="1.673"/>
@@ -7,6 +8,16 @@
   <testcase name="update" classname="com.intexsoft.devi.integration.StudentControllerIntegrationTest" time="0.1"/>
   <testcase name="getById" classname="com.intexsoft.devi.integration.StudentControllerIntegrationTest" time="0.07"/>
   <testcase name="save" classname="com.intexsoft.devi.integration.StudentControllerIntegrationTest" time="0.096"/>
+=======
+<testsuite name="com.intexsoft.devi.integration.StudentControllerIntegrationTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2019-01-20T14:10:04" hostname="DESKTOP-VULFVHS" time="1.844">
+  <properties/>
+  <testcase name="addStudentToGroup_Failed" classname="com.intexsoft.devi.integration.StudentControllerIntegrationTest" time="1.146"/>
+  <testcase name="getAll" classname="com.intexsoft.devi.integration.StudentControllerIntegrationTest" time="0.158"/>
+  <testcase name="remove" classname="com.intexsoft.devi.integration.StudentControllerIntegrationTest" time="0.057"/>
+  <testcase name="update" classname="com.intexsoft.devi.integration.StudentControllerIntegrationTest" time="0.142"/>
+  <testcase name="getById" classname="com.intexsoft.devi.integration.StudentControllerIntegrationTest" time="0.235"/>
+  <testcase name="save" classname="com.intexsoft.devi.integration.StudentControllerIntegrationTest" time="0.1"/>
+>>>>>>> feature/parser-csv-files
   <system-out><![CDATA[Hibernate: select student0_.StudentId as StudentI1_2_, student0_.FirstName as FirstNam2_2_, student0_.GroupId as GroupId4_2_, student0_.LastName as LastName3_2_ from Student student0_ where student0_.FirstName=? and student0_.LastName=?
 Hibernate: select group0_.GroupId as GroupId1_0_, group0_.Number as Number2_0_, group0_.TeacherId as TeacherI3_0_ from GroupOfUniversity group0_ where group0_.Number=?
 Hibernate: select teacher0_.TeacherId as TeacherI1_3_0_, teacher0_.FirstName as FirstNam2_3_0_, teacher0_.LastName as LastName3_3_0_, group1_.GroupId as GroupId1_0_1_, group1_.Number as Number2_0_1_, group1_.TeacherId as TeacherI3_0_1_ from Teacher teacher0_ left outer join GroupOfUniversity group1_ on teacher0_.TeacherId=group1_.TeacherId where teacher0_.TeacherId=?
