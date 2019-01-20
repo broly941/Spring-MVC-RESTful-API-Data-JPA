@@ -7,10 +7,43 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6bf09b7d-6a53-4a6d-ab09-0b6b7ac5691b" name="Default Changelist" comment="Rewrite file parser and init tests">
-      <change afterPath="$PROJECT_DIR$/src/test/resources/addGroupsToTeacher.xlsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/resources/addStudentToGroup.xlsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/.name" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/classes/com/intexsoft/devi/config/AppInitializer.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/classes/com/intexsoft/devi/config/DataConfig.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/classes/com/intexsoft/devi/config/WebConfig.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/classes/com/intexsoft/devi/controller/DTOConverter.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/classes/com/intexsoft/devi/controller/GroupController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/classes/com/intexsoft/devi/controller/StudentController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/classes/com/intexsoft/devi/controller/TeacherController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/classes/com/intexsoft/devi/controller/response/ValidationStatus.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/classes/com/intexsoft/devi/dto/GroupDTO.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/classes/com/intexsoft/devi/dto/StudentDTO.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/classes/com/intexsoft/devi/dto/TeacherDTO.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/classes/com/intexsoft/devi/entity/Group.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/classes/com/intexsoft/devi/entity/Student.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/classes/com/intexsoft/devi/entity/Teacher.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/classes/com/intexsoft/devi/filter/LocaleResolverRequestFilter.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/classes/com/intexsoft/devi/funcInterface/TriFunction.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/classes/com/intexsoft/devi/repository/GroupRepository.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/classes/com/intexsoft/devi/repository/StudentRepository.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/classes/com/intexsoft/devi/repository/TeacherRepository.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/classes/com/intexsoft/devi/service/BaseService.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/classes/com/intexsoft/devi/service/EntitiesValidationService.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/classes/com/intexsoft/devi/service/FileService.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/classes/com/intexsoft/devi/service/GroupService.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/classes/com/intexsoft/devi/service/Impl/BaseServiceImpl.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/classes/com/intexsoft/devi/service/Impl/EntitiesValidationServiceImpl.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/classes/com/intexsoft/devi/service/Impl/FileServiceImpl$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/classes/com/intexsoft/devi/service/Impl/FileServiceImpl.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/classes/com/intexsoft/devi/service/Impl/GroupServiceImpl.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/classes/com/intexsoft/devi/service/Impl/StudentServiceImpl.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/classes/com/intexsoft/devi/service/Impl/TeacherServiceImpl.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/classes/com/intexsoft/devi/service/StudentService.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/classes/com/intexsoft/devi/service/TeacherService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/4.10.2/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.10.2/fileHashes/fileHashes.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/4.10.2/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.10.2/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/.gradle/" />
@@ -51,23 +84,7 @@
         </task>
         <projects_view>
           <tree_state>
-            <expand>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="university" type="f1a62948:ProjectNode" />
-              </path>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="university" type="f1a62948:ProjectNode" />
-                <item name="Tasks" type="e4a08cd1:TasksNode" />
-              </path>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="university" type="f1a62948:ProjectNode" />
-                <item name="Tasks" type="e4a08cd1:TasksNode" />
-                <item name="build" type="c8890929:TasksNode$1" />
-              </path>
-            </expand>
+            <expand />
             <select />
           </tree_state>
         </projects_view>
@@ -79,18 +96,18 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/.gitignore">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="354">
-              <caret line="97" column="5" lean-forward="true" selection-start-line="97" selection-start-column="5" selection-end-line="97" selection-end-column="5" />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/.gradle/vcs-1/gc.properties">
           <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/.gitignore">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="45">
+              <caret line="3" lean-forward="true" selection-start-line="3" selection-end-line="3" />
+            </state>
+          </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
@@ -150,7 +167,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/intexsoft/devi/service/Impl/FileServiceImpl.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1290">
+            <state relative-caret-position="1065">
               <caret line="86" column="5" selection-start-line="86" selection-start-column="5" selection-end-line="86" selection-end-column="5" />
             </state>
           </provider>
@@ -320,7 +337,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -328,29 +344,12 @@
               <item name="university" type="b2602c69:ProjectViewProjectNode" />
               <item name="University" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
             </path>
-            <path>
-              <item name="university" type="b2602c69:ProjectViewProjectNode" />
-              <item name="University" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="university" type="b2602c69:ProjectViewProjectNode" />
-              <item name="University" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="test" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-            </path>
-            <path>
-              <item name="university" type="b2602c69:ProjectViewProjectNode" />
-              <item name="University" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="test" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="resources" type="462c0819:PsiDirectoryNode" />
-            </path>
           </expand>
           <select />
         </subPane>
       </pane>
       <pane id="PackagesPane" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -374,7 +373,7 @@
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.3275862" />
-    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.project.gradle" />
+    <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Ignored.Files" />
   </component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
@@ -439,7 +438,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Gradle.University [build]">
+  <component name="RunManager" selected="Tomcat Server.Tomcat">
     <configuration name="SpringRESTDataJPA — копия [testClasses]" type="GradleRunConfiguration" factoryName="Gradle">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -785,7 +784,9 @@
       <workItem from="1547986542416" duration="2636000" />
       <workItem from="1547989323026" duration="3345000" />
       <workItem from="1547992820412" duration="2069000" />
-      <workItem from="1547995028458" duration="1946000" />
+      <workItem from="1547995028458" duration="2465000" />
+      <workItem from="1548002059881" duration="626000" />
+      <workItem from="1548012110896" duration="274000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit">
       <created>1543526023458</created>
@@ -949,7 +950,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="860462000" />
+    <option name="totallyTimeSpent" value="861881000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -964,7 +965,7 @@
     <frame x="-8" y="22" width="1296" height="1010" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4914481" visible="true" weight="0.26941746" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.4914481" visible="true" weight="0.27831715" />
       <window_info id="Structure" order="1" sideWeight="0.5061296" side_tool="true" weight="0.22653721" />
       <window_info id="Designer" order="2" />
       <window_info id="Learn" order="3" weight="0.32928804" />
@@ -982,7 +983,7 @@
       <window_info anchor="bottom" id="Spring" order="9" weight="0.32839224" />
       <window_info anchor="bottom" id="Database Console" order="10" weight="0.32990867" />
       <window_info anchor="bottom" id="Event Log" order="11" sideWeight="0.5008091" side_tool="true" weight="0.49486887" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="12" visible="true" weight="0.36259976" />
+      <window_info anchor="bottom" id="Terminal" order="12" visible="true" weight="0.6419612" />
       <window_info anchor="bottom" id="Java Enterprise" order="13" weight="0.32839224" />
       <window_info anchor="bottom" id="Messages" order="14" sideWeight="0.49919093" weight="0.49486887" />
       <window_info anchor="bottom" id="Version Control" order="15" weight="0.32839224" />
@@ -994,7 +995,7 @@
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="Maven Projects" order="3" weight="0.32928804" />
       <window_info anchor="right" id="Palette&#9;" order="4" />
-      <window_info anchor="right" id="Gradle" order="5" visible="true" weight="0.32119742" />
+      <window_info anchor="right" id="Gradle" order="5" weight="0.32119742" />
       <window_info anchor="right" id="Bean Validation" order="6" weight="0.32605177" />
       <window_info anchor="right" id="Database" order="7" weight="0.3131068" />
       <window_info anchor="right" id="Key Promoter X" order="8" weight="0.32902735" />
@@ -1397,10 +1398,20 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/.gradle/vcs-1/gc.properties">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/intexsoft/devi/service/Impl/GroupServiceImpl.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="30">
           <caret line="2" column="32" selection-start-line="2" selection-start-column="32" selection-end-line="2" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/intexsoft/devi/controller/TeacherController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="20" column="4" selection-start-line="20" selection-start-column="4" selection-end-line="20" selection-end-column="4" />
         </state>
       </provider>
     </entry>
@@ -1434,7 +1445,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/intexsoft/devi/service/Impl/FileServiceImpl.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1290">
+        <state relative-caret-position="1065">
           <caret line="86" column="5" selection-start-line="86" selection-start-column="5" selection-end-line="86" selection-end-column="5" />
         </state>
       </provider>
@@ -1446,20 +1457,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/intexsoft/devi/controller/TeacherController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="20" column="4" selection-start-line="20" selection-start-column="4" selection-end-line="20" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.gradle/vcs-1/gc.properties">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="354">
-          <caret line="97" column="5" lean-forward="true" selection-start-line="97" selection-start-column="5" selection-end-line="97" selection-end-column="5" />
+        <state relative-caret-position="45">
+          <caret line="3" lean-forward="true" selection-start-line="3" selection-end-line="3" />
         </state>
       </provider>
     </entry>
