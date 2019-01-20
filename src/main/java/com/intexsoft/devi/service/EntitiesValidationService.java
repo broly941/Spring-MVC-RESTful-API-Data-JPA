@@ -13,7 +13,7 @@ import java.util.function.Predicate;
  *
  */
 public interface EntitiesValidationService {
-    boolean isValueStringAndHasReqColumn(Predicate<List<Object>> valueIsStringPredicate, Predicate<List<Object>> HasRequiredColumnPredicate, List<String> rowErrors, List<Object> value, Locale locale);
+    boolean isValueStringAndHasReqColumn(Predicate<List<Object>> valueIsStringPredicate, Predicate<List<Object>> HasRequiredColumnPredicate, List<java.lang.String> rowErrors, List<Object> value, Locale locale);
 
-    void fillValidationStatus(ValidationStatus validationStatus, Integer key, Object validEntity, Locale locale, List<String> rowErrors, Map<Integer, Object> validEntities);
+    void fillValidationStatus(ValidationStatus validationStatus, Integer key, Object validEntity, Locale locale, List<java.lang.String> rowErrors, Map<Integer, Object> validEntities);
 }
