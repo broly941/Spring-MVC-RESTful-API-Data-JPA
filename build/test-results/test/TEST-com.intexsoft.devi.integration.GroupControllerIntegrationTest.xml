@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.intexsoft.devi.integration.GroupControllerIntegrationTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2019-01-20T14:10:01" hostname="DESKTOP-VULFVHS" time="2.55">
+  <properties/>
+  <testcase name="getAll" classname="com.intexsoft.devi.integration.GroupControllerIntegrationTest" time="1.339"/>
+  <testcase name="remove" classname="com.intexsoft.devi.integration.GroupControllerIntegrationTest" time="0.52"/>
+  <testcase name="update" classname="com.intexsoft.devi.integration.GroupControllerIntegrationTest" time="0.252"/>
+  <testcase name="getById" classname="com.intexsoft.devi.integration.GroupControllerIntegrationTest" time="0.294"/>
+  <testcase name="save" classname="com.intexsoft.devi.integration.GroupControllerIntegrationTest" time="0.14"/>
+  <system-out><![CDATA[Hibernate: select group0_.GroupId as GroupId1_0_, group0_.Number as Number2_0_, group0_.TeacherId as TeacherI3_0_ from GroupOfUniversity group0_
+Hibernate: select teacher0_.TeacherId as TeacherI1_3_0_, teacher0_.FirstName as FirstNam2_3_0_, teacher0_.LastName as LastName3_3_0_, group1_.GroupId as GroupId1_0_1_, group1_.Number as Number2_0_1_, group1_.TeacherId as TeacherI3_0_1_ from Teacher teacher0_ left outer join GroupOfUniversity group1_ on teacher0_.TeacherId=group1_.TeacherId where teacher0_.TeacherId=?
+Hibernate: select group0_.GroupId as GroupId1_0_1_, group0_.Number as Number2_0_1_, group0_.TeacherId as TeacherI3_0_1_, teacher1_.TeacherId as TeacherI1_3_0_, teacher1_.FirstName as FirstNam2_3_0_, teacher1_.LastName as LastName3_3_0_ from GroupOfUniversity group0_ left outer join Teacher teacher1_ on group0_.TeacherId=teacher1_.TeacherId where group0_.TeacherId=?
+Hibernate: select teacher0_.TeacherId as TeacherI1_3_0_, teacher0_.FirstName as FirstNam2_3_0_, teacher0_.LastName as LastName3_3_0_, group1_.GroupId as GroupId1_0_1_, group1_.Number as Number2_0_1_, group1_.TeacherId as TeacherI3_0_1_ from Teacher teacher0_ left outer join GroupOfUniversity group1_ on teacher0_.TeacherId=group1_.TeacherId where teacher0_.TeacherId=?
+Hibernate: select group0_.GroupId as GroupId1_0_1_, group0_.Number as Number2_0_1_, group0_.TeacherId as TeacherI3_0_1_, teacher1_.TeacherId as TeacherI1_3_0_, teacher1_.FirstName as FirstNam2_3_0_, teacher1_.LastName as LastName3_3_0_ from GroupOfUniversity group0_ left outer join Teacher teacher1_ on group0_.TeacherId=teacher1_.TeacherId where group0_.TeacherId=?
+Hibernate: select teacher0_.TeacherId as TeacherI1_3_0_, teacher0_.FirstName as FirstNam2_3_0_, teacher0_.LastName as LastName3_3_0_, group1_.GroupId as GroupId1_0_1_, group1_.Number as Number2_0_1_, group1_.TeacherId as TeacherI3_0_1_ from Teacher teacher0_ left outer join GroupOfUniversity group1_ on teacher0_.TeacherId=group1_.TeacherId where teacher0_.TeacherId=?
+Hibernate: select group0_.GroupId as GroupId1_0_1_, group0_.Number as Number2_0_1_, group0_.TeacherId as TeacherI3_0_1_, teacher1_.TeacherId as TeacherI1_3_0_, teacher1_.FirstName as FirstNam2_3_0_, teacher1_.LastName as LastName3_3_0_ from GroupOfUniversity group0_ left outer join Teacher teacher1_ on group0_.TeacherId=teacher1_.TeacherId where group0_.TeacherId=?
+Hibernate: select group0_.GroupId as GroupId1_0_0_, group0_.Number as Number2_0_0_, group0_.TeacherId as TeacherI3_0_0_, teacher1_.TeacherId as TeacherI1_3_1_, teacher1_.FirstName as FirstNam2_3_1_, teacher1_.LastName as LastName3_3_1_ from GroupOfUniversity group0_ left outer join Teacher teacher1_ on group0_.TeacherId=teacher1_.TeacherId where group0_.GroupId=?
+Hibernate: select group0_.GroupId as GroupId1_0_0_, group0_.Number as Number2_0_0_, group0_.TeacherId as TeacherI3_0_0_, teacher1_.TeacherId as TeacherI1_3_1_, teacher1_.FirstName as FirstNam2_3_1_, teacher1_.LastName as LastName3_3_1_ from GroupOfUniversity group0_ left outer join Teacher teacher1_ on group0_.TeacherId=teacher1_.TeacherId where group0_.GroupId=?
+Hibernate: select teacher0_.TeacherId as TeacherI1_3_0_, teacher0_.FirstName as FirstNam2_3_0_, teacher0_.LastName as LastName3_3_0_, group1_.GroupId as GroupId1_0_1_, group1_.Number as Number2_0_1_, group1_.TeacherId as TeacherI3_0_1_ from Teacher teacher0_ left outer join GroupOfUniversity group1_ on teacher0_.TeacherId=group1_.TeacherId where teacher0_.TeacherId=?
+Hibernate: update GroupOfUniversity set Number=?, TeacherId=? where GroupId=?
+Hibernate: delete from GroupTeacher where GroupId=?
+Hibernate: insert into GroupTeacher (GroupId, TeacherId) values (?, ?)
+Hibernate: select group0_.GroupId as GroupId1_0_0_, group0_.Number as Number2_0_0_, group0_.TeacherId as TeacherI3_0_0_, teacher1_.TeacherId as TeacherI1_3_1_, teacher1_.FirstName as FirstNam2_3_1_, teacher1_.LastName as LastName3_3_1_ from GroupOfUniversity group0_ left outer join Teacher teacher1_ on group0_.TeacherId=teacher1_.TeacherId where group0_.GroupId=?
+Hibernate: select teacher0_.TeacherId as TeacherI1_3_0_, teacher0_.FirstName as FirstNam2_3_0_, teacher0_.LastName as LastName3_3_0_, group1_.GroupId as GroupId1_0_1_, group1_.Number as Number2_0_1_, group1_.TeacherId as TeacherI3_0_1_ from Teacher teacher0_ left outer join GroupOfUniversity group1_ on teacher0_.TeacherId=group1_.TeacherId where teacher0_.TeacherId=?
+Hibernate: insert into GroupOfUniversity (GroupId, Number, TeacherId) values (null, ?, ?)
+Hibernate: insert into GroupTeacher (GroupId, TeacherId) values (?, ?)
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
