@@ -6,8 +6,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
-import org.springframework.core.task.TaskExecutor;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -46,7 +44,7 @@ public class WebConfig implements WebMvcConfigurer {
     /**
      * Describes bean for Locale
      *
-     * @return slr
+     * @return localeResolver
      */
     @Bean
     public LocaleResolver localeResolver() {
@@ -56,7 +54,7 @@ public class WebConfig implements WebMvcConfigurer {
     /**
      * Describes bean for Locale
      *
-     * @return lci
+     * @return localeChangeInterceptor
      */
     @Bean
     public LocaleChangeInterceptor localeChangeInterceptor() {
@@ -78,7 +76,7 @@ public class WebConfig implements WebMvcConfigurer {
     /**
      * Upload file
      *
-     * @return
+     * @return multipartResolver
      */
     @Bean(name = "multipartResolver")
     public CommonsMultipartResolver multipartResolver() {
@@ -88,22 +86,12 @@ public class WebConfig implements WebMvcConfigurer {
     }
 
     /**
-     * DTO
+     * Data Transfer Object
      *
-     * @return
+     * @return ModelMapper
      */
     @Bean
     public ModelMapper modelMapper() {
         return new ModelMapper();
-    }
-
-    @Bean
-    public TaskExecutor threadPoolTaskExecutor() {
-        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(4);
-        executor.setMaxPoolSize(4);
-        executor.setThreadNamePrefix("default_task_executor_thread");
-        executor.initialize();
-        return executor;
     }
 }

@@ -30,7 +30,7 @@ public class DataConfigTest {
     /**
      * method for connection to database
      *
-     * @return datasource
+     * @return dataSource
      */
     @Bean
     javax.sql.DataSource dataSource() {
@@ -44,7 +44,7 @@ public class DataConfigTest {
      * Interacts with the database.
      * Create Manager Factory
      *
-     * @return entity manager factory
+     * @return entityManagerFactory
      */
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
@@ -55,7 +55,6 @@ public class DataConfigTest {
         JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         em.setJpaVendorAdapter(vendorAdapter);
         em.setJpaProperties(additionalProperties());
-
 
         return em;
     }
@@ -86,7 +85,7 @@ public class DataConfigTest {
     }
 
     /**
-     * for throws exception
+     * Bean for throws exception
      *
      * @return exceptionTranslation
      */

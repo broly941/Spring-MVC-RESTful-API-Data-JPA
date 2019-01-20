@@ -1,6 +1,6 @@
 package com.intexsoft.devi.filter;
 
-import com.intexsoft.devi.service.GroupServiceImpl;
+import com.intexsoft.devi.service.Impl.GroupServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -67,8 +67,7 @@ public class LocaleResolverRequestFilter extends OncePerRequestFilter {
             try {
                 setLanguage(request, response, filterChain, acceptLanguage);
             } catch (IOException | ServletException e) {
-                LocaleContextHolder.resetLocaleContext();
-                filterChain.doFilter(request, response);
+                response.sendError(400, e.getMessage());
             }
         }
     }

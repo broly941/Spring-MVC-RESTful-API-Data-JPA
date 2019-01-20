@@ -3,6 +3,7 @@ package com.intexsoft.devi.dto;
 /**
  * @author DEVIAPHAN on 02.01.2019
  * @project university
+ * Data Transfer Object of Teacher
  */
 public class TeacherDTO {
     private Long id;

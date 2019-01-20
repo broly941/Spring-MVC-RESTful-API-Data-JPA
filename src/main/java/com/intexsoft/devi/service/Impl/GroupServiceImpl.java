@@ -1,9 +1,11 @@
-package com.intexsoft.devi.service;
+package com.intexsoft.devi.service.Impl;
 
 import com.intexsoft.devi.entity.Group;
 import com.intexsoft.devi.entity.Teacher;
-import com.intexsoft.devi.generic.GenericServiceImpl;
 import com.intexsoft.devi.repository.GroupRepository;
+import com.intexsoft.devi.service.GroupService;
+import com.intexsoft.devi.service.BaseService;
+import com.intexsoft.devi.service.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +22,7 @@ import java.util.stream.Collectors;
  * Business Logic Service Class
  */
 @Service
-public class GroupServiceImpl extends GenericServiceImpl<Group> implements GroupService {
+public class GroupServiceImpl implements GroupService {
 
     private static final String GROUP = "group";
     private static final String GROUPS = "groups";
@@ -32,7 +34,7 @@ public class GroupServiceImpl extends GenericServiceImpl<Group> implements Group
     private static final String UPDATE_BY_ID = "updateById";
     private static final String DELETED_BY_ID = "deleteById";
     private static final String GET_GROUPS_BY_TEACHER_ID = "getGroupsByTeacherId";
-    private static final String GET_GROUPS_BY_TEACHER_ID1 = "Get groups by teacher id";
+    private static final String GET_GROUPS_BY_TEACHER_ID_TEXT = "Get groups by teacher id";
 
     @Autowired
     private GroupRepository groupRepository;
@@ -40,27 +42,35 @@ public class GroupServiceImpl extends GenericServiceImpl<Group> implements Group
     @Autowired
     private TeacherService teacherService;
 
+    @Autowired
+    private BaseService<Group> groupBaseService;
+
     /**
+     * method return all groups
+     *
      * @param locale of messages
      * @return getAll group entities in the database.
      */
     @Override
     public List<Group> getAll(Locale locale) {
-        return getAll(groupRepository::findAll, locale, GET_ALL, GROUPS);
+        return groupBaseService.getAll(groupRepository::findAll, locale, GET_ALL, GROUPS);
     }
 
     /**
+     * method return a group by id
+     *
      * @param id     of group
      * @param locale of messages
      * @return group entity by ID in the database.
-     * @throws EntityNotFoundException if there is no value
      */
     @Override
-    public Group getById(Long id, Locale locale) throws EntityNotFoundException {
-        return get(id, groupRepository::findById, locale, GET_BY_ID, GROUP, GET_GROUP_BY_ID);
+    public Group getById(Long id, Locale locale) {
+        return groupBaseService.get(id, groupRepository::findById, locale, GET_BY_ID, GROUP, GET_GROUP_BY_ID);
     }
 
     /**
+     * method return a group by number
+     *
      * @param groupName of entity
      * @return Optional group
      */
@@ -70,16 +80,20 @@ public class GroupServiceImpl extends GenericServiceImpl<Group> implements Group
     }
 
     /**
+     * method return a groups by teacher id
+     *
      * @param id     of entity
      * @param locale of messages
      * @return list of groups
      */
     @Override
     public List<Group> getGroupsOfTeacherById(Long id, Locale locale) {
-        return getAll(id, groupRepository::findAllGroupsOfTeacherById, locale, GET_GROUPS_BY_TEACHER_ID, GROUPS, GET_GROUPS_BY_TEACHER_ID1);
+        return groupBaseService.getAll(id, groupRepository::findAllGroupsOfTeacherById, locale, GET_GROUPS_BY_TEACHER_ID, GROUPS, GET_GROUPS_BY_TEACHER_ID_TEXT);
     }
 
     /**
+     * method save group and return it
+     *
      * @param group         entity
      * @param curatorId     of teacher
      * @param teacherIdList consist of teachers
@@ -91,35 +105,38 @@ public class GroupServiceImpl extends GenericServiceImpl<Group> implements Group
     public Group save(Group group, Long curatorId, Long[] teacherIdList, Locale locale) {
         group.setTeacher(teacherService.getById(curatorId, locale));
         group.setTeachers(getTeacherList(teacherIdList, locale));
-        return save(group, groupRepository::save, locale, ADD, GROUP);
+        return groupBaseService.save(group, groupRepository::save, locale, ADD, GROUP);
     }
 
     /**
+     * method update group by id and return it
+     *
      * @param group         entity
      * @param groupId       of group
      * @param curatorId     of teacher
      * @param teacherIdList consist of teachers
      * @param locale        of messages
      * @return updated group entity in the database.
-     * @throws EntityNotFoundException if there is no value
      */
     @Override
     @Transactional
-    public Group updateById(Group group, Long groupId, Long curatorId, Long[] teacherIdList, Locale locale) throws EntityNotFoundException {
-        Group currentGroup = get(groupId, groupRepository::findById, locale, UPDATE_BY_ID, GROUP, UPDATE_GROUP_BY_ID);
+    public Group updateById(Group group, Long groupId, Long curatorId, Long[] teacherIdList, Locale locale) {
+        Group currentGroup = groupBaseService.get(groupId, groupRepository::findById, locale, UPDATE_BY_ID, GROUP, UPDATE_GROUP_BY_ID);
         currentGroup.setNumber(group.getNumber());
         currentGroup.setTeacher(teacherService.getById(curatorId, locale));
         currentGroup.setTeachers(getTeacherList(teacherIdList, locale));
-        return save(currentGroup, groupRepository::save, locale, UPDATE_BY_ID, GROUP, groupId);
+        return groupBaseService.save(currentGroup, groupRepository::save, locale, UPDATE_BY_ID, GROUP, groupId);
     }
 
     /**
+     * method delete group by id
+     *
      * @param locale of messages
      * @param id     the group entity to be removed from the database
      */
     @Override
     public void deleteById(Long id, Locale locale) {
-        deleteById(id, groupRepository::deleteById, locale, DELETED_BY_ID, GROUP);
+        groupBaseService.deleteById(id, groupRepository::deleteById, locale, DELETED_BY_ID, GROUP);
     }
 
     private List<Teacher> getTeacherList(Long[] teacherIdList, Locale locale) throws EntityNotFoundException {

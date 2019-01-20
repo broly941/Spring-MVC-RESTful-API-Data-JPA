@@ -1,8 +1,6 @@
-package com.intexsoft.devi.beans;
+package com.intexsoft.devi.controller.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,8 +11,6 @@ import java.util.List;
  * @author DEVIAPHAN on 10.01.2019
  * @project university
  */
-@Component
-@Scope("prototype")
 public class ValidationStatus {
 
     private int rowCount = 0;
@@ -33,16 +29,16 @@ public class ValidationStatus {
         errors.add(value);
     }
 
-    public void setValidRow(int validRow) {
-        this.validRow = validRow;
+    public void validRowInc() {
+        validRow++;
+    }
+
+    public void errorRowInc() {
+        errorsCount++;
     }
 
     public void setRowCount(int rowCount) {
         this.rowCount = rowCount;
-    }
-
-    public void setErrorsCount(int errorsCount) {
-        this.errorsCount = errorsCount;
     }
 
     @JsonIgnore

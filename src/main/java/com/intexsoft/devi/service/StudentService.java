@@ -1,10 +1,9 @@
 package com.intexsoft.devi.service;
 
-import com.intexsoft.devi.beans.ValidationStatus;
+import com.intexsoft.devi.controller.response.ValidationStatus;
 import com.intexsoft.devi.entity.Student;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -17,7 +16,7 @@ import java.util.Optional;
 public interface StudentService {
     List<Student> getAll(Locale locale);
 
-    Student getById(Long id, Locale locale) throws EntityNotFoundException;
+    Student getById(Long id, Locale locale);
 
     Optional<Student> getByName(String firstName, String lastName);
 
@@ -28,15 +27,15 @@ public interface StudentService {
     Student save(Student student, Locale locale);
 
     @Transactional
-    Student updateById(Student student, Long studentId, Long groupId, Locale locale) throws EntityNotFoundException;
+    Student updateById(Student student, Long studentId, Long groupId, Locale locale);
 
     void deleteById(Long id, Locale locale);
 
-    boolean isStudentGroupExist(String firstName, String lastName, String groupName);
+    Optional<Student> getStudentByNameAndGroupName(String firstName, String lastName, String groupName);
 
     List<Student> getStudentsOfGroupById(Long id, Locale locale);
 
-    boolean fileValidation(Map<Integer, List<Object>> map, ValidationStatus validationStatus, Locale locale);
+    ValidationStatus validate(Map<Integer, List<Object>> parsedEntities, Map<Integer, Object> validEntities, Locale locale);
 
-    void fileSave(Map<Integer, List<Object>> map, Locale locale);
+    void save(Map<Integer, Object> validEntities, Locale locale);
 }

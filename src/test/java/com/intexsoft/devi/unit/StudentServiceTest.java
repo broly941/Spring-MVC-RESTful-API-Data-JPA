@@ -1,29 +1,35 @@
 package com.intexsoft.devi.unit;
 
+import com.intexsoft.devi.controller.response.ValidationStatus;
 import com.intexsoft.devi.entity.Student;
 import com.intexsoft.devi.repository.StudentRepository;
-import com.intexsoft.devi.service.GroupServiceImpl;
-import com.intexsoft.devi.service.StudentServiceImpl;
+import com.intexsoft.devi.service.BaseService;
+import com.intexsoft.devi.service.Impl.GroupServiceImpl;
+import com.intexsoft.devi.service.Impl.StudentServiceImpl;
+import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.context.MessageSource;
-import org.springframework.test.context.web.WebAppConfiguration;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.*;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 
 import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 /**
  * @author DEVIAPHAN
  * Test for Business Logic Service Class
  */
-@RunWith(MockitoJUnitRunner.Silent.class)
-@WebAppConfiguration
+@RunWith(MockitoJUnitRunner.class)
 public class StudentServiceTest {
 
     @InjectMocks
@@ -36,6 +42,9 @@ public class StudentServiceTest {
     StudentRepository studentRepository;
 
     @Mock
+    BaseService<Student> studentBaseService;
+
+    @Mock
     MessageSource messageSource;
 
     /**
@@ -44,7 +53,7 @@ public class StudentServiceTest {
     @Test
     public void getAll() {
         List<Student> studentList = initializeStudentList();
-        when(studentRepository.findAll())
+        when(studentBaseService.getAll(any(Supplier.class), eq(Locale.ENGLISH), eq("getAll"), eq("students")))
                 .thenReturn(studentList);
         assertSame(studentList, studentService.getAll(Locale.ENGLISH));
     }
@@ -54,7 +63,7 @@ public class StudentServiceTest {
      */
     @Test
     public void getAll_NotFoundStudents() {
-        when(studentRepository.findAll())
+        when(studentBaseService.getAll(any(Supplier.class), eq(Locale.ENGLISH), eq("getAll"), eq("students")))
                 .thenReturn(Collections.emptyList());
         assertEquals(Collections.emptyList(), studentService.getAll(Locale.ENGLISH));
     }
@@ -65,8 +74,8 @@ public class StudentServiceTest {
     @Test
     public void getById() {
         Student student = initializeStudent((long) 1);
-        when(studentRepository.findById((long) 1))
-                .thenReturn(Optional.ofNullable(student));
+        when(studentBaseService.get(eq((long) 1), any(Function.class), eq(Locale.ENGLISH), eq("getById"), eq("student"), eq("Get student by id")))
+                .thenReturn(student);
         assertSame(student, studentService.getById((long) 1, Locale.ENGLISH));
     }
 
@@ -74,8 +83,8 @@ public class StudentServiceTest {
      * Will thrown out an exception if record by ID cannot found
      */
     @Test(expected = EntityNotFoundException.class)
-    public void getById_NotFoundTeacher() {
-        when(studentRepository.findById((long) 2))
+    public void getById_NotFoundStudent() {
+        when(studentBaseService.get(eq((long) 2), any(Function.class), eq(Locale.ENGLISH), eq("getById"), eq("student"), eq("Get student by id")))
                 .thenThrow(EntityNotFoundException.class);
         studentService.getById((long) 2, Locale.ENGLISH);
     }
@@ -86,7 +95,7 @@ public class StudentServiceTest {
     @Test
     public void getStudentsOfGroupById() {
         List<Student> studentList = initializeStudentList();
-        when(studentRepository.findAllByGroup_Id((long) 1))
+        when(studentBaseService.getAll(eq((long) 1), any(Function.class), eq(Locale.ENGLISH), eq("getStudentsOfGroupById"), eq("students"), eq("Get students by group id")))
                 .thenReturn(studentList);
         assertSame(studentList, studentService.getStudentsOfGroupById((long) 1, Locale.ENGLISH));
     }
@@ -108,23 +117,12 @@ public class StudentServiceTest {
     @Test
     public void save() {
         Student student = initializeStudent((long) 1);
-        when(groupService.getById(null, Locale.ENGLISH))
-                .thenReturn(null);
-        when(studentRepository.save(student))
+        when(studentBaseService.save(eq(student), any(UnaryOperator.class), eq(Locale.ENGLISH), eq("add"), eq("student")))
                 .thenReturn(student);
-        assertSame(student, studentService.save(student, null, Locale.ENGLISH));
+        assertSame(student, studentService.save(student, (long) 4, Locale.ENGLISH));
     }
 
-    /**
-     * Will return boolean value depending exist entity or not
-     */
-    @Test
-    public void isStudentGroupExist() {
-        Student student = initializeStudent((long) 1);
-        when(studentRepository.findByFirstNameAndLastNameAndGroup_Number("first", "last", "group"))
-                .thenReturn(Optional.ofNullable(student));
-        assertTrue(studentService.isStudentGroupExist("first", "last", "group"));
-    }
+
 
     /**
      * Will return a record if all parameters are correct
@@ -132,13 +130,11 @@ public class StudentServiceTest {
     @Test
     public void updateById() {
         Student student = initializeStudent((long) 1);
-        when(studentRepository.findById((long) 1))
-                .thenReturn(Optional.ofNullable(student));
-        when(groupService.getById(null, Locale.ENGLISH))
-                .thenReturn(null);
-        when(studentRepository.save(student))
+        when(studentBaseService.get(eq((long) 1), any(Function.class), eq(Locale.ENGLISH), eq("updateById"), eq("student"), eq("Update student by id")))
                 .thenReturn(student);
-        assertSame(student, studentService.updateById(student, (long) 1, null, Locale.ENGLISH));
+        when(studentBaseService.save(eq(student), any(UnaryOperator.class), eq(Locale.ENGLISH), eq("updateById"), eq("student"), eq((long) 1)))
+                .thenReturn(student);
+        assertSame(student, studentService.updateById(student, (long) 1, (long) 1, Locale.ENGLISH));
     }
 
     /**
@@ -146,9 +142,31 @@ public class StudentServiceTest {
      */
     @Test(expected = EntityNotFoundException.class)
     public void updateById_NotFoundId() {
-        when(studentRepository.findById((long) 2))
+        when(studentBaseService.get(eq((long) 1), any(Function.class), eq(Locale.ENGLISH), eq("updateById"), eq("student"), eq("Update student by id")))
                 .thenThrow(EntityNotFoundException.class);
-        studentService.updateById(initializeStudent((long) 1), (long) 2, null, Locale.ENGLISH);
+        studentService.updateById(initializeStudent((long) 1), (long) 1, (long) 1, Locale.ENGLISH);
+    }
+
+    /**
+     * Will return boolean value depending exist entity or not
+     */
+    @Test
+    public void getStudentByNameAndGroupName() {
+        Optional<Student> optionalStudent= Optional.of(initializeStudent((long) 1));
+        when(studentRepository.findByFirstNameAndLastNameAndGroup_Number("first", "last", "group"))
+                .thenReturn(optionalStudent);
+        assertSame(optionalStudent, studentService.getStudentByNameAndGroupName("first", "last", "group"));
+    }
+
+    /**
+     * Will return a validation status
+     */
+    @Test
+    public void validate() {
+        ValidationStatus validationStatus = new ValidationStatus();
+        Map<Integer, List<Object>> parsedEntities = new HashMap<>();
+        Map<Integer, Object> validEntities = new HashMap<>();
+        assertTrue(EqualsBuilder.reflectionEquals(validationStatus,studentService.validate(parsedEntities, validEntities, Locale.ENGLISH)));
     }
 
     private List<Student> initializeStudentList() {

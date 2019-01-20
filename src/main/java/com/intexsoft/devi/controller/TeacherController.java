@@ -1,19 +1,14 @@
 package com.intexsoft.devi.controller;
 
-import com.fasterxml.jackson.databind.exc.InvalidFormatException;
-import com.intexsoft.devi.beans.ValidationStatus;
+import com.intexsoft.devi.controller.response.ValidationStatus;
 import com.intexsoft.devi.dto.TeacherDTO;
 import com.intexsoft.devi.entity.Teacher;
-import com.intexsoft.devi.service.ExcelFileService;
+import com.intexsoft.devi.service.FileService;
 import com.intexsoft.devi.service.TeacherService;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
@@ -26,16 +21,20 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/teachers")
 public class TeacherController {
+
     @Autowired
     TeacherService teacherService;
 
     @Autowired
-    ExcelFileService excelFileService;
+    FileService fileService;
 
     @Autowired
-    ModelMapper modelMapper;
+    DTOConverter dtoConverter;
 
     /**
+     * method return all teachers
+     *
+     * @param locale of message
      * @return getAll teacher entity in the database.
      */
     @GetMapping
@@ -46,30 +45,35 @@ public class TeacherController {
     }
 
     /**
+     * method return teacher by id
+     *
      * @param id of teacher
      * @return teacher entity by ID in the database.
-     * @throws EntityNotFoundException if there is no value
      */
     @GetMapping("/{id}")
-    public TeacherDTO getById(@PathVariable Long id, Locale locale) throws EntityNotFoundException {
+    public TeacherDTO getById(@PathVariable Long id, Locale locale) {
         return convertToDto(teacherService.getById(id, locale));
     }
 
     /**
-     * @param id
-     * @param locale
-     * @return
-     * @throws EntityNotFoundException
+     * method return all teachers by group id
+     *
+     * @param id     of group
+     * @param locale of message
+     * @return all teachers by group id
      */
     @GetMapping("/getByGroupId/{id}")
-    public List<TeacherDTO> getTeachersOfGroupById(@PathVariable Long id, Locale locale) throws EntityNotFoundException {
+    public List<TeacherDTO> getTeachersOfGroupById(@PathVariable Long id, Locale locale) {
         return teacherService.getTeachersOfGroupById(id, locale).stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
 
     /**
+     * method save teacher
+     *
      * @param teacherDTO entity
+     * @param locale     of message
      * @return added teacher entity in the database.
      */
     @PostMapping
@@ -78,20 +82,24 @@ public class TeacherController {
     }
 
     /**
+     * update teacher by id
+     *
      * @param teacherDTO entity
-     * @param id         of teachere database.
-     *                   * @throws EntityNotFoundException if t
-     * @return updated teacher entity in thhere is no value
+     * @param id         of teacher
+     * @param locale     of message
+     * @return updated group entity in the database.
      */
     @PutMapping("/{id}")
-    public TeacherDTO updateById(@RequestBody TeacherDTO teacherDTO, @PathVariable Long id, Locale locale) throws
-            EntityNotFoundException {
+    public TeacherDTO updateById(@RequestBody TeacherDTO teacherDTO, @PathVariable Long id, Locale locale) {
         Teacher teacher = teacherService.updateById(convertToEntity(teacherDTO), id, locale);
         return convertToDto(teacher);
     }
 
     /**
-     * @param id the teacher entity to be removed from the database
+     * method delete teacher by id
+     *
+     * @param id     the teacher entity to be removed from the database
+     * @param locale of message
      */
     @DeleteMapping("/{id}")
     public void deleteById(@PathVariable Long id, Locale locale) {
@@ -99,22 +107,23 @@ public class TeacherController {
     }
 
     /**
-     * @param file
-     * @param locale
-     * @return
-     * @throws IOException
-     * @throws InvalidFormatException
+     * method save entities in database from excel file
+     *
+     * @param file excel
+     * @param locale of message
+     * @return validation status
+     * @throws IOException if an exception occurred in the file parsing
      */
-    @PostMapping("/fileload")
-    public ResponseEntity<ValidationStatus> addGroupsToTeacher(@RequestParam(value = "file", required = false) MultipartFile file, @RequestParam Integer page, Locale locale) throws IOException, InvalidFormatException {
-        return new ResponseEntity<>(excelFileService.createEntity(locale, file, page, teacherService::fileValidation, teacherService::fileSave), HttpStatus.OK);
+    @PostMapping("/upload")
+    public ValidationStatus addGroupsToTeacher(@RequestParam(value = "file") MultipartFile file, Locale locale) throws IOException {
+        return fileService.parse(locale, file.getInputStream(),file.getOriginalFilename().split("\\.")[1], teacherService::validate, teacherService::save);
     }
 
     private TeacherDTO convertToDto(Teacher teacher) {
-        return modelMapper.map(teacher, TeacherDTO.class);
+        return (TeacherDTO) dtoConverter.convert(teacher, TeacherDTO.class);
     }
 
     private Teacher convertToEntity(TeacherDTO teacherDTO) {
-        return modelMapper.map(teacherDTO, Teacher.class);
+        return (Teacher) dtoConverter.convert(teacherDTO, Teacher.class);
     }
 }

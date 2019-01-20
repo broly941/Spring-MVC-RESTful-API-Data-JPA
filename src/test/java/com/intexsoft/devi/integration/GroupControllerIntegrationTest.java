@@ -64,7 +64,7 @@ public class GroupControllerIntegrationTest {
 
 
     /**
-     * addGroupsToTeacher mockMvc
+     * addGroupsToTeacher_Failed mockMvc
      */
     @Before
     public void init() {
@@ -74,7 +74,7 @@ public class GroupControllerIntegrationTest {
     /**
      * Will return an all records from tested db
      *
-     * @throws Exception
+     * @throws Exception in json parse or MockMvc.perform
      */
     @Test
     public void getAll() throws Exception {
@@ -90,7 +90,7 @@ public class GroupControllerIntegrationTest {
     /**
      * Will return a record by ID from tested db
      *
-     * @throws Exception
+     * @throws Exception in json parse or MockMvc.perform
      */
     @Test
     public void getById() throws Exception {
@@ -106,7 +106,7 @@ public class GroupControllerIntegrationTest {
     /**
      * Will save a record in tested db
      *
-     * @throws Exception
+     * @throws Exception in json parse or MockMvc.perform
      */
     @Test
     public void save() throws Exception {
@@ -131,7 +131,7 @@ public class GroupControllerIntegrationTest {
     /**
      * Will update a record by ID from tested db
      *
-     * @throws Exception
+     * @throws Exception in json parse or MockMvc.perform
      */
     @Test
     public void update() throws Exception {
@@ -154,7 +154,7 @@ public class GroupControllerIntegrationTest {
     /**
      * Will delete a record by ID from tested db
      *
-     * @throws Exception
+     * @throws Exception in json parse or MockMvc.perform
      */
     @Test
     public void remove() throws Exception {

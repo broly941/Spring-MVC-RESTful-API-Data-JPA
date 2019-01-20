@@ -56,7 +56,7 @@ public class DataConfig {
     /**
      * method for connection to database
      *
-     * @return datasource
+     * @return dataSource
      */
     @Bean
     public DataSource dataSource() {

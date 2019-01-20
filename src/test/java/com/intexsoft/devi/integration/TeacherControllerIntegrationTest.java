@@ -52,7 +52,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class TeacherControllerIntegrationTest {
 
     private static final String ACCEPT_LANGUAGE = "Accept-language";
-    private static final String EN = "en";
+    private static final String EN = "en-UK";
     private static final String APPLICATION_JSON_CHARSET_UTF_8 = "application/json;charset=UTF-8";
 
     private static final String TEACHERS_ID = "/teachers/{id}";
@@ -70,13 +70,11 @@ public class TeacherControllerIntegrationTest {
     private static final String ILYA = "Ilya";
     private static final String KORZHAVIN = "Korzhavin";
 
-    private static final String PAGE = "page";
-    private static final String TEACHERS_FILELOAD = "/teachers/fileload";
+    private static final String TEACHERS_UPLOAD = "/teachers/upload";
     private static final String FILE_WORD = "file";
     private static final String FILE_XLSX = "file/xlsx";
-    private static final String FILE = "IntegrationTest.xlsx";
-    private static final String ADD_GROUPS_TO_TEACHERS_SUCCESSFUL = "{\"rowCount\":3,\"validRow\":3,\"errorsCount\":0,\"errors\":[]}";
-    private static final String STRING_3 = "3";
+    private static final String FILE = "addGroupsToTeacher.xlsx";
+    private static final String ADD_GROUPS_TO_TEACHERS = "{\"rowCount\":3,\"validRow\":3,\"errorsCount\":0,\"errors\":[]}";
 
     private MockMvc mockMvc;
 
@@ -84,7 +82,7 @@ public class TeacherControllerIntegrationTest {
     private WebApplicationContext webApplicationContext;
 
     /**
-     * addGroupsToTeacher mockMvc
+     * addGroupsToTeacher_Failed mockMvc
      */
     @Before
     public void init() {
@@ -94,7 +92,7 @@ public class TeacherControllerIntegrationTest {
     /**
      * Will return an all records from tested db
      *
-     * @throws Exception
+     * @throws Exception in json parse or MockMvc.perform
      */
     @Test
     public void getAll() throws Exception {
@@ -111,7 +109,7 @@ public class TeacherControllerIntegrationTest {
     /**
      * Will return a record by ID from tested db
      *
-     * @throws Exception
+     * @throws Exception in json parse or MockMvc.perform
      */
     @Test
     public void getById() throws Exception {
@@ -128,7 +126,7 @@ public class TeacherControllerIntegrationTest {
     /**
      * Will save a record in tested db
      *
-     * @throws Exception
+     * @throws Exception in json parse or MockMvc.perform
      */
     @Test
     public void save() throws Exception {
@@ -143,7 +141,7 @@ public class TeacherControllerIntegrationTest {
         )
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(APPLICATION_JSON_CHARSET_UTF_8))
-                .andExpect(jsonPath($_ID, is(4)))
+                .andExpect(jsonPath($_ID, is(7)))
                 .andExpect(jsonPath($_FIRST_NAME, is(YIP)))
                 .andExpect(jsonPath($_LAST_NAME, is(MAN)));
     }
@@ -151,7 +149,7 @@ public class TeacherControllerIntegrationTest {
     /**
      * Will update a record by ID from tested db
      *
-     * @throws Exception
+     * @throws Exception in json parse or MockMvc.perform
      */
     @Test
     public void update() throws Exception {
@@ -174,7 +172,7 @@ public class TeacherControllerIntegrationTest {
     /**
      * Will delete a record by ID from tested db
      *
-     * @throws Exception
+     * @throws Exception in json parse or MockMvc.perform
      */
     @Test
     public void remove() throws Exception {
@@ -187,17 +185,16 @@ public class TeacherControllerIntegrationTest {
     /**
      * Will save a new entity and return validation status
      *
-     * @throws Exception
+     * @throws Exception in json parse or MockMvc.perform
      */
     @Test
-    public void addGroupsToTeacher() throws Exception {
+    public void addGroupsToTeacher_Failed() throws Exception {
         MockMultipartFile file = getMultipartFile();
-        mockMvc.perform(multipart(TEACHERS_FILELOAD)
+        mockMvc.perform(multipart(TEACHERS_UPLOAD)
                 .file(file)
-                .param(PAGE, STRING_3)
                 .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isOk())
-                .andExpect(content().string(ADD_GROUPS_TO_TEACHERS_SUCCESSFUL));
+                .andExpect(content().string(ADD_GROUPS_TO_TEACHERS));
     }
 
     private MockMultipartFile getMultipartFile() throws IOException {

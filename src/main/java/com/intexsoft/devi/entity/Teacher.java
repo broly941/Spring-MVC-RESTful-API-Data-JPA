@@ -21,16 +21,10 @@ public class Teacher {
     @Column(name = "LastName")
     private String lastName;
 
-    @OneToOne(
-            cascade = {
-                    CascadeType.PERSIST,
-            }, mappedBy = "teacher")
+    @OneToOne(cascade = {CascadeType.PERSIST,}, mappedBy = "teacher")
     private Group group;
 
-    @ManyToMany(fetch = FetchType.LAZY,
-            cascade = {
-                    CascadeType.PERSIST,
-            })
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {})
     @JoinTable(name = "GroupTeacher", joinColumns = @JoinColumn(name = "TeacherId"), inverseJoinColumns = @JoinColumn(name = "GroupId"))
     private List<Group> groups;
 
@@ -40,6 +34,12 @@ public class Teacher {
     public Teacher(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
+    }
+
+    public Teacher(String firstName, String lastName, List<Group> groups) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.groups = groups;
     }
 
     public Long getId() {

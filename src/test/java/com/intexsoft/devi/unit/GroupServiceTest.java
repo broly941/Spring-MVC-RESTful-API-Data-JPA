@@ -2,35 +2,42 @@ package com.intexsoft.devi.unit;
 
 import com.intexsoft.devi.entity.Group;
 import com.intexsoft.devi.repository.GroupRepository;
-import com.intexsoft.devi.service.GroupServiceImpl;
-import com.intexsoft.devi.service.TeacherServiceImpl;
+import com.intexsoft.devi.service.BaseService;
+import com.intexsoft.devi.service.Impl.GroupServiceImpl;
+import com.intexsoft.devi.service.Impl.TeacherServiceImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.context.MessageSource;
-import org.springframework.test.context.web.WebAppConfiguration;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.*;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 /**
  * @author DEVIAPHAN
  * Test for Business Logic Service Class
  */
-@RunWith(MockitoJUnitRunner.Silent.class)
-@WebAppConfiguration
+@RunWith(MockitoJUnitRunner.class)
 public class GroupServiceTest {
     @InjectMocks
     GroupServiceImpl groupService;
 
     @Mock
     GroupRepository groupRepository;
+
+    @Mock
+    BaseService<Group> groupBaseService;
 
     @Mock
     TeacherServiceImpl teacherService;
@@ -44,7 +51,7 @@ public class GroupServiceTest {
     @Test
     public void getAll() {
         List<Group> groupList = initializeGroupList();
-        when(groupRepository.findAll())
+        when(groupBaseService.getAll(any(Supplier.class), eq(Locale.ENGLISH), eq("getAll"), eq("groups")))
                 .thenReturn(groupList);
         assertSame(groupList, groupService.getAll(Locale.ENGLISH));
     }
@@ -54,7 +61,7 @@ public class GroupServiceTest {
      */
     @Test
     public void getAll_NotFoundGroups() {
-        when(groupRepository.findAll())
+        when(groupBaseService.getAll(any(Supplier.class), eq(Locale.ENGLISH), eq("getAll"), eq("groups")))
                 .thenReturn(Collections.emptyList());
         assertEquals(Collections.emptyList(), groupService.getAll(Locale.ENGLISH));
     }
@@ -65,8 +72,8 @@ public class GroupServiceTest {
     @Test
     public void getById() {
         Group group = initializeGroup((long) 1);
-        when(groupRepository.findById((long) 1))
-                .thenReturn(Optional.ofNullable(group));
+        when(groupBaseService.get(eq((long) 1), any(Function.class), eq(Locale.ENGLISH), eq("getById"), eq("group"), eq("Get group by id")))
+                .thenReturn(group);
         assertSame(group, groupService.getById((long) 1, Locale.ENGLISH));
     }
 
@@ -75,7 +82,7 @@ public class GroupServiceTest {
      */
     @Test(expected = EntityNotFoundException.class)
     public void getById_NotFoundGroup() {
-        when(groupRepository.findById((long) 2))
+        when(groupBaseService.get(eq((long) 2), any(Function.class), eq(Locale.ENGLISH), eq("getById"), eq("group"), eq("Get group by id")))
                 .thenThrow(EntityNotFoundException.class);
         groupService.getById((long) 2, Locale.ENGLISH);
     }
@@ -91,15 +98,25 @@ public class GroupServiceTest {
         assertSame(groupOptional, groupService.getByNumber("POIT-1"));
     }
 
+
+    /**
+     * Will return a records by teacher id
+     */
+    @Test
+    public void getGroupsOfTeacherById() {
+        List<Group> groupList = initializeGroupList();
+        when(groupBaseService.getAll(eq((long) 1), any(Function.class), eq(Locale.ENGLISH), eq("getGroupsByTeacherId"), eq("groups"), eq("Get groups by teacher id")))
+                .thenReturn(groupList);
+        assertSame(groupList, groupService.getGroupsOfTeacherById((long) 1, Locale.ENGLISH));
+    }
+
     /**
      * Will save a record if all parameters are correct
      */
     @Test
     public void save() {
         Group group = initializeGroup((long) 1);
-        when(teacherService.getById((long) 2, Locale.ENGLISH))
-                .thenReturn(null);
-        when(groupRepository.save(group))
+        when(groupBaseService.save(eq(group), any(UnaryOperator.class), eq(Locale.ENGLISH), eq("add"), eq("group")))
                 .thenReturn(group);
         assertSame(group, groupService.save(group, (long) 2, new Long[]{}, Locale.ENGLISH));
     }
@@ -110,11 +127,9 @@ public class GroupServiceTest {
     @Test
     public void updateById() {
         Group group = initializeGroup((long) 1);
-        when(groupRepository.findById((long) 1))
-                .thenReturn(Optional.ofNullable(group));
-        when(teacherService.getById(null, Locale.ENGLISH))
-                .thenReturn(null);
-        when(groupRepository.save(group))
+        when(groupBaseService.get(eq((long) 1), any(Function.class), eq(Locale.ENGLISH), eq("updateById"), eq("group"), eq("Update group by id")))
+                .thenReturn(group);
+        when(groupBaseService.save(eq(group), any(UnaryOperator.class), eq(Locale.ENGLISH), eq("updateById"), eq("group"), eq((long) 1)))
                 .thenReturn(group);
         assertSame(group, groupService.updateById(group, (long) 1, null, new Long[]{}, Locale.ENGLISH));
     }
@@ -124,7 +139,7 @@ public class GroupServiceTest {
      */
     @Test(expected = EntityNotFoundException.class)
     public void updateById_NotFoundId() {
-        when(groupRepository.findById((long) 2))
+        when(groupBaseService.get(eq((long) 1), any(Function.class), eq(Locale.ENGLISH), eq("updateById"), eq("group"), eq("Update group by id")))
                 .thenThrow(EntityNotFoundException.class);
         groupService.updateById(initializeGroup((long) 1), (long) 1, (long) 1, new Long[]{}, Locale.ENGLISH);
     }

@@ -3,6 +3,7 @@ package com.intexsoft.devi.dto;
 /**
  * @author DEVIAPHAN on 10.01.2019
  * @project university
+ * Data Transfer Object of Group
  */
 public class GroupDTO {
     private Long id;
