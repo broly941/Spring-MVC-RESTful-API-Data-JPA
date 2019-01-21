@@ -19,14 +19,14 @@ public class Group implements Serializable {
     @Column(name = "Number")
     private String number;
 
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToOne
     @JoinColumn(name = "TeacherId")
     private Teacher teacher;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "group")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "group")
     private List<Student> students;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {})
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "GroupTeacher", joinColumns = @JoinColumn(name = "GroupId"), inverseJoinColumns = @JoinColumn(name = "TeacherId"))
     private List<Teacher> teachers;
 

@@ -21,10 +21,10 @@ public class Teacher {
     @Column(name = "LastName")
     private String lastName;
 
-    @OneToOne(cascade = {CascadeType.PERSIST,}, mappedBy = "teacher")
+    @OneToOne(mappedBy = "teacher")
     private Group group;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {})
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "GroupTeacher", joinColumns = @JoinColumn(name = "TeacherId"), inverseJoinColumns = @JoinColumn(name = "GroupId"))
     private List<Group> groups;
 

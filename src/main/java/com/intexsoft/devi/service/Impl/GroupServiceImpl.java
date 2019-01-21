@@ -1,16 +1,24 @@
 package com.intexsoft.devi.service.Impl;
 
 import com.intexsoft.devi.entity.Group;
+import com.intexsoft.devi.entity.Student;
 import com.intexsoft.devi.entity.Teacher;
 import com.intexsoft.devi.repository.GroupRepository;
 import com.intexsoft.devi.service.BaseService;
 import com.intexsoft.devi.service.GroupService;
+import com.intexsoft.devi.service.StudentService;
 import com.intexsoft.devi.service.TeacherService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.Query;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -44,6 +52,14 @@ public class GroupServiceImpl implements GroupService {
 
     @Autowired
     private BaseService<Group> groupBaseService;
+
+    @Autowired
+    private EntityManagerFactory entityManagerFactory;
+
+    @Autowired
+    private MessageSource messageSource;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(GroupService.class);
 
     /**
      * method return all groups
@@ -135,8 +151,16 @@ public class GroupServiceImpl implements GroupService {
      * @param id     the group entity to be removed from the database
      */
     @Override
+    @Transactional
     public void deleteById(Long id, Locale locale) {
-        groupBaseService.deleteById(id, groupRepository::deleteById, locale, DELETED_BY_ID, GROUP);
+        EntityManager em = entityManagerFactory.createEntityManager();
+
+        Query query = em.createNativeQuery("DELETE FROM groupofuniversity WHERE groupofuniversity.GroupId = ?");
+        query.setParameter(1, id);
+        em.joinTransaction();
+        query.executeUpdate();
+
+        LOGGER.info(messageSource.getMessage(DELETED_BY_ID, new Object[]{GROUP, id}, locale));
     }
 
     private List<Teacher> getTeacherList(Long[] teacherIdList, Locale locale) throws EntityNotFoundException {
