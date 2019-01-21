@@ -40,8 +40,9 @@ public class WebConfig implements WebMvcConfigurer {
     }
 
     /**
+     * Enable Cross-Origin Resource Sharing
      *
-     * @param registry
+     * @param registry object which can be used for additional configuration
      */
     @Override
     public void addCorsMappings(CorsRegistry registry) {
