@@ -51,7 +51,7 @@ public class StudentControllerIntegrationTest {
 
     private static final String ACCEPT_LANGUAGE = "Accept-language";
     private static final String APPLICATION_JSON_CHARSET_UTF_8 = "application/json;charset=UTF-8";
-    private static final String EN = "en";
+    private static final String EN = "en-US";
 
     private static final String STUDENTS = "/students";
     private static final String STUDENTS_ID = "/students/{id}";
@@ -73,9 +73,13 @@ public class StudentControllerIntegrationTest {
     private static final String DONALD = "Donald";
     private static final String TRUMP = "Trump";
     private static final String STUDENTS_UPLOAD = "/students/upload";
-    private static final String CREATE_STUDENT = "{\"rowCount\":3,\"validRow\":3,\"errorsCount\":0,\"errors\":[]}";
-    private static final String FILE = "addStudentToGroup.xlsx";
-    private static final String FILE_WORD = "file";
+    private static final String ADD_STUDENT_TO_GROUP_SUC = "{\"rowCount\":3,\"validRow\":3,\"errorsCount\":0,\"errors\":[]}";
+    private static final String ADD_STUDENT_TO_GROUP_UNSUC = "{\"rowCount\":3,\"validRow\":0,\"errorsCount\":3,\"errors\":[\"Row 1: [group 'POIT-16x' does not exist]\",\"Row 2: [the required number of columns is missing]\",\"Row 3: [student already exists]\"]}";
+    private static final String SUCCESS_XLSX_FILE = "addStudentToGroup_Success.xlsx";
+    private static final String UNSUCCESSFUL_XLSX_FILE = "addStudentToGroup_Unsuccessful.xlsx";
+    private static final String SUCCESS_CSV_FILE = "addStudentToGroup_Success.csv";
+    private static final String UNSUCCESSFUL_CSV_FILE = "addStudentToGroup_Unsuccessful.csv";
+    private static final String FILE = "file";
     private static final String FILE_XLSX = "file/xlsx";
 
     private MockMvc mockMvc;
@@ -144,7 +148,7 @@ public class StudentControllerIntegrationTest {
         )
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(APPLICATION_JSON_CHARSET_UTF_8))
-                .andExpect(jsonPath($_ID, is(7)))
+                .andExpect(jsonPath($_ID, is(4)))
                 .andExpect(jsonPath($_FIRST_NAME, is(TONY)))
                 .andExpect(jsonPath($_LAST_NAME, is(HAWK)));
     }
@@ -192,20 +196,67 @@ public class StudentControllerIntegrationTest {
      * @throws Exception in json parse or MockMvc.perform
      */
     @Test
-    public void addStudentToGroup_Failed() throws Exception {
-        MockMultipartFile file = getMultipartFile();
+    public void addStudentToGroup_xlsx_Success() throws Exception {
+        MockMultipartFile file = getMultipartFile(SUCCESS_XLSX_FILE);
         mockMvc.perform(multipart(STUDENTS_UPLOAD)
                 .file(file)
                 .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isOk())
-                .andExpect(content().string(CREATE_STUDENT));
+                .andExpect(content().string(ADD_STUDENT_TO_GROUP_SUC));
     }
 
-    private MockMultipartFile getMultipartFile() throws IOException {
+    /**
+     * Will not save a new entity and return validation status
+     *
+     * @throws Exception in json parse or MockMvc.perform
+     */
+    @Test
+    public void addStudentToGroup_xlsx_Unsuccessful() throws Exception {
+        MockMultipartFile file = getMultipartFile(UNSUCCESSFUL_XLSX_FILE);
+        mockMvc.perform(multipart(STUDENTS_UPLOAD)
+                .file(file)
+                .header(ACCEPT_LANGUAGE, EN)
+                .contentType(MediaType.MULTIPART_FORM_DATA))
+                .andExpect(status().isOk())
+                .andExpect(content().string(ADD_STUDENT_TO_GROUP_UNSUC));
+    }
+
+    /**
+     * Will save a new entity and return validation status
+     *
+     * @throws Exception in json parse or MockMvc.perform
+     */
+    @Test
+    public void addStudentToGroup_csv_Success() throws Exception {
+        MockMultipartFile file = getMultipartFile(SUCCESS_CSV_FILE);
+        mockMvc.perform(multipart(STUDENTS_UPLOAD)
+                .file(file)
+                .contentType(MediaType.MULTIPART_FORM_DATA))
+                .andExpect(status().isOk())
+                .andExpect(content().string(ADD_STUDENT_TO_GROUP_SUC));
+    }
+
+    /**
+     * Will not save a new entity and return validation status
+     *
+     * @throws Exception in json parse or MockMvc.perform
+     */
+    @Test
+    public void addStudentToGroup_csv_Unsuccessful() throws Exception {
+        MockMultipartFile file = getMultipartFile(UNSUCCESSFUL_CSV_FILE);
+        mockMvc.perform(multipart(STUDENTS_UPLOAD)
+                .file(file)
+                .header(ACCEPT_LANGUAGE, EN)
+                .contentType(MediaType.MULTIPART_FORM_DATA))
+                .andExpect(status().isOk())
+                .andExpect(content().string(ADD_STUDENT_TO_GROUP_UNSUC));
+    }
+
+    private MockMultipartFile getMultipartFile(String fileName) throws IOException {
         ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(Objects.requireNonNull(classLoader.getResource(FILE)).getFile());
+        File file = new File(Objects.requireNonNull(classLoader.getResource(fileName)).getFile());
         FileInputStream input = new FileInputStream(file);
-        return new MockMultipartFile(FILE_WORD,
+        return new MockMultipartFile(FILE,
                 file.getName(), FILE_XLSX, IOUtils.toByteArray(input));
     }
 

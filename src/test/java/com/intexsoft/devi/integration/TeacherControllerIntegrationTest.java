@@ -52,7 +52,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class TeacherControllerIntegrationTest {
 
     private static final String ACCEPT_LANGUAGE = "Accept-language";
-    private static final String EN = "en-UK";
+    private static final String EN = "en-US";
     private static final String APPLICATION_JSON_CHARSET_UTF_8 = "application/json;charset=UTF-8";
 
     private static final String TEACHERS_ID = "/teachers/{id}";
@@ -71,10 +71,14 @@ public class TeacherControllerIntegrationTest {
     private static final String KORZHAVIN = "Korzhavin";
 
     private static final String TEACHERS_UPLOAD = "/teachers/upload";
-    private static final String FILE_WORD = "file";
+    private static final String FILE = "file";
     private static final String FILE_XLSX = "file/xlsx";
-    private static final String FILE = "addGroupsToTeacher.xlsx";
-    private static final String ADD_GROUPS_TO_TEACHERS = "{\"rowCount\":3,\"validRow\":3,\"errorsCount\":0,\"errors\":[]}";
+    private static final String SUCCESS_XLSX_FILE = "addGroupsToTeacher_Success.xlsx";
+    private static final String UNSUCCESS_XLSX_FILE = "addGroupsToTeacher_Unsuccessful.xlsx";
+    private static final String SUCCESS_CSV_FILE = "addGroupsToTeacher_Success.csv";
+    private static final String UNSUCCESS_CSV_FILE = "addGroupsToTeacher_Unsuccessful.csv";
+    private static final String ADD_GROUPS_TO_TEACHERS_SUC = "{\"rowCount\":3,\"validRow\":3,\"errorsCount\":0,\"errors\":[]}";
+    private static final String ADD_GROUPS_TO_TEACHERS_UNSUC = "{\"rowCount\":3,\"validRow\":0,\"errorsCount\":3,\"errors\":[\"Row 1: [teacher already exists]\",\"Row 2: [some type is not a string]\",\"Row 3: [the required number of columns is missing]\"]}";
 
     private MockMvc mockMvc;
 
@@ -188,20 +192,67 @@ public class TeacherControllerIntegrationTest {
      * @throws Exception in json parse or MockMvc.perform
      */
     @Test
-    public void addGroupsToTeacher_Failed() throws Exception {
-        MockMultipartFile file = getMultipartFile();
+    public void addGroupsToTeacher_xlsx_Success() throws Exception {
+        MockMultipartFile file = getMultipartFile(SUCCESS_XLSX_FILE);
         mockMvc.perform(multipart(TEACHERS_UPLOAD)
                 .file(file)
                 .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isOk())
-                .andExpect(content().string(ADD_GROUPS_TO_TEACHERS));
+                .andExpect(content().string(ADD_GROUPS_TO_TEACHERS_SUC));
     }
 
-    private MockMultipartFile getMultipartFile() throws IOException {
+    /**
+     * Will save a new entity and return validation status
+     *
+     * @throws Exception in json parse or MockMvc.perform
+     */
+    @Test
+    public void addGroupsToTeacher_xlsx_Unsuccessful() throws Exception {
+        MockMultipartFile file = getMultipartFile(UNSUCCESS_XLSX_FILE);
+        mockMvc.perform(multipart(TEACHERS_UPLOAD)
+                .file(file)
+                .header(ACCEPT_LANGUAGE, EN)
+                .contentType(MediaType.MULTIPART_FORM_DATA))
+                .andExpect(status().isOk())
+                .andExpect(content().string(ADD_GROUPS_TO_TEACHERS_UNSUC));
+    }
+
+    /**
+     * Will save a new entity and return validation status
+     *
+     * @throws Exception in json parse or MockMvc.perform
+     */
+    @Test
+    public void addGroupsToTeacher_csv_Success() throws Exception {
+        MockMultipartFile file = getMultipartFile(SUCCESS_CSV_FILE);
+        mockMvc.perform(multipart(TEACHERS_UPLOAD)
+                .file(file)
+                .contentType(MediaType.MULTIPART_FORM_DATA))
+                .andExpect(status().isOk())
+                .andExpect(content().string(ADD_GROUPS_TO_TEACHERS_SUC));
+    }
+
+    /**
+     * Will save a new entity and return validation status
+     *
+     * @throws Exception in json parse or MockMvc.perform
+     */
+    @Test
+    public void addGroupsToTeacher_csv_Unsuccessful() throws Exception {
+        MockMultipartFile file = getMultipartFile(UNSUCCESS_CSV_FILE);
+        mockMvc.perform(multipart(TEACHERS_UPLOAD)
+                .file(file)
+                .header(ACCEPT_LANGUAGE, EN)
+                .contentType(MediaType.MULTIPART_FORM_DATA))
+                .andExpect(status().isOk())
+                .andExpect(content().string(ADD_GROUPS_TO_TEACHERS_UNSUC));
+    }
+
+    private MockMultipartFile getMultipartFile(String fileName) throws IOException {
         ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(Objects.requireNonNull(classLoader.getResource(FILE)).getFile());
+        File file = new File(Objects.requireNonNull(classLoader.getResource(fileName)).getFile());
         FileInputStream input = new FileInputStream(file);
-        return new MockMultipartFile(FILE_WORD,
+        return new MockMultipartFile(FILE,
                 file.getName(), FILE_XLSX, IOUtils.toByteArray(input));
     }
 
