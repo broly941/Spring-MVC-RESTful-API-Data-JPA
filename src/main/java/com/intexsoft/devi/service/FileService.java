@@ -16,4 +16,6 @@ import java.util.function.BiConsumer;
  */
 public interface FileService {
     ValidationStatus parse(Locale locale, InputStream file, String fileExtension, TriFunction<Map<Integer, List<Object>>, Map<Integer, Object>, Locale, ValidationStatus> validation, BiConsumer<Map<Integer, Object>, Locale> save) throws IOException;
+
+    Map<Integer, List<Object>> getIfNotEmpty(Locale locale, Map<Integer, List<Object>> parsedEntities);
 }

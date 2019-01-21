@@ -53,7 +53,7 @@ public class StudentServiceImpl implements StudentService {
     private EntitiesValidationService entitiesValidationService;
 
     private static final Predicate<List<Object>> allowableColumnPredicate = value -> value.size() != 3;
-    private static final Predicate<List<Object>> instanceStringPredicate = value -> (value.get(0) instanceof String && value.get(1) instanceof String && value.get(2) instanceof String);
+    private static final Predicate<List<Object>> instanceStringPredicate = value -> value.stream().allMatch(v -> v instanceof String);
 
     /**
      * method return all students

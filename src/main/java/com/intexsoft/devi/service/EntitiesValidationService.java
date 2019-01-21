@@ -10,7 +10,6 @@ import java.util.function.Predicate;
 /**
  * @author DEVIAPHAN on 15.01.2019
  * @project university
- *
  */
 public interface EntitiesValidationService {
     boolean isValueStringAndHasReqColumn(Predicate<List<Object>> valueIsStringPredicate, Predicate<List<Object>> HasRequiredColumnPredicate, List<java.lang.String> rowErrors, List<Object> value, Locale locale);
