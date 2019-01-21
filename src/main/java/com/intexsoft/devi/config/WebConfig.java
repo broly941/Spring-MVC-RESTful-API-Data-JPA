@@ -39,6 +39,10 @@ public class WebConfig implements WebMvcConfigurer {
         return messageSource;
     }
 
+    /**
+     *
+     * @param registry
+     */
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**");
