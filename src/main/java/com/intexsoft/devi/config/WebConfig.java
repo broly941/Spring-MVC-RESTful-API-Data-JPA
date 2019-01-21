@@ -39,11 +39,6 @@ public class WebConfig implements WebMvcConfigurer {
         return messageSource;
     }
 
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**");
-    }
-
     /**
      * Enable Cross-Origin Resource Sharing
      *
