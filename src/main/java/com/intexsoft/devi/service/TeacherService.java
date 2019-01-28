@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author DEVIAPHAN on 21.12.2018
@@ -30,7 +31,7 @@ public interface TeacherService {
 
     Optional<Teacher> getTeacherByName(String firstName, String lastName);
 
-    ValidationStatus validate(Map<Integer, List<Object>> parsedEntities, Map<Integer, Object> validEntities, Locale locale);
+    ValidationStatus validate(ConcurrentHashMap<Integer, List<Object>> parsedEntities, ConcurrentHashMap<Integer, Object> validEntities, Locale locale);
 
     void save(Map<Integer, Object> validEntities, Locale locale);
 }

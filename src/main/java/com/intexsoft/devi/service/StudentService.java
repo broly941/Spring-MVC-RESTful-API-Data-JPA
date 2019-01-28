@@ -1,13 +1,14 @@
 package com.intexsoft.devi.service;
 
 import com.intexsoft.devi.controller.response.ValidationStatus;
+import com.intexsoft.devi.entity.Group;
 import com.intexsoft.devi.entity.Student;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
  * @author DEVIAPHAN on 21.12.2018
@@ -35,7 +36,7 @@ public interface StudentService {
 
     List<Student> getStudentsOfGroupById(Long id, Locale locale);
 
-    ValidationStatus validate(Map<Integer, List<Object>> parsedEntities, Map<Integer, Object> validEntities, Locale locale);
+    ValidationStatus validate(ConcurrentHashMap<Integer, List<Object>> parsedEntities, ConcurrentHashMap<Integer, Object> validEntities, Locale locale);
 
     void save(Map<Integer, Object> validEntities, Locale locale);
 }

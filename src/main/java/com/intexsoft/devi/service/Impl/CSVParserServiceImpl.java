@@ -12,6 +12,8 @@ import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 
 /**
@@ -21,7 +23,7 @@ import java.util.function.Predicate;
  * @project university
  */
 @Service
-public class CSVParserServiceImpl implements CSVParserService {
+public class CSVParserServiceImpl implements CSVParserService, Callable<Map<Integer, List<Object>>> {
 
     private static final String SEMICOLON = ";";
 
@@ -51,6 +53,17 @@ public class CSVParserServiceImpl implements CSVParserService {
     }
 
     /**
+     * TODO add comment
+     *
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public Map<Integer, List<Object>> call() throws Exception {
+        return null;
+    }
+
+    /**
      * method parse csv file and return map
      *
      * @param file   for init db
@@ -59,9 +72,9 @@ public class CSVParserServiceImpl implements CSVParserService {
      * @throws IOException if throw exception in parse
      */
     @Override
-    public Map<Integer, List<Object>> parseCsv(InputStream file, Locale locale) throws IOException {
+    public ConcurrentHashMap<Integer, List<Object>> parseCsv(InputStream file, Locale locale) throws IOException {
         int rowIndex = 1;
-        Map<Integer, List<Object>> parsedEntities = new HashMap<>();
+        ConcurrentHashMap<Integer, List<Object>> parsedEntities = new ConcurrentHashMap<>();
         MappingIterator<String[]> it = mapper.readerFor(String[].class).readValues(file);
         it.next();
         while (it.hasNext()) {

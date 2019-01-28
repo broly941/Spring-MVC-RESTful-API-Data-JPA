@@ -16,6 +16,7 @@ import org.springframework.context.MessageSource;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
@@ -164,9 +165,10 @@ public class StudentServiceTest {
     @Test
     public void validate() {
         ValidationStatus validationStatus = new ValidationStatus();
-        Map<Integer, List<Object>> parsedEntities = new HashMap<>();
-        Map<Integer, Object> validEntities = new HashMap<>();
-        assertTrue(EqualsBuilder.reflectionEquals(validationStatus,studentService.validate(parsedEntities, validEntities, Locale.ENGLISH)));
+        ConcurrentHashMap<Integer, List<Object>> parsedEntities = new ConcurrentHashMap<>();
+        ConcurrentHashMap<Integer, Object> validEntities = new ConcurrentHashMap<>();
+//        assertTrue(EqualsBuilder.reflectionEquals(validationStatus,studentService.validate(parsedEntities, validEntities, Locale.ENGLISH)));
+        assertEquals(validationStatus, studentService.validate(parsedEntities, validEntities, Locale.ENGLISH));
     }
 
     private List<Student> initializeStudentList() {

@@ -9,9 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
+import javax.security.auth.callback.Callback;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Class parse csv file and return map of entities
@@ -37,7 +39,7 @@ public class XLSXParserServiceImpl implements XLSXParserService {
      * @throws IOException if throw exception in parse
      */
     @Override
-    public Map<Integer, List<Object>> parseXlsx(InputStream file, Locale locale) throws IOException {
+    public ConcurrentHashMap<Integer, List<Object>> parseXlsx(InputStream file, Locale locale) throws IOException {
         XSSFWorkbook workbook = new XSSFWorkbook(file);
         XSSFSheet sheet = workbook.getSheetAt(0);
         Iterator<Row> rowIterator = sheet.iterator();
@@ -45,9 +47,9 @@ public class XLSXParserServiceImpl implements XLSXParserService {
         return getMap(rowIterator, locale);
     }
 
-    private Map<Integer, List<Object>> getMap(Iterator<Row> rowIterator, Locale locale) {
+    private ConcurrentHashMap<Integer, List<Object>> getMap(Iterator<Row> rowIterator, Locale locale) {
         int rowIndex = 0;
-        Map<Integer, List<Object>> parsedEntities = new HashMap<>();
+        ConcurrentHashMap<Integer, List<Object>> parsedEntities = new ConcurrentHashMap<>();
         rowIterator.next();
 
         while (rowIterator.hasNext()) {

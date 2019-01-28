@@ -2,9 +2,13 @@ package com.intexsoft.devi.service;
 
 import com.intexsoft.devi.controller.response.ValidationStatus;
 
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 
 /**
@@ -14,5 +18,9 @@ import java.util.function.Predicate;
 public interface EntitiesValidationService {
     boolean isValueStringAndHasReqColumn(Predicate<List<Object>> valueIsStringPredicate, Predicate<List<Object>> HasRequiredColumnPredicate, List<java.lang.String> rowErrors, List<Object> value, Locale locale);
 
-    void fillValidationStatus(ValidationStatus validationStatus, Integer key, Object validEntity, Locale locale, List<java.lang.String> rowErrors, Map<Integer, Object> validEntities);
+    void fillValidationStatus(ValidationStatus validationStatus, int key, Object validEntity, Locale locale, List<String> rowErrors, ConcurrentHashMap<Integer, Object> validEntities);
+
+    ExecutorService getExecutorService();
+
+    void validateParsedEntities(ConcurrentHashMap<Integer, List<Object>> parsedEntities, ConcurrentHashMap<Integer, Object> validEntities, Locale locale, ValidationStatus validationStatus, Type reqType);
 }

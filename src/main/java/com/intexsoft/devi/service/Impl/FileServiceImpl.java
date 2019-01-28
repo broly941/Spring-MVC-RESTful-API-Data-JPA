@@ -12,10 +12,9 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiConsumer;
 
 /**
@@ -56,22 +55,26 @@ public class FileServiceImpl implements FileService {
      * @throws IOException if an exception occurred in the file parsing
      */
     @Override
-    public ValidationStatus parse(Locale locale, InputStream file, String fileExtension, TriFunction<Map<Integer, List<Object>>, Map<Integer, Object>, Locale, ValidationStatus> validation, BiConsumer<Map<Integer, Object>, Locale> save) throws IOException {
+    public ValidationStatus parse(Locale locale, InputStream file, String fileExtension, TriFunction<ConcurrentHashMap<Integer, List<Object>>, ConcurrentHashMap<Integer, Object>, Locale, ValidationStatus> validation, BiConsumer<ConcurrentHashMap<Integer, Object>, Locale> save) throws IOException {
         if (file.available() == 0) {
             throw new EntityNotFoundException(messageSource.getMessage(UNABLE_TO_UPLOAD_EMPTY_FILE, new Object[]{}, locale));
         } else {
-            Map<Integer, List<Object>> parsedEntities = parse(locale, file, fileExtension);
-            Map<Integer, Object> validEntities = new HashMap<>();
-            ValidationStatus validationStatus = validation.apply(parsedEntities, validEntities, locale);
-            if (validationStatus.isValid()) {
-                save.accept(validEntities, locale);
-            }
-            return validationStatus;
+            return getStatus(locale, file, fileExtension, validation, save);
         }
     }
 
-    private Map<Integer, List<Object>> parse(Locale locale, InputStream file, String fileExtension) throws IOException {
-        Map<Integer, List<Object>> parsedEntities;
+    private ValidationStatus getStatus(Locale locale, InputStream file, String fileExtension, TriFunction<ConcurrentHashMap<Integer, List<Object>>, ConcurrentHashMap<Integer, Object>, Locale, ValidationStatus> validation, BiConsumer<ConcurrentHashMap<Integer, Object>, Locale> save) throws IOException {
+        ConcurrentHashMap<Integer, List<Object>> parsedEntities = parse(locale, file, fileExtension);
+        ConcurrentHashMap<Integer, Object> validEntities = new ConcurrentHashMap<>();
+        ValidationStatus validationStatus = validation.apply(parsedEntities, validEntities, locale);
+        if (validationStatus.isValid()) {
+            save.accept(validEntities, locale);
+        }
+        return validationStatus;
+    }
+
+    private ConcurrentHashMap<Integer, List<Object>> parse(Locale locale, InputStream file, String fileExtension) throws IOException {
+        ConcurrentHashMap<Integer, List<Object>> parsedEntities;
         if (fileExtension.equals(XLSX)) {
             parsedEntities = xlsxParserService.parseXlsx(file, locale);
         } else if (fileExtension.equals(CSV)) {
@@ -90,7 +93,7 @@ public class FileServiceImpl implements FileService {
      * @return map of parsed entities
      */
     @Override
-    public Map<Integer, List<Object>> getIfNotEmpty(Locale locale, Map<Integer, List<Object>> parsedEntities) {
+    public ConcurrentHashMap<Integer, List<Object>> getIfNotEmpty(Locale locale, ConcurrentHashMap<Integer, List<Object>> parsedEntities) {
         if (parsedEntities.isEmpty()) {
             throw new EntityNotFoundException(messageSource.getMessage(UNABLE_TO_UPLOAD_EMPTY_FILE, new Object[]{}, locale));
         } else {

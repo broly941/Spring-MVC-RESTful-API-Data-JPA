@@ -5,11 +5,12 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author DEVIAPHAN on 21.01.2019
  * @project university
  */
 public interface XLSXParserService {
-    Map<Integer, List<Object>> parseXlsx(InputStream file, Locale locale) throws IOException;
+    ConcurrentHashMap<Integer, List<Object>> parseXlsx(InputStream file, Locale locale) throws IOException;
 }
