@@ -100,7 +100,7 @@ public class EntitiesValidationServiceImpl implements EntitiesValidationService 
      * @return validation status
      */
     @Override
-    public ValidationStatus validateParsedEntities(ConcurrentHashMap<Integer, List<Object>> parsedEntities, ConcurrentHashMap<Integer, Object> validEntities, Locale locale, Function<ParameterValidation, Void> validator) {
+    public ValidationStatus validateParsedEntities(ConcurrentHashMap<Integer, List<Object>> parsedEntities, ConcurrentHashMap<Integer, Object> validEntities, Locale locale, Function<ValidationParameters, Void> validator) {
         ValidationStatus validationStatus = getValidationStatus(parsedEntities);
         CopyOnWriteArraySet<String> duplicateSet = new CopyOnWriteArraySet<>();
         ExecutorService executor = getExecutorService();
@@ -126,11 +126,11 @@ public class EntitiesValidationServiceImpl implements EntitiesValidationService 
         return validationStatus;
     }
 
-    private List<Callable<Void>> setTasks(Function<ParameterValidation, Void> validator, ConcurrentHashMap<Integer, List<Object>> parsedEntities, ValidationStatus validationStatus, ConcurrentHashMap<Integer, Object> validEntities, Locale locale, CopyOnWriteArraySet<String> duplicateSet) {
+    private List<Callable<Void>> setTasks(Function<ValidationParameters, Void> validator, ConcurrentHashMap<Integer, List<Object>> parsedEntities, ValidationStatus validationStatus, ConcurrentHashMap<Integer, Object> validEntities, Locale locale, CopyOnWriteArraySet<String> duplicateSet) {
         return parsedEntities.entrySet().stream()
                 .map(m -> (Callable<Void>) () -> {
-                    ParameterValidation parameterValidation = new ParameterValidation(m.getKey(), m.getValue(), validEntities, locale, validationStatus, duplicateSet);
-                    validator.apply(parameterValidation);
+                    ValidationParameters validationParameters = new ValidationParameters(m.getKey(), m.getValue(), validEntities, locale, validationStatus, duplicateSet);
+                    validator.apply(validationParameters);
                     return null;
                 }).collect(Collectors.toList());
     }

@@ -1,7 +1,7 @@
 package com.intexsoft.devi.service;
 
 import com.intexsoft.devi.controller.response.ValidationStatus;
-import com.intexsoft.devi.service.Impl.fileReader.validate.ParameterValidation;
+import com.intexsoft.devi.service.Impl.fileReader.validate.ValidationParameters;
 
 import java.util.List;
 import java.util.Locale;
@@ -21,5 +21,5 @@ public interface EntitiesValidationService {
 
     ExecutorService getExecutorService();
 
-    ValidationStatus validateParsedEntities(ConcurrentHashMap<Integer, List<Object>> parsedEntities, ConcurrentHashMap<Integer, Object> validEntities, Locale locale, Function<ParameterValidation, Void> validator);
+    ValidationStatus validateParsedEntities(ConcurrentHashMap<Integer, List<Object>> parsedEntities, ConcurrentHashMap<Integer, Object> validEntities, Locale locale, Function<ValidationParameters, Void> validator);
 }

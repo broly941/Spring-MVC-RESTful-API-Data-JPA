@@ -55,7 +55,7 @@ public class StudentValidatorImpl implements StudentValidator {
      * @return the stub - null
      */
     @Override
-    public Void validate(ParameterValidation parameters) {
+    public Void validate(ValidationParameters parameters) {
         Group group = null;
         String firstName = null;
         String lastName = null;

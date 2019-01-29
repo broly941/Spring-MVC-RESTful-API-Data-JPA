@@ -13,7 +13,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
  * @author DEVIAPHAN on 1/28/2019
  * @project university
  */
-public class ParameterValidation {
+public class ValidationParameters {
     private int key;
     private List<Object> value;
     private ConcurrentHashMap<Integer, Object> validEntities;
@@ -21,7 +21,7 @@ public class ParameterValidation {
     private ValidationStatus validationStatus;
     private CopyOnWriteArraySet<String> duplicateSet;
 
-    public ParameterValidation(int key, List<Object> value, ConcurrentHashMap<Integer, Object> validEntities, Locale locale, ValidationStatus validationStatus, CopyOnWriteArraySet<String> duplicateSet) {
+    public ValidationParameters(int key, List<Object> value, ConcurrentHashMap<Integer, Object> validEntities, Locale locale, ValidationStatus validationStatus, CopyOnWriteArraySet<String> duplicateSet) {
         this.key = key;
         this.value = value;
         this.validEntities = validEntities;

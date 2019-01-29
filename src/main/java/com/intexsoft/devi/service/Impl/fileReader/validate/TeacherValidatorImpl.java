@@ -49,7 +49,7 @@ public class TeacherValidatorImpl implements TeacherValidator {
      * @return the stub - null
      */
     @Override
-    public Void validate(ParameterValidation parameters) {
+    public Void validate(ValidationParameters parameters) {
         String firstName = null;
         String lastName = null;
         List<Group> groupList = null;
