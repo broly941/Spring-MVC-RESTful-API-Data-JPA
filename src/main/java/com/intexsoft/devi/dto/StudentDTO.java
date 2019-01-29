@@ -1,9 +1,10 @@
 package com.intexsoft.devi.dto;
 
 /**
+ * Data Transfer Object of Student
+ *
  * @author DEVIAPHAN on 02.01.2019
  * @project university
- * Data Transfer Object of Student
  */
 public class StudentDTO {
     private Long id;

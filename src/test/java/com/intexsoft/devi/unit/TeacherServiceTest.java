@@ -4,8 +4,8 @@ import com.intexsoft.devi.controller.response.ValidationStatus;
 import com.intexsoft.devi.entity.Teacher;
 import com.intexsoft.devi.repository.TeacherRepository;
 import com.intexsoft.devi.service.BaseService;
-import com.intexsoft.devi.service.Impl.TeacherServiceImpl;
-import org.apache.commons.lang3.builder.EqualsBuilder;
+import com.intexsoft.devi.service.EntitiesValidationService;
+import com.intexsoft.devi.service.Impl.entityManagment.TeacherServiceImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -15,6 +15,7 @@ import org.springframework.context.MessageSource;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
@@ -25,8 +26,9 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 /**
- * @author DEVIAPHAN
  * Test for Business Logic Service Class
+ *
+ * @author DEVIAPHAN
  */
 @RunWith(MockitoJUnitRunner.class)
 public class TeacherServiceTest {
@@ -39,6 +41,9 @@ public class TeacherServiceTest {
 
     @Mock
     BaseService<Teacher> teacherBaseService;
+
+    @Mock
+    EntitiesValidationService entitiesValidationService;
 
     @Mock
     MessageSource messageSource;
@@ -139,17 +144,6 @@ public class TeacherServiceTest {
         when(teacherBaseService.get(eq((long) 1), any(Function.class), eq(Locale.ENGLISH), eq("updateById"), eq("teacher"), eq("Update teacher by id")))
                 .thenThrow(EntityNotFoundException.class);
         teacherService.updateById(initializeTeacher((long) 1), (long) 1, Locale.ENGLISH);
-    }
-
-    /**
-     * Will return a validation status
-     */
-    @Test
-    public void validate() {
-        ValidationStatus validationStatus = new ValidationStatus();
-        Map<Integer, List<Object>> parsedEntities = new HashMap<>();
-        Map<Integer, Object> validEntities = new HashMap<>();
-        assertTrue(EqualsBuilder.reflectionEquals(validationStatus,teacherService.validate(parsedEntities, validEntities, Locale.ENGLISH)));
     }
 
     private List<Teacher> initializeTeacherList() {

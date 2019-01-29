@@ -1,25 +1,21 @@
-package com.intexsoft.devi.service.Impl;
+package com.intexsoft.devi.service.Impl.entityManagment;
 
 import com.intexsoft.devi.controller.response.ValidationStatus;
-import com.intexsoft.devi.entity.Group;
 import com.intexsoft.devi.entity.Student;
 import com.intexsoft.devi.repository.StudentRepository;
-import com.intexsoft.devi.service.BaseService;
-import com.intexsoft.devi.service.EntitiesValidationService;
-import com.intexsoft.devi.service.GroupService;
-import com.intexsoft.devi.service.StudentService;
+import com.intexsoft.devi.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.function.Predicate;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
- * @author DEVIAPHAN
  * Business Logic Service Class
+ *
+ * @author DEVIAPHAN
  */
 @Service
 public class StudentServiceImpl implements StudentService {
@@ -34,8 +30,6 @@ public class StudentServiceImpl implements StudentService {
     private static final String GET_ALL = "getAll";
     private static final String GET_STUDENTS_OF_GROUP_BY_ID = "getStudentsOfGroupById";
     private static final String GET_STUDENTS_BY_GROUP_ID = "Get students by group id";
-    private static final String GROUP_DOES_NOT_EXIST = "GROUP_DOES_NOT_EXIST";
-    private static final String STUDENT_ALREADY_EXISTS = "STUDENT_ALREADY_EXISTS";
 
     @Autowired
     private StudentRepository studentRepository;
@@ -44,16 +38,13 @@ public class StudentServiceImpl implements StudentService {
     private GroupService groupService;
 
     @Autowired
-    private MessageSource messageSource;
-
-    @Autowired
     private BaseService<Student> studentBaseService;
 
     @Autowired
     private EntitiesValidationService entitiesValidationService;
 
-    private static final Predicate<List<Object>> allowableColumnPredicate = value -> value.size() != 3;
-    private static final Predicate<List<Object>> instanceStringPredicate = value -> value.stream().allMatch(v -> v instanceof String);
+    @Autowired
+    private StudentValidator studentValidator;
 
     /**
      * method return all students
@@ -182,52 +173,8 @@ public class StudentServiceImpl implements StudentService {
      * @return validationStatus
      */
     @Override
-    public ValidationStatus validate(Map<Integer, List<Object>> parsedEntities, Map<Integer, Object> validEntities, Locale locale) {
-        ValidationStatus validationStatus = new ValidationStatus();
-        validationStatus.setRowCount(parsedEntities.size());
-        validateParsedEntities(parsedEntities, validEntities, locale, validationStatus);
-        return validationStatus;
-    }
-
-    private void validateParsedEntities(Map<Integer, List<Object>> parsedEntities, Map<Integer, Object> validEntities, Locale locale, ValidationStatus validationStatus) {
-        Set<String> duplicateSet = new HashSet<>();
-        parsedEntities.forEach((key, value) -> {
-            Group group = null;
-            String firstName = null;
-            String lastName = null;
-            String groupName;
-            List<String> rowErrors = new ArrayList<>();
-            if (entitiesValidationService.isValueStringAndHasReqColumn(instanceStringPredicate, allowableColumnPredicate, rowErrors, value, locale)) {
-                firstName = value.get(0).toString();
-                lastName = value.get(1).toString();
-                groupName = value.get(2).toString();
-                validateStudent(locale, firstName, lastName, rowErrors);
-                group = validateGroup(locale, groupName, rowErrors);
-                validateDuplicate(locale, duplicateSet, firstName, lastName, rowErrors);
-            }
-            entitiesValidationService.fillValidationStatus(validationStatus, key, new Student(firstName, lastName, group), locale, rowErrors, validEntities);
-        });
-    }
-
-    private void validateDuplicate(Locale locale, Set<String> duplicateSet, String firstName, String lastName, List<String> rowErrors) {
-        if (!duplicateSet.add(firstName + " " + lastName)) {
-            rowErrors.add(messageSource.getMessage("DUPLICATE", new Object[]{}, locale));
-        }
-    }
-
-    private void validateStudent(Locale locale, String firstName, String lastName, List<String> rowErrors) {
-        Optional<Student> optionalStudent = getByName(firstName, lastName);
-        if (optionalStudent.isPresent()) {
-            rowErrors.add(messageSource.getMessage(STUDENT_ALREADY_EXISTS, new Object[]{}, locale));
-        }
-    }
-
-    private Group validateGroup(Locale locale, String groupName, List<String> rowErrors) {
-        Optional<Group> optionalGroup = groupService.getByNumber(groupName);
-        if (!optionalGroup.isPresent()) {
-            rowErrors.add(messageSource.getMessage(GROUP_DOES_NOT_EXIST, new Object[]{groupName}, locale));
-        }
-        return optionalGroup.orElse(null);
+    public ValidationStatus validate(ConcurrentHashMap<Integer, List<Object>> parsedEntities, ConcurrentHashMap<Integer, Object> validEntities, Locale locale) {
+        return entitiesValidationService.validateParsedEntities(parsedEntities, validEntities, locale, studentValidator::validate);
     }
 
     /**

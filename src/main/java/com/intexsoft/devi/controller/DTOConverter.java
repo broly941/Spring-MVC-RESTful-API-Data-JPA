@@ -7,9 +7,10 @@ import org.springframework.stereotype.Component;
 import java.lang.reflect.Type;
 
 /**
+ * Class converts entities to DTO and DTO to entities
+ *
  * @author DEVIAPHAN on 16.01.2019
  * @project university
- * Class converts entities to DTO and DTO to entities
  */
 @Component
 public class DTOConverter {

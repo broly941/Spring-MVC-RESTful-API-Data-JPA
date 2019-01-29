@@ -3,7 +3,10 @@ package com.intexsoft.devi.controller.response;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * The class contains information about the file and validation status.
@@ -15,14 +18,14 @@ public class ValidationStatus {
 
     private int rowCount = 0;
 
-    private int validRow = 0;
+    private AtomicInteger validRow = new AtomicInteger(0);
 
-    private int errorsCount = 0;
+    private AtomicInteger errorsCount = new AtomicInteger(0);
 
-    private List<String> errors;
+    private CopyOnWriteArrayList<String> errors;
 
     public ValidationStatus() {
-        errors = new ArrayList<>();
+        errors = new CopyOnWriteArrayList<>();
     }
 
     public void append(String value) {
@@ -30,11 +33,11 @@ public class ValidationStatus {
     }
 
     public void validRowInc() {
-        validRow++;
+        validRow.getAndIncrement();
     }
 
     public void errorRowInc() {
-        errorsCount++;
+        errorsCount.getAndIncrement();
     }
 
     public void setRowCount(int rowCount) {
@@ -51,14 +54,18 @@ public class ValidationStatus {
     }
 
     public int getValidRow() {
-        return validRow;
+        return validRow.get();
     }
 
     public int getErrorsCount() {
-        return errorsCount;
+        return errorsCount.get();
     }
 
     public List<String> getErrors() {
         return errors;
+    }
+
+    public void sortErrors() {
+        Collections.sort(errors);
     }
 }

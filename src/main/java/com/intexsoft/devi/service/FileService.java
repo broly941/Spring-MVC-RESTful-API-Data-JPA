@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiConsumer;
 
 /**
@@ -15,7 +16,7 @@ import java.util.function.BiConsumer;
  * @project university
  */
 public interface FileService {
-    ValidationStatus parse(Locale locale, InputStream file, String fileExtension, TriFunction<Map<Integer, List<Object>>, Map<Integer, Object>, Locale, ValidationStatus> validation, BiConsumer<Map<Integer, Object>, Locale> save) throws IOException;
+    ValidationStatus parse(Locale locale, InputStream file, String fileExtension, TriFunction<ConcurrentHashMap<Integer, List<Object>>, ConcurrentHashMap<Integer, Object>, Locale, ValidationStatus> validation, BiConsumer<ConcurrentHashMap<Integer, Object>, Locale> save) throws IOException;
 
-    Map<Integer, List<Object>> getIfNotEmpty(Locale locale, Map<Integer, List<Object>> parsedEntities);
+    ConcurrentHashMap<Integer, List<Object>> getIfNotEmpty(Locale locale, ConcurrentHashMap<Integer, List<Object>> parsedEntities);
 }

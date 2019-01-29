@@ -15,8 +15,10 @@ import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import java.nio.charset.StandardCharsets;
 
 /**
+ * Specifies that the class contains the definitions
+ * and dependencies of the Bean components.
+ *
  * @author DEVIAPHAN
- * Specifies that the class contains the definitions and dependencies of the Bean components.
  */
 @Configuration
 @EnableWebMvc

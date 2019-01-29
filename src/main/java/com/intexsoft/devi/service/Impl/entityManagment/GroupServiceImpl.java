@@ -1,12 +1,10 @@
-package com.intexsoft.devi.service.Impl;
+package com.intexsoft.devi.service.Impl.entityManagment;
 
 import com.intexsoft.devi.entity.Group;
-import com.intexsoft.devi.entity.Student;
 import com.intexsoft.devi.entity.Teacher;
 import com.intexsoft.devi.repository.GroupRepository;
 import com.intexsoft.devi.service.BaseService;
 import com.intexsoft.devi.service.GroupService;
-import com.intexsoft.devi.service.StudentService;
 import com.intexsoft.devi.service.TeacherService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,8 +24,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- * @author DEVIAPHAN
  * Business Logic Service Class
+ *
+ * @author DEVIAPHAN
  */
 @Service
 public class GroupServiceImpl implements GroupService {

@@ -3,8 +3,8 @@ package com.intexsoft.devi.unit;
 import com.intexsoft.devi.entity.Group;
 import com.intexsoft.devi.repository.GroupRepository;
 import com.intexsoft.devi.service.BaseService;
-import com.intexsoft.devi.service.Impl.GroupServiceImpl;
-import com.intexsoft.devi.service.Impl.TeacherServiceImpl;
+import com.intexsoft.devi.service.Impl.entityManagment.GroupServiceImpl;
+import com.intexsoft.devi.service.Impl.entityManagment.TeacherServiceImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -25,8 +25,9 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 /**
- * @author DEVIAPHAN
  * Test for Business Logic Service Class
+ *
+ * @author DEVIAPHAN
  */
 @RunWith(MockitoJUnitRunner.class)
 public class GroupServiceTest {

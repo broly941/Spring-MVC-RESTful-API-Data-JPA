@@ -33,8 +33,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
- * @author DEVIAPHAN
  * Test for Controller Teacher Class
+ *
+ * @author DEVIAPHAN
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = DataConfigTest.class)

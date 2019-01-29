@@ -1,9 +1,10 @@
-package com.intexsoft.devi.service.Impl;
+package com.intexsoft.devi.service.Impl.fileReader.parse;
 
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvParser.Feature;
 import com.intexsoft.devi.service.CSVParserService;
+import com.intexsoft.devi.service.Impl.fileReader.FileServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,7 @@ import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 
 /**
@@ -59,9 +61,9 @@ public class CSVParserServiceImpl implements CSVParserService {
      * @throws IOException if throw exception in parse
      */
     @Override
-    public Map<Integer, List<Object>> parseCsv(InputStream file, Locale locale) throws IOException {
+    public ConcurrentHashMap<Integer, List<Object>> parseCsv(InputStream file, Locale locale) throws IOException {
         int rowIndex = 1;
-        Map<Integer, List<Object>> parsedEntities = new HashMap<>();
+        ConcurrentHashMap<Integer, List<Object>> parsedEntities = new ConcurrentHashMap<>();
         MappingIterator<String[]> it = mapper.readerFor(String[].class).readValues(file);
         it.next();
         while (it.hasNext()) {

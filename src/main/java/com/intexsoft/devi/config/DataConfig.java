@@ -17,8 +17,9 @@ import java.util.Objects;
 import java.util.Properties;
 
 /**
- * @author DEVIAPHAN
  * Initialization of components for Data Jpa
+ *
+ * @author DEVIAPHAN
  */
 @Configuration
 @EnableTransactionManagement

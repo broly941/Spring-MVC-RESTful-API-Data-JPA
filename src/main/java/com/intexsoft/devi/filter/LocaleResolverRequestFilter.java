@@ -1,6 +1,6 @@
 package com.intexsoft.devi.filter;
 
-import com.intexsoft.devi.service.Impl.GroupServiceImpl;
+import com.intexsoft.devi.service.Impl.entityManagment.GroupServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -29,9 +29,11 @@ import java.util.stream.Collectors;
 import static org.springframework.http.HttpHeaders.ACCEPT_LANGUAGE;
 
 /**
+ * If the request has the wrong Accept-Language or Locale
+ * is not available then throw 404 error.
+ *
  * @author DEVIAPHAN on 19.12.2018
  * @project university
- * If the request has the wrong Accept-Language or Locale is not available then throw 404 error.
  */
 @Order(1)
 public class LocaleResolverRequestFilter extends OncePerRequestFilter {
