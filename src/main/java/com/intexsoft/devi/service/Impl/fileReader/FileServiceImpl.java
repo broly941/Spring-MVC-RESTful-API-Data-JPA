@@ -1,4 +1,4 @@
-package com.intexsoft.devi.service.Impl;
+package com.intexsoft.devi.service.Impl.fileReader;
 
 import com.intexsoft.devi.controller.response.ValidationStatus;
 import com.intexsoft.devi.funcInterface.TriFunction;
@@ -18,12 +18,12 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiConsumer;
 
 /**
- * @author DEVIAPHAN
- * <p>
  * Business Logic Excel File Class
  * <p>
  * The class is engaged in parsing, validating
  * and saving records from a file in the database.
+ *
+ * @author DEVIAPHAN
  */
 @Service
 public class FileServiceImpl implements FileService {

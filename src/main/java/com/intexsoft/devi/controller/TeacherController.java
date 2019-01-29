@@ -15,8 +15,9 @@ import java.util.Locale;
 import java.util.stream.Collectors;
 
 /**
- * @author DEVIAPHAN
  * Processes the request and returns the response as JSON.
+ *
+ * @author DEVIAPHAN
  */
 @RestController
 @RequestMapping("/teachers")
@@ -109,14 +110,14 @@ public class TeacherController {
     /**
      * method save entities in database from excel file
      *
-     * @param file excel
+     * @param file   excel
      * @param locale of message
      * @return validation status
-     * @throws IOException if an exception occurred in the file parsing
+     * @throws IOException if an exception occurred in the fileReader parsing
      */
     @PostMapping("/upload")
     public ValidationStatus addGroupsToTeacher(@RequestParam(value = "file") MultipartFile file, Locale locale) throws IOException {
-        return fileService.parse(locale, file.getInputStream(),file.getOriginalFilename().split("\\.")[1], teacherService::validate, teacherService::save);
+        return fileService.parse(locale, file.getInputStream(), file.getOriginalFilename().split("\\.")[1], teacherService::validate, teacherService::save);
     }
 
     private TeacherDTO convertToDto(Teacher teacher) {

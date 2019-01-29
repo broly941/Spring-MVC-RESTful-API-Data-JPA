@@ -1,9 +1,10 @@
 package com.intexsoft.devi.funcInterface;
 
 /**
+ * Its implementation of the functional interface
+ *
  * @author DEVIAPHAN on 16.01.2019
  * @project university
- * Its implementation of the functional interface
  */
 @FunctionalInterface
 public interface TriFunction<A, B, C, R> {

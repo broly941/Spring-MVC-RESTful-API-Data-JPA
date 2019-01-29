@@ -5,8 +5,9 @@ import javax.persistence.*;
 import static javax.persistence.GenerationType.IDENTITY;
 
 /**
- * @author DEVIAPHAN
  * The class that stores the state of the entity.
+ *
+ * @author DEVIAPHAN
  */
 @Entity
 @Table(name = "Student")

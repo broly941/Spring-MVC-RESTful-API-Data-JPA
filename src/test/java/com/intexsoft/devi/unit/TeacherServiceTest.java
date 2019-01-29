@@ -5,8 +5,7 @@ import com.intexsoft.devi.entity.Teacher;
 import com.intexsoft.devi.repository.TeacherRepository;
 import com.intexsoft.devi.service.BaseService;
 import com.intexsoft.devi.service.EntitiesValidationService;
-import com.intexsoft.devi.service.Impl.TeacherServiceImpl;
-import org.apache.commons.lang3.builder.EqualsBuilder;
+import com.intexsoft.devi.service.Impl.entityManagment.TeacherServiceImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -27,8 +26,9 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 /**
- * @author DEVIAPHAN
  * Test for Business Logic Service Class
+ *
+ * @author DEVIAPHAN
  */
 @RunWith(MockitoJUnitRunner.class)
 public class TeacherServiceTest {
@@ -145,18 +145,6 @@ public class TeacherServiceTest {
                 .thenThrow(EntityNotFoundException.class);
         teacherService.updateById(initializeTeacher((long) 1), (long) 1, Locale.ENGLISH);
     }
-
-//    /**
-//     * Will return a validation status
-//     */
-//    @Test
-//    public void validate() {
-//        ValidationStatus validationStatus = new ValidationStatus();
-//        ConcurrentHashMap<Integer, List<Object>> parsedEntities = new ConcurrentHashMap<>();
-//        ConcurrentHashMap<Integer, Object> validEntities = new ConcurrentHashMap<>();
-////        assertTrue(EqualsBuilder.reflectionEquals(validationStatus,teacherService.validate(parsedEntities, validEntities, Locale.ENGLISH)));
-//        assertEquals(validationStatus, teacherService.validate(parsedEntities, validEntities, Locale.ENGLISH));
-//    }
 
     private List<Teacher> initializeTeacherList() {
         List<Teacher> teacherList = new ArrayList<>();

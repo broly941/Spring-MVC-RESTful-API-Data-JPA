@@ -4,8 +4,9 @@ import com.intexsoft.devi.controller.response.ValidationStatus;
 import com.intexsoft.devi.entity.Student;
 import com.intexsoft.devi.repository.StudentRepository;
 import com.intexsoft.devi.service.BaseService;
-import com.intexsoft.devi.service.Impl.GroupServiceImpl;
-import com.intexsoft.devi.service.Impl.StudentServiceImpl;
+import com.intexsoft.devi.service.EntitiesValidationService;
+import com.intexsoft.devi.service.Impl.entityManagment.GroupServiceImpl;
+import com.intexsoft.devi.service.Impl.entityManagment.StudentServiceImpl;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,8 +28,9 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 /**
- * @author DEVIAPHAN
  * Test for Business Logic Service Class
+ *
+ * @author DEVIAPHAN
  */
 @RunWith(MockitoJUnitRunner.class)
 public class StudentServiceTest {
@@ -44,6 +46,9 @@ public class StudentServiceTest {
 
     @Mock
     BaseService<Student> studentBaseService;
+
+    @Mock
+    EntitiesValidationService entitiesValidationService;
 
     @Mock
     MessageSource messageSource;
@@ -124,7 +129,6 @@ public class StudentServiceTest {
     }
 
 
-
     /**
      * Will return a record if all parameters are correct
      */
@@ -153,22 +157,10 @@ public class StudentServiceTest {
      */
     @Test
     public void getStudentByNameAndGroupName() {
-        Optional<Student> optionalStudent= Optional.of(initializeStudent((long) 1));
+        Optional<Student> optionalStudent = Optional.of(initializeStudent((long) 1));
         when(studentRepository.findByFirstNameAndLastNameAndGroup_Number("first", "last", "group"))
                 .thenReturn(optionalStudent);
         assertSame(optionalStudent, studentService.getStudentByNameAndGroupName("first", "last", "group"));
-    }
-
-    /**
-     * Will return a validation status
-     */
-    @Test
-    public void validate() {
-        ValidationStatus validationStatus = new ValidationStatus();
-        ConcurrentHashMap<Integer, List<Object>> parsedEntities = new ConcurrentHashMap<>();
-        ConcurrentHashMap<Integer, Object> validEntities = new ConcurrentHashMap<>();
-//        assertTrue(EqualsBuilder.reflectionEquals(validationStatus,studentService.validate(parsedEntities, validEntities, Locale.ENGLISH)));
-        assertEquals(validationStatus, studentService.validate(parsedEntities, validEntities, Locale.ENGLISH));
     }
 
     private List<Student> initializeStudentList() {

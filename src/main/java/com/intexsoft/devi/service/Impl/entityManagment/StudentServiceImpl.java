@@ -1,12 +1,9 @@
-package com.intexsoft.devi.service.Impl;
+package com.intexsoft.devi.service.Impl.entityManagment;
 
 import com.intexsoft.devi.controller.response.ValidationStatus;
 import com.intexsoft.devi.entity.Student;
 import com.intexsoft.devi.repository.StudentRepository;
-import com.intexsoft.devi.service.BaseService;
-import com.intexsoft.devi.service.EntitiesValidationService;
-import com.intexsoft.devi.service.GroupService;
-import com.intexsoft.devi.service.StudentService;
+import com.intexsoft.devi.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,8 +13,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
- * @author DEVIAPHAN
  * Business Logic Service Class
+ *
+ * @author DEVIAPHAN
  */
 @Service
 public class StudentServiceImpl implements StudentService {
@@ -44,6 +42,9 @@ public class StudentServiceImpl implements StudentService {
 
     @Autowired
     private EntitiesValidationService entitiesValidationService;
+
+    @Autowired
+    private StudentValidator studentValidator;
 
     /**
      * method return all students
@@ -173,10 +174,7 @@ public class StudentServiceImpl implements StudentService {
      */
     @Override
     public ValidationStatus validate(ConcurrentHashMap<Integer, List<Object>> parsedEntities, ConcurrentHashMap<Integer, Object> validEntities, Locale locale) {
-        ValidationStatus validationStatus = new ValidationStatus();
-        validationStatus.setRowCount(parsedEntities.size());
-        entitiesValidationService.validateParsedEntities(parsedEntities, validEntities, locale, validationStatus, Student.class);
-        return validationStatus;
+        return entitiesValidationService.validateParsedEntities(parsedEntities, validEntities, locale, studentValidator::validate);
     }
 
     /**
@@ -185,8 +183,6 @@ public class StudentServiceImpl implements StudentService {
      * @param validEntities of entity in file.
      * @param locale        of messages.
      */
-
-    //TODO Save in batch
     @Override
     @Transactional
     public void save(Map<Integer, Object> validEntities, Locale locale) {

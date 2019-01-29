@@ -11,8 +11,9 @@ import java.util.Locale;
 import java.util.stream.Collectors;
 
 /**
- * @author DEVIAPHAN
  * Processes the request and returns the response as JSON.
+ *
+ * @author DEVIAPHAN
  */
 @RestController
 @RequestMapping("/groups")

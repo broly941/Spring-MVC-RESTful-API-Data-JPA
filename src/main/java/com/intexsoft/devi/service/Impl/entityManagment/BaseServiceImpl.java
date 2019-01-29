@@ -1,4 +1,4 @@
-package com.intexsoft.devi.service.Impl;
+package com.intexsoft.devi.service.Impl.entityManagment;
 
 import com.intexsoft.devi.service.BaseService;
 import com.intexsoft.devi.service.GroupService;
@@ -19,10 +19,10 @@ import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
 /**
+ * The generic class is engaged in managing entities in the database.
+ *
  * @author DEVIAPHAN on 21.12.2018
  * @project university
- * <p>
- * The generic class is engaged in managing entities in the database.
  */
 @Service
 public class BaseServiceImpl<T> implements BaseService<T> {
@@ -133,11 +133,12 @@ public class BaseServiceImpl<T> implements BaseService<T> {
 
     /**
      * method save all entities
+     *
      * @param entities stored objects
-     * @param function  of desired method in service
-     * @param locale    of message
-     * @param message   name of message
-     * @param par1      of message
+     * @param function of desired method in service
+     * @param locale   of message
+     * @param message  name of message
+     * @param par1     of message
      */
     @Override
     @Transactional

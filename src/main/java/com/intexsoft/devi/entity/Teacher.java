@@ -4,8 +4,9 @@ import javax.persistence.*;
 import java.util.List;
 
 /**
- * @author DEVIAPHAN
  * The class that stores the state of the entity.
+ *
+ * @author DEVIAPHAN
  */
 @Entity
 @Table(name = "Teacher")

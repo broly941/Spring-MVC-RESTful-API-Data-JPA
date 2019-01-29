@@ -1,10 +1,11 @@
-package com.intexsoft.devi.service.Impl;
+package com.intexsoft.devi.service.Impl.entityManagment;
 
 import com.intexsoft.devi.controller.response.ValidationStatus;
 import com.intexsoft.devi.entity.Teacher;
 import com.intexsoft.devi.repository.TeacherRepository;
 import com.intexsoft.devi.service.BaseService;
 import com.intexsoft.devi.service.EntitiesValidationService;
+import com.intexsoft.devi.service.Impl.fileReader.validate.TeacherValidatorImpl;
 import com.intexsoft.devi.service.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,8 +16,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
- * @author DEVIAPHAN
  * Business Logic Service Class
+ *
+ * @author DEVIAPHAN
  */
 @Service
 public class TeacherServiceImpl implements TeacherService {
@@ -40,6 +42,9 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Autowired
     private EntitiesValidationService entitiesValidationService;
+
+    @Autowired
+    private TeacherValidatorImpl teacherValidator;
 
     /**
      * method return all teachers
@@ -138,10 +143,7 @@ public class TeacherServiceImpl implements TeacherService {
      */
     @Override
     public ValidationStatus validate(ConcurrentHashMap<Integer, List<Object>> parsedEntities, ConcurrentHashMap<Integer, Object> validEntities, Locale locale) {
-        ValidationStatus validationStatus = new ValidationStatus();
-        validationStatus.setRowCount(parsedEntities.size());
-        entitiesValidationService.validateParsedEntities(parsedEntities, validEntities, locale, validationStatus, Teacher.class);
-        return validationStatus;
+        return entitiesValidationService.validateParsedEntities(parsedEntities, validEntities, locale, teacherValidator::validate);
     }
 
     /**

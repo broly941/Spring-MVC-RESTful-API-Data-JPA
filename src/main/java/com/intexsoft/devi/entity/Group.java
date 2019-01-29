@@ -5,8 +5,9 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * @author DEVIAPHAN
  * The class that stores the state of the entity.
+ *
+ * @author DEVIAPHAN
  */
 @Entity
 @Table(name = "GroupOfUniversity")

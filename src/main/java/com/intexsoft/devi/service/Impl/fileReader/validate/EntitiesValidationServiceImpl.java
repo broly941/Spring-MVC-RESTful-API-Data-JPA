@@ -1,8 +1,6 @@
-package com.intexsoft.devi.service.Impl;
+package com.intexsoft.devi.service.Impl.fileReader.validate;
 
 import com.intexsoft.devi.controller.response.ValidationStatus;
-import com.intexsoft.devi.entity.Student;
-import com.intexsoft.devi.entity.Teacher;
 import com.intexsoft.devi.service.EntitiesValidationService;
 import com.intexsoft.devi.service.GroupService;
 import org.slf4j.Logger;
@@ -10,39 +8,29 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.WebApplicationContext;
 
-import javax.persistence.EntityNotFoundException;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.*;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
+ * The class containing methods for validation.
+ *
  * @author DEVIAPHAN on 14.01.2019
  * @project university
- * The class performs file validation.
  */
 @Service
 public class EntitiesValidationServiceImpl implements EntitiesValidationService {
-
     private static final String TIMED_OUT = "Timed_out";
-    private static final String INVALID_VALIDATION_TYPE = "Invalid_validation_type";
-    private static final String STUDENT_VALIDATOR = "studentValidator";
-    private static final String TEACHER_VALIDATOR = "teacherValidator";
-
     private static final String SOME_TYPE_IS_NOT_A_STRING = "SOME_TYPE_IS_NOT_A_STRING";
     private static final String REQUIRED_COLUMN_MISSING = "Required_Column_Missing";
     private static final String ROW = "ROW";
 
     @Autowired
     private MessageSource messageSource;
-
-    @Autowired
-    private WebApplicationContext context;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GroupService.class);
 
@@ -103,60 +91,53 @@ public class EntitiesValidationServiceImpl implements EntitiesValidationService 
     }
 
     /**
-     * method make validate parsed entities and fill validation status
+     * the method splits the collection into threads and performs validation, then returns the status of the validation.
      *
-     * @param parsedEntities   of file
-     * @param validEntities    is valid entities from parse entities
-     * @param locale           of message
-     * @param validationStatus is return obj
-     * @param reqType          is type to select tasks generator
+     * @param parsedEntities of file
+     * @param validEntities  is valid entities in parsed file
+     * @param locale         of message
+     * @param validator      of method for validate
+     * @return validation status
      */
     @Override
-    public void validateParsedEntities(ConcurrentHashMap<Integer, List<Object>> parsedEntities, ConcurrentHashMap<Integer, Object> validEntities, Locale locale, ValidationStatus validationStatus, Type reqType) {
+    public ValidationStatus validateParsedEntities(ConcurrentHashMap<Integer, List<Object>> parsedEntities, ConcurrentHashMap<Integer, Object> validEntities, Locale locale, Function<ParameterValidation, Void> validator) {
+        ValidationStatus validationStatus = getValidationStatus(parsedEntities);
         CopyOnWriteArraySet<String> duplicateSet = new CopyOnWriteArraySet<>();
         ExecutorService executor = getExecutorService();
-        List<? extends Callable<Void>> tasks = setTasks(reqType, parsedEntities, validationStatus, validEntities, locale, duplicateSet);
+        List<? extends Callable<Void>> tasks = setTasks(validator, parsedEntities, validationStatus, validEntities, locale, duplicateSet);
 
         try {
             executor.invokeAll(tasks);
-            executor.awaitTermination(1, TimeUnit.MINUTES);
         } catch (InterruptedException e) {
-            LOGGER.info(messageSource.getMessage(TIMED_OUT, new Object[]{}, locale));
-            executor.shutdownNow();
+            e.printStackTrace();
         } finally {
             executor.shutdown();
         }
 
-        validationStatus.sortErrors();
-    }
-
-    private List<? extends Callable<Void>> setTasks(Type reqType, ConcurrentHashMap<Integer, List<Object>> parsedEntities, ValidationStatus validationStatus, ConcurrentHashMap<Integer, Object> validEntities, Locale locale, CopyOnWriteArraySet<String> duplicateSet) {
-        if (reqType == Student.class) {
-            return getStudentTasks(parsedEntities, validEntities, locale, validationStatus, duplicateSet);
-        } else if (reqType == Teacher.class) {
-            return getTeacherTasks(parsedEntities, validEntities, locale, validationStatus, duplicateSet);
-        } else {
-            throw new EntityNotFoundException(messageSource.getMessage(INVALID_VALIDATION_TYPE, new Object[]{}, locale));
+        try {
+            executor.awaitTermination(1, TimeUnit.MINUTES);
+        } catch (InterruptedException e) {
+            LOGGER.info(messageSource.getMessage(TIMED_OUT, new Object[]{}, locale));
+            executor.shutdownNow();
         }
+
+        validationStatus.sortErrors();
+
+        return validationStatus;
     }
 
-    private List<StudentValidator> getStudentTasks(ConcurrentHashMap<Integer, List<Object>> parsedEntities, ConcurrentHashMap<Integer, Object> validEntities, Locale locale, ValidationStatus validationStatus, CopyOnWriteArraySet<String> duplicateSet) {
+    private List<Callable<Void>> setTasks(Function<ParameterValidation, Void> validator, ConcurrentHashMap<Integer, List<Object>> parsedEntities, ValidationStatus validationStatus, ConcurrentHashMap<Integer, Object> validEntities, Locale locale, CopyOnWriteArraySet<String> duplicateSet) {
         return parsedEntities.entrySet().stream()
-                .map((m) -> {
-                    StudentValidator studentValidator = (StudentValidator) context.getBean(STUDENT_VALIDATOR);
-                    studentValidator.setValue(m.getKey(), m.getValue(), validEntities, locale, validationStatus, duplicateSet);
-                    return studentValidator;
-                })
-                .collect(Collectors.toList());
+                .map(m -> (Callable<Void>) () -> {
+                    ParameterValidation parameterValidation = new ParameterValidation(m.getKey(), m.getValue(), validEntities, locale, validationStatus, duplicateSet);
+                    validator.apply(parameterValidation);
+                    return null;
+                }).collect(Collectors.toList());
     }
 
-    private List<TeacherValidator> getTeacherTasks(ConcurrentHashMap<Integer, List<Object>> parsedEntities, ConcurrentHashMap<Integer, Object> validEntities, Locale locale, ValidationStatus validationStatus, CopyOnWriteArraySet<String> duplicateSet) {
-        return parsedEntities.entrySet().stream()
-                .map((m) -> {
-                    TeacherValidator teacherValidator = (TeacherValidator) context.getBean(TEACHER_VALIDATOR);
-                    teacherValidator.setValue(m.getKey(), m.getValue(), validEntities, locale, validationStatus, duplicateSet);
-                    return teacherValidator;
-                })
-                .collect(Collectors.toList());
+    private ValidationStatus getValidationStatus(ConcurrentHashMap<Integer, List<Object>> parsedEntities) {
+        ValidationStatus validationStatus = new ValidationStatus();
+        validationStatus.setRowCount(parsedEntities.size());
+        return validationStatus;
     }
 }

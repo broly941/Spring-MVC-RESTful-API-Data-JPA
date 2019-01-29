@@ -6,10 +6,11 @@ import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatche
 import javax.servlet.Filter;
 
 /**
- * @author DEVIAPHAN
  * Configure the Dispatcher Servlet.
  * Reference to class implementing interfaceDirectory WebMvcConfigurer.
  * Specifying the request URL to Handler Mapping.
+ *
+ * @author DEVIAPHAN
  */
 public class AppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
     @Override
