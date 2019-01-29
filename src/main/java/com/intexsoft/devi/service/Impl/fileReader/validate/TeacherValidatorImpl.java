@@ -3,6 +3,8 @@ package com.intexsoft.devi.service.Impl.fileReader.validate;
 import com.intexsoft.devi.entity.Group;
 import com.intexsoft.devi.entity.Teacher;
 import com.intexsoft.devi.service.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.MessageSource;
@@ -36,6 +38,8 @@ public class TeacherValidatorImpl implements TeacherValidator {
     @Autowired
     private MessageSource messageSource;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(GroupService.class);
+
     private static final String TEACHER_ALREADY_EXISTS = "TEACHER_ALREADY_EXISTS";
     private static final String GROUP_DOES_NOT_EXIST = "GROUP_DOES_NOT_EXIST";
 
@@ -50,6 +54,7 @@ public class TeacherValidatorImpl implements TeacherValidator {
      */
     @Override
     public Void validate(ValidationParameters parameters) {
+        long startTime = System.currentTimeMillis();
         String firstName = null;
         String lastName = null;
         List<Group> groupList = null;
@@ -64,7 +69,13 @@ public class TeacherValidatorImpl implements TeacherValidator {
             validateDuplicate(parameters.getDuplicateSet(), firstName, lastName, rowErrors, locale);
         }
         entitiesValidationService.fillValidationStatus(parameters.getValidationStatus(), parameters.getKey(), new Teacher(firstName, lastName, groupList), locale, rowErrors, parameters.getValidEntities());
+        getRuntimeStatistic(startTime);
         return null;
+    }
+
+    private void getRuntimeStatistic(long startTime) {
+        long time = System.currentTimeMillis() - startTime;
+        LOGGER.debug(Thread.currentThread().getName() + ": " + time + " millis");
     }
 
     private void validateDuplicate(CopyOnWriteArraySet<String> duplicateSet, String firstName, String lastName, List<String> rowErrors, Locale locale) {

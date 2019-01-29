@@ -6,11 +6,14 @@ import com.intexsoft.devi.service.EntitiesValidationService;
 import com.intexsoft.devi.service.GroupService;
 import com.intexsoft.devi.service.StudentService;
 import com.intexsoft.devi.service.StudentValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
+import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -42,6 +45,8 @@ public class StudentValidatorImpl implements StudentValidator {
     @Autowired
     private MessageSource messageSource;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(GroupService.class);
+
     private static final String STUDENT_ALREADY_EXISTS = "STUDENT_ALREADY_EXISTS";
     private static final String GROUP_DOES_NOT_EXIST = "GROUP_DOES_NOT_EXIST";
 
@@ -56,6 +61,7 @@ public class StudentValidatorImpl implements StudentValidator {
      */
     @Override
     public Void validate(ValidationParameters parameters) {
+        long startTime = System.currentTimeMillis();
         Group group = null;
         String firstName = null;
         String lastName = null;
@@ -72,7 +78,13 @@ public class StudentValidatorImpl implements StudentValidator {
             validateDuplicate(locale, parameters.getDuplicateSet(), firstName, lastName, rowErrors);
         }
         entitiesValidationService.fillValidationStatus(parameters.getValidationStatus(), parameters.getKey(), new Student(firstName, lastName, group), locale, rowErrors, parameters.getValidEntities());
+        getRuntimeStatistic(startTime);
         return null;
+    }
+
+    private void getRuntimeStatistic(long startTime) {
+        long time = System.currentTimeMillis() - startTime;
+        LOGGER.debug(Thread.currentThread().getName() + ": " + time + " millis");
     }
 
     private void validateDuplicate(Locale locale, CopyOnWriteArraySet<String> duplicateSet, String firstName, String lastName, List<String> rowErrors) {
@@ -95,5 +107,4 @@ public class StudentValidatorImpl implements StudentValidator {
         }
         return optionalGroup.orElse(null);
     }
-
 }
