@@ -114,7 +114,7 @@ public class BaseServiceImpl<T> implements BaseService<T> {
     public T save(T entity, UnaryOperator<T> function, Locale locale, String message, String par1) {
         T returnEntity = null;
         try {
-            function.apply(entity);
+            returnEntity = function.apply(entity);
         } catch (JpaSystemException ex) {
             throw new ViolationException(messageSource.getMessage(VIOLATION_EXCEPTION, new Object[]{}, locale));
         }
