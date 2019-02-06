@@ -1,11 +1,13 @@
 package com.intexsoft.devi.service.Impl.entityManagment;
 
+import com.intexsoft.devi.exception.ViolationException;
 import com.intexsoft.devi.service.BaseService;
 import com.intexsoft.devi.service.GroupService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +29,7 @@ import java.util.function.UnaryOperator;
 @Service
 public class BaseServiceImpl<T> implements BaseService<T> {
 
+    public static final String VIOLATION_EXCEPTION = "ViolationException";
     @Autowired
     private MessageSource messageSource;
 
@@ -109,8 +112,14 @@ public class BaseServiceImpl<T> implements BaseService<T> {
     @Override
     @Transactional
     public T save(T entity, UnaryOperator<T> function, Locale locale, String message, String par1) {
+        T returnEntity = null;
+        try {
+            function.apply(entity);
+        } catch (JpaSystemException ex) {
+            throw new ViolationException(messageSource.getMessage(VIOLATION_EXCEPTION, new Object[]{}, locale));
+        }
         LOGGER.info(messageSource.getMessage(message, new Object[]{par1}, locale));
-        return function.apply(entity);
+        return returnEntity;
     }
 
     /**
@@ -142,7 +151,8 @@ public class BaseServiceImpl<T> implements BaseService<T> {
      */
     @Override
     @Transactional
-    public void saveAll(List<T> entities, Consumer<List<T>> function, Locale locale, String message, String par1) {
+    public void saveAll(List<T> entities, Consumer<List<T>> function, Locale locale, String message, String
+            par1) {
         LOGGER.info(messageSource.getMessage(message, new Object[]{par1}, locale));
         function.accept(entities);
     }
