@@ -24,7 +24,7 @@ import java.util.Properties;
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories("com.intexsoft.devi.repository")
-@PropertySource("classpath:database.properties")
+@PropertySource("file:${catalina.home}/conf/university/database.properties")
 public class DataConfig {
 
     private static final String ENTITY_PACKAGE = "com.intexsoft.devi.entity";
