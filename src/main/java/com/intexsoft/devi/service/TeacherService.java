@@ -4,6 +4,8 @@ import com.intexsoft.devi.controller.response.ValidationStatus;
 import com.intexsoft.devi.entity.Teacher;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -34,4 +36,8 @@ public interface TeacherService {
     ValidationStatus validate(ConcurrentHashMap<Integer, List<Object>> parsedEntities, ConcurrentHashMap<Integer, Object> validEntities, Locale locale);
 
     void save(Map<Integer, Object> validEntities, Locale locale);
+
+    List<Teacher> getSortedTeachers();
+
+    List<Teacher> getSortedRevertTeachers();
 }

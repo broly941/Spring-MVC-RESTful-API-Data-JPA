@@ -2,15 +2,19 @@ package com.intexsoft.devi.service.Impl.entityManagment;
 
 import com.intexsoft.devi.controller.response.ValidationStatus;
 import com.intexsoft.devi.entity.Teacher;
+import com.intexsoft.devi.exception.SQLQueryException;
 import com.intexsoft.devi.repository.TeacherRepository;
 import com.intexsoft.devi.service.BaseService;
 import com.intexsoft.devi.service.EntitiesValidationService;
 import com.intexsoft.devi.service.Impl.fileReader.validate.TeacherValidatorImpl;
+import com.intexsoft.devi.service.QueryExecutor;
 import com.intexsoft.devi.service.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -34,6 +38,9 @@ public class TeacherServiceImpl implements TeacherService {
     private static final String GET_TEACHERS_OF_GROUP_BY_ID = "getTeachersOfGroupById";
     private static final String GET_TEACHERS_OF_GROUP_BY_ID1 = "Get teachers of group by id";
 
+    private static final String GET_SORTED_TEACHER_ASC = "{ ? = call modify_data_pkg.get_sorted_teachers_asc() }";
+    private static final String GET_SORTED_TEACHER_DESC = "{ ? = call modify_data_pkg.get_sorted_teachers_desc() }";
+
     @Autowired
     private TeacherRepository teacherRepository;
 
@@ -45,6 +52,9 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Autowired
     private TeacherValidatorImpl teacherValidator;
+
+    @Autowired
+    private QueryExecutor queryExecutor;
 
     /**
      * method return all teachers
@@ -158,5 +168,46 @@ public class TeacherServiceImpl implements TeacherService {
         Map<Integer, Teacher> teacherEntities = validEntities.entrySet().stream()
                 .collect(Collectors.toMap(Map.Entry::getKey, e -> (Teacher) e.getValue()));
         teacherBaseService.saveAll(new ArrayList<>(teacherEntities.values()), teacherRepository::saveAll, locale, ADD, TEACHERS);
+    }
+
+    /**
+     * method return all sorted teachers
+     *
+     * @return All entity in the database.
+     */
+    @Override
+    public List<Teacher> getSortedTeachers() {
+        return queryExecutor.execute(GET_SORTED_TEACHER_ASC, this::initTeachersFromResultList);
+    }
+
+    /**
+     * method return all sorted revert teachers
+     *
+     * @return All entity in the database.
+     */
+    @Override
+    public List<Teacher> getSortedRevertTeachers() {
+        return queryExecutor.execute(GET_SORTED_TEACHER_DESC, this::initTeachersFromResultList);
+    }
+
+    /**
+     * method set param to entity and return list of them
+     *
+     * @param resultSet which stored result from query
+     * @return All entity in the database.
+     */
+    private List<Teacher> initTeachersFromResultList(ResultSet resultSet) {
+        List<Teacher> teachers = new ArrayList<>();
+        try {
+            while (resultSet.next()) {
+                long id = resultSet.getLong(1);
+                String firstName = resultSet.getString(2);
+                String lastName = resultSet.getString(3);
+                teachers.add(new Teacher(id, firstName, lastName));
+            }
+        } catch (SQLException ex) {
+            throw new SQLQueryException();
+        }
+        return teachers;
     }
 }

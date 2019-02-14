@@ -1,6 +1,7 @@
 package com.intexsoft.devi.service;
 
 import com.intexsoft.devi.entity.Group;
+import com.intexsoft.devi.entity.Student;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -28,4 +29,8 @@ public interface GroupService {
     void deleteById(Long id, Locale locale);
 
     List<Group> getGroupsOfTeacherById(Long id, Locale locale);
+
+    List<Group> getSortedGroups();
+
+    List<Group> getSortedRevertGroups();
 }

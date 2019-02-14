@@ -119,6 +119,29 @@ public class StudentController {
         return fileService.parse(locale, file.getInputStream(), file.getOriginalFilename().split("\\.")[1], studentService::validate, studentService::save);
     }
 
+    /**
+     * method return all sorted teachers using oracle package
+     *
+     * @return All entity in the database.
+     */
+    @GetMapping("/sort-asc")
+    public List<StudentDTO> getSortedTeachers() {
+        return studentService.getSortedStudents().stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * method return all sorted revert students using oracle package
+     *
+     * @return All entity in the database.
+     */
+    @GetMapping("/sort-desc")
+    public List<StudentDTO> getSortedRevertTeachers() {
+        return studentService.getSortedRevertStudents().stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
 
     private StudentDTO convertToDto(Student student) {
         return (StudentDTO) dtoConverter.convert(student, StudentDTO.class);

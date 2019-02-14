@@ -2,9 +2,11 @@ package com.intexsoft.devi.service.Impl.entityManagment;
 
 import com.intexsoft.devi.entity.Group;
 import com.intexsoft.devi.entity.Teacher;
+import com.intexsoft.devi.exception.SQLQueryException;
 import com.intexsoft.devi.repository.GroupRepository;
 import com.intexsoft.devi.service.BaseService;
 import com.intexsoft.devi.service.GroupService;
+import com.intexsoft.devi.service.QueryExecutor;
 import com.intexsoft.devi.service.TeacherService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,10 +19,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.Query;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -43,6 +44,9 @@ public class GroupServiceImpl implements GroupService {
     private static final String GET_GROUPS_BY_TEACHER_ID = "getGroupsByTeacherId";
     private static final String GET_GROUPS_BY_TEACHER_ID_TEXT = "Get groups by teacher id";
 
+    private static final String GET_SORTED_GROUP_ASC = "{ ? = call modify_data_pkg.get_sorted_groups_asc() }";
+    private static final String GET_SORTED_GROUP_DESC = "{ ? = call modify_data_pkg.get_sorted_groups_desc() }";
+
     @Autowired
     private GroupRepository groupRepository;
 
@@ -57,6 +61,9 @@ public class GroupServiceImpl implements GroupService {
 
     @Autowired
     private MessageSource messageSource;
+
+    @Autowired
+    private QueryExecutor queryExecutor;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GroupService.class);
 
@@ -166,5 +173,45 @@ public class GroupServiceImpl implements GroupService {
         return Arrays.stream(teacherIdList)
                 .map(id -> teacherService.getById(id, locale))
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * method return all sorted groups
+     *
+     * @return All entity in the database.
+     */
+    @Override
+    public List<Group> getSortedGroups() {
+        return queryExecutor.execute(GET_SORTED_GROUP_ASC, this::initGroupsFromResultList);
+    }
+
+    /**
+     * method return all sorted revert groups
+     *
+     * @return All entity in the database.
+     */
+    @Override
+    public List<Group> getSortedRevertGroups() {
+        return queryExecutor.execute(GET_SORTED_GROUP_DESC, this::initGroupsFromResultList);
+    }
+
+    /**
+     * method set param to entity and return list of them
+     *
+     * @param resultSet which stored result from query
+     * @return All entity in the database.
+     */
+    private List<Group> initGroupsFromResultList(ResultSet resultSet) {
+        List<Group> groups = new ArrayList<>();
+        try {
+            while (resultSet.next()) {
+                long id = resultSet.getLong(1);
+                String group = resultSet.getString(2);
+                groups.add(new Group(id, group));
+            }
+        } catch (SQLException ex) {
+            throw new SQLQueryException();
+        }
+        return groups;
     }
 }

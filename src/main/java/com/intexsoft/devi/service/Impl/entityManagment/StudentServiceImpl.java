@@ -2,12 +2,15 @@ package com.intexsoft.devi.service.Impl.entityManagment;
 
 import com.intexsoft.devi.controller.response.ValidationStatus;
 import com.intexsoft.devi.entity.Student;
+import com.intexsoft.devi.exception.SQLQueryException;
 import com.intexsoft.devi.repository.StudentRepository;
 import com.intexsoft.devi.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -31,6 +34,9 @@ public class StudentServiceImpl implements StudentService {
     private static final String GET_STUDENTS_OF_GROUP_BY_ID = "getStudentsOfGroupById";
     private static final String GET_STUDENTS_BY_GROUP_ID = "Get students by group id";
 
+    private static final String GET_SORTED_STUDENT_ASC = "{ ? = call modify_data_pkg.get_sorted_students_asc() }";
+    private static final String GET_SORTED_STUDENT_DESC = "{ ? = call modify_data_pkg.get_sorted_students_desc() }";
+
     @Autowired
     private StudentRepository studentRepository;
 
@@ -45,6 +51,9 @@ public class StudentServiceImpl implements StudentService {
 
     @Autowired
     private StudentValidator studentValidator;
+
+    @Autowired
+    private QueryExecutor queryExecutor;
 
     /**
      * method return all students
@@ -189,5 +198,47 @@ public class StudentServiceImpl implements StudentService {
         Map<Integer, Student> studentEntities = validEntities.entrySet().stream()
                 .collect(Collectors.toMap(Map.Entry::getKey, e -> (Student) e.getValue()));
         studentBaseService.saveAll(new ArrayList<>(studentEntities.values()), studentRepository::saveAll, locale, ADD, STUDENTS);
+    }
+
+
+    /**
+     * method return all sorted students
+     *
+     * @return All entity in the database.
+     */
+    @Override
+    public List<Student> getSortedStudents() {
+        return queryExecutor.execute(GET_SORTED_STUDENT_ASC, this::initStudentsFromResultList);
+    }
+
+    /**
+     * method return all sorted revert students
+     *
+     * @return All entity in the database.
+     */
+    @Override
+    public List<Student> getSortedRevertStudents() {
+        return queryExecutor.execute(GET_SORTED_STUDENT_DESC, this::initStudentsFromResultList);
+    }
+
+    /**
+     * method set param to entity and return list of them
+     *
+     * @param resultSet which stored result from query
+     * @return All entity in the database.
+     */
+    private List<Student> initStudentsFromResultList(ResultSet resultSet) {
+        List<Student> teachers = new ArrayList<>();
+        try {
+            while (resultSet.next()) {
+                long id = resultSet.getLong(1);
+                String firstName = resultSet.getString(2);
+                String lastName = resultSet.getString(3);
+                teachers.add(new Student(id, firstName, lastName));
+            }
+        } catch (SQLException ex) {
+            throw new SQLQueryException();
+        }
+        return teachers;
     }
 }

@@ -39,4 +39,8 @@ public interface StudentService {
     ValidationStatus validate(ConcurrentHashMap<Integer, List<Object>> parsedEntities, ConcurrentHashMap<Integer, Object> validEntities, Locale locale);
 
     void save(Map<Integer, Object> validEntities, Locale locale);
+
+    List<Student> getSortedStudents();
+
+    List<Student> getSortedRevertStudents();
 }

@@ -120,6 +120,28 @@ public class TeacherController {
         return fileService.parse(locale, file.getInputStream(), file.getOriginalFilename().split("\\.")[1], teacherService::validate, teacherService::save);
     }
 
+    /**
+     * method return all sorted teachers using oracle package
+     * @return All entity in the database.
+     */
+    @GetMapping("/sort-asc")
+    public List<TeacherDTO> getSortedTeachers () {
+        return teacherService.getSortedTeachers().stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * method return all sorted revert teachers using oracle package
+     * @return All entity in the database.
+     */
+    @GetMapping("/sort-desc")
+    public List<TeacherDTO> getSortedRevertTeachers () {
+        return teacherService.getSortedRevertTeachers().stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
     private TeacherDTO convertToDto(Teacher teacher) {
         return (TeacherDTO) dtoConverter.convert(teacher, TeacherDTO.class);
     }

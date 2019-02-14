@@ -103,6 +103,30 @@ public class GroupController {
         groupService.deleteById(id, locale);
     }
 
+    /**
+     * method return all sorted groups using oracle package
+     *
+     * @return All entity in the database.
+     */
+    @GetMapping("/sort-asc")
+    public List<GroupDTO> getSortedGroups() {
+        return groupService.getSortedGroups().stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * method return all sorted revert groups using oracle package
+     *
+     * @return All entity in the database.
+     */
+    @GetMapping("/sort-desc")
+    public List<GroupDTO> getSortedRevertTeachers() {
+        return groupService.getSortedRevertGroups().stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
     private GroupDTO convertToDto(Group group) {
         return (GroupDTO) dtoConverter.convert(group, GroupDTO.class);
     }

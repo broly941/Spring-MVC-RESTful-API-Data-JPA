@@ -43,6 +43,12 @@ public class Teacher {
         this.groups = groups;
     }
 
+    public Teacher(Long id, String firstName, String lastName) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+
     public Long getId() {
         return id;
     }
