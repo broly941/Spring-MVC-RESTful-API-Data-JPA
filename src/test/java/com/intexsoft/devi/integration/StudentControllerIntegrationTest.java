@@ -75,7 +75,7 @@ public class StudentControllerIntegrationTest {
     private static final String TRUMP = "Trump";
     private static final String STUDENTS_UPLOAD = "/students/upload";
     private static final String ADD_STUDENT_TO_GROUP_SUC = "{\"rowCount\":3,\"validRow\":3,\"errorsCount\":0,\"errors\":[]}";
-    private static final String ADD_STUDENT_TO_GROUP_UNSUC = "{\"rowCount\":3,\"validRow\":0,\"errorsCount\":3,\"errors\":[\"Row 1: [group 'POIT-16x' does not exist]\",\"Row 2: [the required number of columns is missing]\",\"Row 3: [student already exists]\"]}";
+    private static final String ADD_STUDENT_TO_GROUP_UNSUC = "{\"rowCount\":3,\"validRow\":0,\"errorsCount\":3,\"errors\":[\"Row 1: [group 'POIT-16x' does not isFilterExist]\",\"Row 2: [the required number of columns is missing]\",\"Row 3: [student already isFilterExist]\"]}";
     private static final String SUCCESS_XLSX_FILE = "addStudentToGroup_Success.xlsx";
     private static final String UNSUCCESSFUL_XLSX_FILE = "addStudentToGroup_Unsuccessful.xlsx";
     private static final String SUCCESS_CSV_FILE = "addStudentToGroup_Success.csv";

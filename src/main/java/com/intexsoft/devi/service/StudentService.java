@@ -1,8 +1,12 @@
 package com.intexsoft.devi.service;
 
+import com.intexsoft.devi.controller.request.RequestParameters;
 import com.intexsoft.devi.controller.response.ValidationStatus;
 import com.intexsoft.devi.entity.Group;
 import com.intexsoft.devi.entity.Student;
+import com.intexsoft.devi.entity.Teacher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
@@ -21,13 +25,10 @@ public interface StudentService {
 
     Optional<Student> getByName(String firstName, String lastName);
 
-    @Transactional
     Student save(Student student, Long groupId, Locale locale);
 
-    @Transactional
     Student save(Student student, Locale locale);
 
-    @Transactional
     Student updateById(Student student, Long studentId, Long groupId, Locale locale);
 
     void deleteById(Long id, Locale locale);
@@ -43,4 +44,6 @@ public interface StudentService {
     List<Student> getSortedStudents();
 
     List<Student> getSortedRevertStudents();
+
+    Page<Student> getByFilter(RequestParameters parameters, Locale locale);
 }

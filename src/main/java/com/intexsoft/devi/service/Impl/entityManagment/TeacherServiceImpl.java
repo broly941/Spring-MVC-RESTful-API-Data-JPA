@@ -1,5 +1,7 @@
 package com.intexsoft.devi.service.Impl.entityManagment;
 
+import com.intexsoft.devi.controller.request.RequestParameters;
+import com.intexsoft.devi.controller.request.StudentTeacherFilter;
 import com.intexsoft.devi.controller.response.ValidationStatus;
 import com.intexsoft.devi.entity.Teacher;
 import com.intexsoft.devi.exception.SQLQueryException;
@@ -10,6 +12,8 @@ import com.intexsoft.devi.service.Impl.fileReader.validate.TeacherValidatorImpl;
 import com.intexsoft.devi.service.QueryExecutor;
 import com.intexsoft.devi.service.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -209,5 +213,21 @@ public class TeacherServiceImpl implements TeacherService {
             throw new SQLQueryException();
         }
         return teachers;
+    }
+
+    /**
+     * method takes parameters and result entity as result of filtering or list of entities as result of pagination
+     *
+     * @param parameters is object which stores the parameters for pagination
+     * @param locale     of message
+     * @return list of teachers
+     */
+    @Override
+    public Page<Teacher> getByFilter(RequestParameters parameters, Locale locale) {
+        StudentTeacherFilter filter = (StudentTeacherFilter) parameters.getFilter();
+        Pageable pageable = parameters.getPage().getPageable();
+        return teacherBaseService.getByFilter(filter, pageable,
+                () -> teacherRepository.findAllByFirstNameAndLastName(filter.getFirstName(), filter.getLastName(), pageable),
+                () -> teacherRepository.findAll(pageable));
     }
 }

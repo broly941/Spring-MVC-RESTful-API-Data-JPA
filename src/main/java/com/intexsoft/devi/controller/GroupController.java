@@ -1,6 +1,11 @@
 package com.intexsoft.devi.controller;
 
+import com.intexsoft.devi.controller.request.GroupFilter;
+import com.intexsoft.devi.controller.request.PaginationPage;
+import com.intexsoft.devi.controller.request.RequestParameters;
+import com.intexsoft.devi.controller.request.StudentTeacherFilter;
 import com.intexsoft.devi.dto.GroupDTO;
+import com.intexsoft.devi.dto.TeacherDTO;
 import com.intexsoft.devi.entity.Group;
 import com.intexsoft.devi.service.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,14 +31,18 @@ public class GroupController {
     DTOConverter dtoConverter;
 
     /**
-     * method return all group entities
+     * method return paginated list by page/number or entity as result of filtering
      *
-     * @param locale of message
-     * @return getAll group entities in the database.
+     * @param page      of pagination
+     * @param number    of pagination
+     * @param groupNumber for filtering of pagination result
+     * @param locale    of message
+     * @return paginated list or entity
      */
     @GetMapping
-    public List<GroupDTO> getAll(Locale locale) {
-        return groupService.getAll(locale).stream()
+    public List<GroupDTO> find(@RequestParam(required = false) Integer page, @RequestParam(required = false) Integer number,
+                                 @RequestParam(required = false) String groupNumber, Locale locale) {
+        return groupService.getByFilter(new RequestParameters<>(new PaginationPage(page, number), new GroupFilter(groupNumber)), locale).stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }

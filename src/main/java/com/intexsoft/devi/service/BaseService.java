@@ -1,5 +1,9 @@
 package com.intexsoft.devi.service;
 
+import com.intexsoft.devi.controller.request.Filter;
+import com.intexsoft.devi.controller.request.StudentTeacherFilter;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
@@ -19,14 +23,13 @@ public interface BaseService<T> {
 
     List<T> getAll(Long id, Function<Long, List<T>> function, Locale locale, String message, String par1, String excPar1);
 
-    @Transactional
     T save(T entity, UnaryOperator<T> function, Locale locale, String message, String par1);
 
-    @Transactional
     T save(T entity, UnaryOperator<T> function, Locale locale, String message, String par1, Long par2);
 
-    @Transactional
     void saveAll(List<T> entities, Consumer<List<T>> function, Locale locale, String message, String par1);
 
     void deleteById(Long id, Consumer<Long> function, Locale locale, String message, String par1);
+
+    Page<T> getByFilter(Filter filter, Pageable pageable, Supplier<Page<T>> getByFilter, Supplier<Page<T>> getByPageSupp);
 }

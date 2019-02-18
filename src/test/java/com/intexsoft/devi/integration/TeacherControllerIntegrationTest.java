@@ -79,7 +79,7 @@ public class TeacherControllerIntegrationTest {
     private static final String SUCCESS_CSV_FILE = "addGroupsToTeacher_Success.csv";
     private static final String UNSUCCESS_CSV_FILE = "addGroupsToTeacher_Unsuccessful.csv";
     private static final String ADD_GROUPS_TO_TEACHERS_SUC = "{\"rowCount\":3,\"validRow\":3,\"errorsCount\":0,\"errors\":[]}";
-    private static final String ADD_GROUPS_TO_TEACHERS_UNSUC = "{\"rowCount\":3,\"validRow\":0,\"errorsCount\":3,\"errors\":[\"Row 1: [teacher already exists]\",\"Row 2: [some type is not a string]\",\"Row 3: [the required number of columns is missing]\"]}";
+    private static final String ADD_GROUPS_TO_TEACHERS_UNSUC = "{\"rowCount\":3,\"validRow\":0,\"errorsCount\":3,\"errors\":[\"Row 1: [teacher already isFilterExist]\",\"Row 2: [some type is not a string]\",\"Row 3: [the required number of columns is missing]\"]}";
 
     private MockMvc mockMvc;
 
