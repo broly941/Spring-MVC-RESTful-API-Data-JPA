@@ -1,5 +1,7 @@
 package com.intexsoft.devi.service.Impl.entityManagment;
 
+import com.intexsoft.devi.controller.request.Filter;
+import com.intexsoft.devi.controller.request.StudentTeacherFilter;
 import com.intexsoft.devi.exception.ViolationException;
 import com.intexsoft.devi.service.BaseService;
 import com.intexsoft.devi.service.GroupService;
@@ -7,6 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -170,5 +174,19 @@ public class BaseServiceImpl<T> implements BaseService<T> {
     public void deleteById(Long id, Consumer<Long> function, Locale locale, String message, String par1) {
         LOGGER.info(messageSource.getMessage(message, new Object[]{par1, id}, locale));
         function.accept(id);
+    }
+
+    /**
+     * method takes parameters, lambdas and result entity as result of filtering or list of entities as result of pagination
+     *
+     * @param filter        is obj which stores the strings for pagination
+     * @param pageable      is obj which store Pageable
+     * @param getByFilter   is supplier
+     * @param getByPageSupp is supplier
+     * @return list of entities
+     */
+    @Override
+    public Page<T> getByFilter(Filter filter, Pageable pageable, Supplier<Page<T>> getByFilter, Supplier<Page<T>> getByPageSupp) {
+        return filter.isFilterExist() ? getByFilter.get() : getByPageSupp.get();
     }
 }

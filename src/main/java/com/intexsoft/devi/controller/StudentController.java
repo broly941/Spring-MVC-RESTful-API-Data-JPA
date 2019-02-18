@@ -1,11 +1,15 @@
 package com.intexsoft.devi.controller;
 
+import com.intexsoft.devi.controller.request.PaginationPage;
+import com.intexsoft.devi.controller.request.RequestParameters;
+import com.intexsoft.devi.controller.request.StudentTeacherFilter;
 import com.intexsoft.devi.controller.response.ValidationStatus;
 import com.intexsoft.devi.dto.StudentDTO;
 import com.intexsoft.devi.entity.Student;
 import com.intexsoft.devi.service.FileService;
 import com.intexsoft.devi.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -33,17 +37,21 @@ public class StudentController {
     DTOConverter dtoConverter;
 
     /**
-     * method return all student
+     * method return paginated list by page/number or entity as result of filtering
      *
-     * @param locale of message
-     * @return getAll student entities in the database.
+     * @param page      of pagination
+     * @param number    of pagination
+     * @param firstName for filtering of pagination result
+     * @param lastName  for filtering of pagination result
+     * @param locale    of message
+     * @return paginated list or entity
      */
     @GetMapping
-    public List<StudentDTO> getAll(Locale locale) {
-        return studentService.getAll(locale).stream()
-                .map(this::convertToDto)
-                .collect(Collectors.toList());
+    public Page<StudentDTO> find(@RequestParam(required = false) Integer page, @RequestParam(required = false) Integer number,
+                                 @RequestParam(required = false) String firstName, @RequestParam(required = false) String lastName, Locale locale) {
+        return studentService.getByFilter(new RequestParameters<>(new PaginationPage(page, number), new StudentTeacherFilter(firstName, lastName)), locale).map(this::convertToDto);
     }
+
 
     /**
      * method return all student by group id

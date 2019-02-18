@@ -1,15 +1,13 @@
 package com.intexsoft.devi.service;
 
+import com.intexsoft.devi.controller.request.RequestParameters;
 import com.intexsoft.devi.controller.response.ValidationStatus;
 import com.intexsoft.devi.entity.Teacher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -23,10 +21,8 @@ public interface TeacherService {
 
     List<Teacher> getTeachersOfGroupById(Long id, Locale locale);
 
-    @Transactional
     Teacher save(Teacher teacher, Locale locale);
 
-    @Transactional
     Teacher updateById(Teacher teacher, Long teacherId, Locale locale);
 
     void deleteById(Long id, Locale locale);
@@ -40,4 +36,6 @@ public interface TeacherService {
     List<Teacher> getSortedTeachers();
 
     List<Teacher> getSortedRevertTeachers();
+
+    Page<Teacher> getByFilter(RequestParameters parameters, Locale locale);
 }

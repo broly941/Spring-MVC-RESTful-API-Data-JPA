@@ -1,11 +1,15 @@
 package com.intexsoft.devi.controller;
 
+import com.intexsoft.devi.controller.request.PaginationPage;
+import com.intexsoft.devi.controller.request.RequestParameters;
+import com.intexsoft.devi.controller.request.StudentTeacherFilter;
 import com.intexsoft.devi.controller.response.ValidationStatus;
 import com.intexsoft.devi.dto.TeacherDTO;
 import com.intexsoft.devi.entity.Teacher;
 import com.intexsoft.devi.service.FileService;
 import com.intexsoft.devi.service.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -33,16 +37,19 @@ public class TeacherController {
     DTOConverter dtoConverter;
 
     /**
-     * method return all teachers
+     * method return paginated list by page/number or entity as result of filtering
      *
-     * @param locale of message
-     * @return getAll teacher entity in the database.
+     * @param page      of pagination
+     * @param number    of pagination
+     * @param firstName for filtering of pagination result
+     * @param lastName  for filtering of pagination result
+     * @param locale    of message
+     * @return paginated list or entity
      */
     @GetMapping
-    public List<TeacherDTO> getAll(Locale locale) {
-        return teacherService.getAll(locale).stream()
-                .map(this::convertToDto)
-                .collect(Collectors.toList());
+    public Page<TeacherDTO> find(@RequestParam(required = false) Integer page, @RequestParam(required = false) Integer number,
+                                 @RequestParam(required = false) String firstName, @RequestParam(required = false) String lastName, Locale locale) {
+        return teacherService.getByFilter(new RequestParameters<>(new PaginationPage(page, number), new StudentTeacherFilter(firstName, lastName)), locale).map(this::convertToDto);
     }
 
     /**
@@ -122,10 +129,11 @@ public class TeacherController {
 
     /**
      * method return all sorted teachers using oracle package
+     *
      * @return All entity in the database.
      */
     @GetMapping("/sort-asc")
-    public List<TeacherDTO> getSortedTeachers () {
+    public List<TeacherDTO> getSortedTeachers() {
         return teacherService.getSortedTeachers().stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
@@ -133,10 +141,11 @@ public class TeacherController {
 
     /**
      * method return all sorted revert teachers using oracle package
+     *
      * @return All entity in the database.
      */
     @GetMapping("/sort-desc")
-    public List<TeacherDTO> getSortedRevertTeachers () {
+    public List<TeacherDTO> getSortedRevertTeachers() {
         return teacherService.getSortedRevertTeachers().stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());

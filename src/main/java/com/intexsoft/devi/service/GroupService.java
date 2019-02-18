@@ -1,7 +1,9 @@
 package com.intexsoft.devi.service;
 
+import com.intexsoft.devi.controller.request.RequestParameters;
 import com.intexsoft.devi.entity.Group;
 import com.intexsoft.devi.entity.Student;
+import org.springframework.data.domain.Page;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -33,4 +35,6 @@ public interface GroupService {
     List<Group> getSortedGroups();
 
     List<Group> getSortedRevertGroups();
+
+    Page<Group> getByFilter(RequestParameters parameters, Locale locale);
 }

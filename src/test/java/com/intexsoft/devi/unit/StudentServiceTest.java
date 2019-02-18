@@ -153,7 +153,7 @@ public class StudentServiceTest {
     }
 
     /**
-     * Will return boolean value depending exist entity or not
+     * Will return boolean value depending isFilterExist entity or not
      */
     @Test
     public void getStudentByNameAndGroupName() {

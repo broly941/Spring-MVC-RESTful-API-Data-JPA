@@ -1,5 +1,8 @@
 package com.intexsoft.devi.service.Impl.entityManagment;
 
+import com.intexsoft.devi.controller.request.GroupFilter;
+import com.intexsoft.devi.controller.request.RequestParameters;
+import com.intexsoft.devi.controller.request.StudentTeacherFilter;
 import com.intexsoft.devi.entity.Group;
 import com.intexsoft.devi.entity.Teacher;
 import com.intexsoft.devi.exception.SQLQueryException;
@@ -12,6 +15,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -213,5 +218,21 @@ public class GroupServiceImpl implements GroupService {
             throw new SQLQueryException();
         }
         return groups;
+    }
+
+    /**
+     * method takes parameters and result entity as result of filtering or list of entities as result of pagination
+     *
+     * @param parameters is object which stores the parameters for pagination
+     * @param locale     of message
+     * @return list of teachers
+     */
+    @Override
+    public Page<Group> getByFilter(RequestParameters parameters, Locale locale) {
+        GroupFilter filter = (GroupFilter) parameters.getFilter();
+        Pageable pageable = parameters.getPage().getPageable();
+        return groupBaseService.getByFilter(filter, pageable,
+                () -> groupRepository.findAllByNumber(filter.getGroupNumber(), pageable),
+                () -> groupRepository.findAll(pageable));
     }
 }
