@@ -9,6 +9,7 @@ import com.intexsoft.devi.dto.TeacherDTO;
 import com.intexsoft.devi.entity.Group;
 import com.intexsoft.devi.service.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -40,11 +41,9 @@ public class GroupController {
      * @return paginated list or entity
      */
     @GetMapping
-    public List<GroupDTO> find(@RequestParam(required = false) Integer page, @RequestParam(required = false) Integer number,
-                                 @RequestParam(required = false) String groupNumber, Locale locale) {
-        return groupService.getByFilter(new RequestParameters<>(new PaginationPage(page, number), new GroupFilter(groupNumber)), locale).stream()
-                .map(this::convertToDto)
-                .collect(Collectors.toList());
+    public Page<GroupDTO> find(@RequestParam(required = false) Integer page, @RequestParam(required = false) Integer number,
+                               @RequestParam(required = false) String groupNumber, Locale locale) {
+        return groupService.getByFilter(new RequestParameters<>(new PaginationPage(page, number), new GroupFilter(groupNumber)), locale).map(this::convertToDto);
     }
 
     /**
