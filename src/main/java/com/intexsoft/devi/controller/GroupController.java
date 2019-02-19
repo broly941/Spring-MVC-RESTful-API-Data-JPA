@@ -34,10 +34,10 @@ public class GroupController {
     /**
      * method return paginated list by page/number or entity as result of filtering
      *
-     * @param page      of pagination
-     * @param number    of pagination
+     * @param page        of pagination
+     * @param number      of pagination
      * @param groupNumber for filtering of pagination result
-     * @param locale    of message
+     * @param locale      of message
      * @return paginated list or entity
      */
     @GetMapping
