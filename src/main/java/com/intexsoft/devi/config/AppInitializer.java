@@ -1,5 +1,6 @@
 package com.intexsoft.devi.config;
 
+import com.intexsoft.devi.filter.JwtAuthTokenFilter;
 import com.intexsoft.devi.filter.LocaleResolverRequestFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
@@ -28,8 +29,8 @@ public class AppInitializer extends AbstractAnnotationConfigDispatcherServletIni
         return new String[]{"/"};
     }
 
-    @Override
-    protected Filter[] getServletFilters() {
-        return new Filter[]{new LocaleResolverRequestFilter()};
-    }
+//    @Override
+//    protected Filter[] getServletFilters() {
+//        return new Filter[]{new LocaleResolverRequestFilter()};
+//    }
 }
