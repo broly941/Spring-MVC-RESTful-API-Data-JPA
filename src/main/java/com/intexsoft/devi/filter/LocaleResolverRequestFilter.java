@@ -37,7 +37,6 @@ import static org.springframework.http.HttpHeaders.ACCEPT_LANGUAGE;
  * @author DEVIAPHAN on 19.12.2018
  * @project university
  */
-@Order(1)
 public class LocaleResolverRequestFilter extends OncePerRequestFilter {
 
     private final Predicate<Integer> indexValidPredicate = index -> index != -1;
@@ -59,7 +58,7 @@ public class LocaleResolverRequestFilter extends OncePerRequestFilter {
         langList = loadLanguageList();
     }
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(GroupServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(LocaleResolverRequestFilter.class);
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {

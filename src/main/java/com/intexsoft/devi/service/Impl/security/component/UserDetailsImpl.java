@@ -1,4 +1,4 @@
-package com.intexsoft.devi.service.Impl.security;
+package com.intexsoft.devi.service.Impl.security.component;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.intexsoft.devi.entity.User;
@@ -11,7 +11,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class UserPrinciple implements UserDetails {
+/**
+ * It simply stores user information which is later encapsulated into Authentication objects.
+ * This allows non-security related user information (such as email addresses, telephone numbers etc) to be stored.
+ */
+public class UserDetailsImpl implements UserDetails {
     private static final long serialVersionUID = 1L;
 
     private Long id;
@@ -27,9 +31,19 @@ public class UserPrinciple implements UserDetails {
 
     private Collection<? extends GrantedAuthority> authorities;
 
-    public UserPrinciple(Long id, String name,
-                         String username, String email, String password,
-                         Collection<? extends GrantedAuthority> authorities) {
+    /**
+     * Constructor
+     *
+     * @param id          of user
+     * @param name        of user
+     * @param username    of user
+     * @param email       of user
+     * @param password    of user
+     * @param authorities of user
+     */
+    public UserDetailsImpl(Long id, String name,
+                           String username, String email, String password,
+                           Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.name = name;
         this.username = username;
@@ -38,12 +52,18 @@ public class UserPrinciple implements UserDetails {
         this.authorities = authorities;
     }
 
-    public static UserPrinciple build(User user) {
+    /**
+     * method generate and return UserDetailsImpl
+     *
+     * @param user object
+     * @return UserDetailsImpl
+     */
+    public static UserDetailsImpl build(User user) {
         List<GrantedAuthority> authorities = user.getRoles().stream().map(role ->
                 new SimpleGrantedAuthority(role.getName())
         ).collect(Collectors.toList());
 
-        return new UserPrinciple(
+        return new UserDetailsImpl(
                 user.getId(),
                 user.getName(),
                 user.getUsername(),
@@ -105,7 +125,7 @@ public class UserPrinciple implements UserDetails {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        UserPrinciple user = (UserPrinciple) o;
+        UserDetailsImpl user = (UserDetailsImpl) o;
         return Objects.equals(id, user.id);
     }
 }

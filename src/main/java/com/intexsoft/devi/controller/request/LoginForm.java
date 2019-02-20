@@ -1,15 +1,10 @@
-package com.intexsoft.devi.entity;
+package com.intexsoft.devi.controller.request;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
-
+/**
+ * Storing and management data for logIn
+ */
 public class LoginForm {
-    @NotBlank
-    @Size(min=3, max = 60)
     private String username;
-
-    @NotBlank
-    @Size(min = 6, max = 40)
     private String password;
 
     public String getUsername() {

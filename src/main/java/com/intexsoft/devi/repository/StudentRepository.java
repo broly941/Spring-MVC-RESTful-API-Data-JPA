@@ -10,8 +10,9 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * @author DEVIAPHAN
  * The class works with searching, retrieving and storing data from a database.
+ *
+ * @author DEVIAPHAN
  */
 public interface StudentRepository extends JpaRepository<Student, Long> {
     Optional<Student> findByFirstNameAndLastNameAndGroup_Number(String firstName, String lastName, String number);

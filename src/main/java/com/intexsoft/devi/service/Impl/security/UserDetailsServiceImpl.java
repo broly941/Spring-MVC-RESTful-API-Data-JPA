@@ -1,34 +1,34 @@
 package com.intexsoft.devi.service.Impl.security;
 
-import com.intexsoft.devi.entity.User;
-import com.intexsoft.devi.repository.UserRepository;
+import com.intexsoft.devi.service.Impl.security.component.UserDetailsImpl;
+import com.intexsoft.devi.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Implementation of {@link UserDetailsService} interface.
  * <p>
  * Add access right for current user.
+ *
+ * @author ilya.korzhavin
  */
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
-    UserRepository userRepository;
+    private UserService userService;
 
+    /**
+     * method return UserDetails by username
+     * @param username of user
+     * @return UserDetails object
+     * @throws UsernameNotFoundException if user not exists
+     */
     @Override
-    public UserDetails loadUserByUsername(String username)
-            throws UsernameNotFoundException {
-
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() ->
-                        new UsernameNotFoundException("User Not Found with -> username or email : " + username)
-                );
-
-        return UserPrinciple.build(user);
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return UserDetailsImpl.build(userService.get(username));
     }
 }

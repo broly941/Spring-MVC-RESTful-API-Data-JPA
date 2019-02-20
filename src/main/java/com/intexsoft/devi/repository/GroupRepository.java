@@ -11,8 +11,9 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * @author DEVIAPHAN
  * The class works with searching, retrieving and storing data from a database.
+ *
+ * @author DEVIAPHAN
  */
 public interface GroupRepository extends JpaRepository<Group, Long> {
     Optional<Group> findByNumber(String number);
@@ -22,5 +23,5 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
 
     Page<Group> findAll(Pageable pageable);
 
-    Page<Group> findAllByNumber (String groupNumber, Pageable pageable);
+    Page<Group> findAllByNumber(String groupNumber, Pageable pageable);
 }

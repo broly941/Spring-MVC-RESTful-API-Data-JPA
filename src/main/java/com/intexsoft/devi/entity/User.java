@@ -39,17 +39,12 @@ public class User {
     public User() {
     }
 
-    public User (String email, String username, String password) {
-        this.email = email;
-        this.username = username;
-        this.password = password;
-    }
-
-    public User(String name, String username, String email, String password) {
-        this.email = email;
+    public User(String name, String username, String email, String password, Set<Role> roles) {
         this.name = name;
         this.username = username;
+        this.email = email;
         this.password = password;
+        this.roles = roles;
     }
 
     public Long getId() {

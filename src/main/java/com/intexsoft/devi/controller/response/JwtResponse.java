@@ -1,5 +1,10 @@
 package com.intexsoft.devi.controller.response;
 
+/**
+ * The class contains information about JWT.
+ *
+ * @author ilya.korzhavin
+ */
 public class JwtResponse {
     private String token;
     private String type = "Bearer";

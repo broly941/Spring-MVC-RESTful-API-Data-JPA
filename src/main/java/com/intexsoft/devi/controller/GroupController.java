@@ -1,9 +1,11 @@
 package com.intexsoft.devi.controller;
 
+import com.intexsoft.devi.controller.component.DTOConverter;
 import com.intexsoft.devi.dto.GroupDTO;
 import com.intexsoft.devi.entity.Group;
 import com.intexsoft.devi.service.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,6 +34,7 @@ public class GroupController {
      * @return getAll group entities in the database.
      */
     @GetMapping
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public List<GroupDTO> getAll(Locale locale) {
         return groupService.getAll(locale).stream()
                 .map(this::convertToDto)
