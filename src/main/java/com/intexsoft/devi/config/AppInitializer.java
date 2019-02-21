@@ -15,7 +15,7 @@ import javax.servlet.Filter;
 public class AppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer{
     @Override
     protected Class<?>[] getRootConfigClasses() {
-        return new Class[]{WebConfig.class, WebSecurityConfig.class, DataConfig.class};
+        return new Class[]{WebSecurityConfig.class, WebConfig.class, DataConfig.class};
     }
 
     @Override
@@ -28,8 +28,8 @@ public class AppInitializer extends AbstractAnnotationConfigDispatcherServletIni
         return new String[]{"/"};
     }
 
-    @Override
-    protected Filter[] getServletFilters() {
-        return new Filter[]{new LocaleResolverRequestFilter()};
-    }
+//    @Override
+//    protected Filter[] getServletFilters() {
+//        return new Filter[]{new LocaleResolverRequestFilter()};
+//    }
 }

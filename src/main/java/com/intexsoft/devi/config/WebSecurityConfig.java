@@ -1,5 +1,6 @@
 package com.intexsoft.devi.config;
 
+import com.intexsoft.devi.exception.JwtAuthEntryPoint;
 import com.intexsoft.devi.filter.LocaleResolverRequestFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -22,9 +23,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
  */
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(
-        prePostEnabled = true
-)
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
@@ -49,22 +48,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
-//    @Override
-//    protected void configure(HttpSecurity http) throws Exception {
-//        http
-//                .csrf().disable()
-//                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
-//                // don't create session
-//                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-//                .authorizeRequests()
-//                .antMatchers("/university/auth/**", "/auth/**", "/groups/**", "/groups", "teachers/sort-desc").hasRole("ADMIN")
-////                .antMatchers("/auth/**").permitAll()
-//                .anyRequest()
-//                .authenticated();
-//        http
-//                .addFilterBefore(new LocaleResolverRequestFilter(), UsernamePasswordAuthenticationFilter.class);
-//
-//        // disable page caching
-//        http.headers().cacheControl();
-//    }
+    @Autowired
+    private JwtAuthEntryPoint unauthorizedHandler;
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+
+        http.cors().and().csrf().disable().
+                authorizeRequests()
+                .antMatchers("/university/**", "/groups", "/groups/**").hasRole("ADMIN")
+                .and()
+                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler)
+                .and()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+        http.addFilterBefore(new LocaleResolverRequestFilter(), UsernamePasswordAuthenticationFilter.class);
+    }
 }
