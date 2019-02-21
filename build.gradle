@@ -46,6 +46,7 @@ dependencies {
 
     // DataBase
     compile group: 'org.hibernate', name: 'hibernate-core', version: '5.3.7.Final'
+    compile files('libs/ojdbc7.jar')
 
     // Parser
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.7'

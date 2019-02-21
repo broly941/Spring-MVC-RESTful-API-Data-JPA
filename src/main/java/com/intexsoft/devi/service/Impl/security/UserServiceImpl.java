@@ -79,7 +79,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public User save(SignUpForm signUpRequest) {
         validationRequestData(signUpRequest);
-        User user = new User(signUpRequest.getName(), signUpRequest.getUsername(), signUpRequest.getEmail(), encoder.encode(signUpRequest.getPassword()), getRoles(signUpRequest.getRole()));
+        User user = new User(signUpRequest.getUsername(), signUpRequest.getEmail(), encoder.encode(signUpRequest.getPassword()), getRoles(signUpRequest.getRole()));
         return userRepository.save(user);
     }
 
