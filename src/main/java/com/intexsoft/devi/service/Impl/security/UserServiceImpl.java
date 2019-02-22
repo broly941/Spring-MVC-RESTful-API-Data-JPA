@@ -17,6 +17,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -41,8 +42,13 @@ public class UserServiceImpl implements UserService {
     public static final String ADMIN_ROLE_NOT_FIND = "Admin Role not find";
     public static final String PM_ROLE_NOT_FIND = "PM Role not find";
     public static final String USER_ROLE_NOT_FIND = "User Role not find";
+
     public static final String ADMIN = "admin";
     public static final String PM = "pm";
+    public static final String USERNAME_IS_ALREADY_TAKEN = "Username is already taken";
+    public static final String EMAIL_IS_ALREADY_IN_USE = "Email is already in use";
+    public static final String USER_NOT_FOUND = "User not found: ";
+
     @Autowired
     private UserRepository userRepository;
 
@@ -66,7 +72,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public User get(String username) {
-        return userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+        return userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND + username));
     }
 
     /**
@@ -79,7 +85,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public User save(SignUpForm signUpRequest) {
         validationRequestData(signUpRequest);
-        User user = new User(signUpRequest.getUsername(), signUpRequest.getEmail(), encoder.encode(signUpRequest.getPassword()), getRoles(signUpRequest.getRole()));
+        User user = new User(signUpRequest.getUsername(), signUpRequest.getEmail(), encoder.encode(signUpRequest.getPassword()), getRoles(signUpRequest.getRoles()));
         return userRepository.save(user);
     }
 
@@ -93,14 +99,23 @@ public class UserServiceImpl implements UserService {
     public JwtResponse getToken(LoginForm loginRequest) {
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword());
         Authentication authentication = authenticationManager.authenticate(token);
-
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        SecurityContext o = SecurityContextHolder.getContext();
-        String jwt = jwtProvider.generateJwtToken(authentication);
+        return new JwtResponse(jwtProvider.generateJwtToken(authentication));
+    }
 
+    /**
+     * method return refresh token
+     *
+     * @param token old access token
+     * @return refresh token
+     */
+    @Override
+    public JwtResponse refreshToken(String token) {
+        String jwt = jwtProvider.generateRefreshToken(token);
         return new JwtResponse(jwt);
     }
 
+    //todo stream filter
     private Set<Role> getRoles(Set<String> requestRoles) {
         Set<Role> userRoles = new HashSet<>();
         requestRoles.forEach(role -> {
@@ -123,9 +138,9 @@ public class UserServiceImpl implements UserService {
 
     private void validationRequestData(SignUpForm signUpRequest) {
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
-            throw new ValidationException("Username is already taken");
+            throw new ValidationException(USERNAME_IS_ALREADY_TAKEN);
         } else if (userRepository.existsByEmail(signUpRequest.getEmail())) {
-            throw new ValidationException("Email is already in use");
+            throw new ValidationException(EMAIL_IS_ALREADY_IN_USE);
         }
     }
 

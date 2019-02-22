@@ -23,6 +23,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     /**
      * method return UserDetails by username
+     *
      * @param username of user
      * @return UserDetails object
      * @throws UsernameNotFoundException if user not exists

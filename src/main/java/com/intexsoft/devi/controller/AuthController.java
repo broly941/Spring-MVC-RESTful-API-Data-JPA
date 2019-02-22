@@ -6,10 +6,7 @@ import com.intexsoft.devi.controller.response.JwtResponse;
 import com.intexsoft.devi.entity.User;
 import com.intexsoft.devi.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Controller for registration and authorization user
@@ -31,6 +28,16 @@ public class AuthController {
     @PostMapping("/signin")
     public JwtResponse authenticateUser(@RequestBody LoginForm loginRequest) {
         return userService.getToken(loginRequest);
+    }
+
+    /**
+     * Refresh jwt and return it
+     *
+     * @return token
+     */
+    @PostMapping("/refresh")
+    public JwtResponse refreshToken(@RequestParam String token) {
+        return userService.refreshToken(token);
     }
 
     /**

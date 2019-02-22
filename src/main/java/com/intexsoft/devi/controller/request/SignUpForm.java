@@ -6,19 +6,10 @@ import java.util.Set;
  * Storing and management data for signUp
  */
 public class SignUpForm {
-    private String name;
     private String username;
     private String email;
-    private Set<String> role;
+    private Set<String> roles;
     private String password;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public String getUsername() {
         return username;
@@ -44,11 +35,11 @@ public class SignUpForm {
         this.password = password;
     }
 
-    public Set<String> getRole() {
-        return this.role;
+    public Set<String> getRoles() {
+        return roles;
     }
 
-    public void setRole(Set<String> role) {
-        this.role = role;
+    public void setRoles(Set<String> roles) {
+        this.roles = roles;
     }
 }

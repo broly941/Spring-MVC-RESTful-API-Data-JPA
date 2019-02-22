@@ -16,4 +16,6 @@ public interface UserService {
     User save(SignUpForm signUpRequest);
 
     JwtResponse getToken(LoginForm loginRequest);
+
+    JwtResponse refreshToken(String token);
 }
