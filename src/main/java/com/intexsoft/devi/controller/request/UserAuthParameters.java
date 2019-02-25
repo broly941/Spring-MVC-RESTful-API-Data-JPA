@@ -3,7 +3,7 @@ package com.intexsoft.devi.controller.request;
 /**
  * Storing and management data for logIn
  */
-public class LoginForm {
+public class UserAuthParameters {
     private String username;
     private String password;
 

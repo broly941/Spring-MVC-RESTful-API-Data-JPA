@@ -1,4 +1,4 @@
-package com.intexsoft.devi.service;
+package com.intexsoft.devi.service.interfaces;
 
 import com.intexsoft.devi.controller.request.Filter;
 import com.intexsoft.devi.controller.request.StudentTeacherFilter;

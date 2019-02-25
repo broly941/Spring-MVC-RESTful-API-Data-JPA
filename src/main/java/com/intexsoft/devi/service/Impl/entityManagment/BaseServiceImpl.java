@@ -1,10 +1,9 @@
 package com.intexsoft.devi.service.Impl.entityManagment;
 
 import com.intexsoft.devi.controller.request.Filter;
-import com.intexsoft.devi.controller.request.StudentTeacherFilter;
 import com.intexsoft.devi.exception.ViolationException;
-import com.intexsoft.devi.service.BaseService;
-import com.intexsoft.devi.service.GroupService;
+import com.intexsoft.devi.service.interfaces.BaseService;
+import com.intexsoft.devi.service.interfaces.GroupService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

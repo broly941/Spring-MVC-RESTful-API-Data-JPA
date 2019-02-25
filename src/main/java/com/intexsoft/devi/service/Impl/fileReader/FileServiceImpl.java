@@ -2,9 +2,9 @@ package com.intexsoft.devi.service.Impl.fileReader;
 
 import com.intexsoft.devi.controller.response.ValidationStatus;
 import com.intexsoft.devi.funcInterface.TriFunction;
-import com.intexsoft.devi.service.CSVParserService;
-import com.intexsoft.devi.service.FileService;
-import com.intexsoft.devi.service.XLSXParserService;
+import com.intexsoft.devi.service.interfaces.CSVParserService;
+import com.intexsoft.devi.service.interfaces.FileService;
+import com.intexsoft.devi.service.interfaces.XLSXParserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;

@@ -1,4 +1,4 @@
-package com.intexsoft.devi.service;
+package com.intexsoft.devi.service.interfaces;
 
 import com.intexsoft.devi.controller.response.ValidationStatus;
 import com.intexsoft.devi.service.Impl.fileReader.validate.ValidationParameters;

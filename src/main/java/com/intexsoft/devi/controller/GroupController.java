@@ -3,9 +3,8 @@ package com.intexsoft.devi.controller;
 import com.intexsoft.devi.controller.component.DTOConverter;
 import com.intexsoft.devi.dto.GroupDTO;
 import com.intexsoft.devi.entity.Group;
-import com.intexsoft.devi.service.GroupService;
+import com.intexsoft.devi.service.interfaces.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

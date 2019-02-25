@@ -1,7 +1,7 @@
-package com.intexsoft.devi.service;
+package com.intexsoft.devi.service.interfaces;
 
-import com.intexsoft.devi.controller.request.LoginForm;
-import com.intexsoft.devi.controller.request.SignUpForm;
+import com.intexsoft.devi.controller.request.UserAuthParameters;
+import com.intexsoft.devi.controller.request.UserRegistrationParameters;
 import com.intexsoft.devi.controller.response.JwtResponse;
 import com.intexsoft.devi.entity.User;
 
@@ -13,9 +13,9 @@ import com.intexsoft.devi.entity.User;
 public interface UserService {
     User get(String username);
 
-    User save(SignUpForm signUpRequest);
+    User save(UserRegistrationParameters signUpRequest);
 
-    JwtResponse getToken(LoginForm loginRequest);
+    JwtResponse getToken(UserAuthParameters loginRequest);
 
     JwtResponse refreshToken(String token);
 }

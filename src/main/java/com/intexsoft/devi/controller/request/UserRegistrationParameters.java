@@ -5,7 +5,7 @@ import java.util.Set;
 /**
  * Storing and management data for signUp
  */
-public class SignUpForm {
+public class UserRegistrationParameters {
     private String username;
     private String email;
     private Set<String> roles;

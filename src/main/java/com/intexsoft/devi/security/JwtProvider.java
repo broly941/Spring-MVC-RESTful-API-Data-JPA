@@ -29,9 +29,6 @@ import java.util.stream.Collectors;
 public class JwtProvider {
 
     @Autowired
-    private UserDetailsService userDetailsService;
-
-    @Autowired
     Environment environment;
 
     public static final String INVALID_JWT_SIGNATURE_MESSAGE = "Invalid JWT signature -> Message: {} ";
@@ -41,8 +38,7 @@ public class JwtProvider {
     public static final String JWT_CLAIMS_STRING_IS_EMPTY_MESSAGE = "JWT claims string is empty -> Message: {}";
 
     private final String JWT_SECRET = "jwtBrolySecretKey";
-    private final int JWT_EXPIRATION = 86400;
-
+    private final Integer JWT_EXPIRATION = (1000*600);
     private final Logger LOGGER = LoggerFactory.getLogger(JwtProvider.class);
 
     @Autowired
@@ -60,7 +56,7 @@ public class JwtProvider {
         return Jwts.builder()
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date())
-                .setExpiration(new Date((new Date()).getTime() + JWT_EXPIRATION))
+                .setExpiration(new Date(System.currentTimeMillis() + JWT_EXPIRATION))
                 .signWith(SignatureAlgorithm.HS512, JWT_SECRET)
                 .compact();
     }
@@ -73,15 +69,11 @@ public class JwtProvider {
      */
     public String generateRefreshToken(String token) {
         String username = tokenProvider.getUserNameFromJwtToken(token);
-        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-        UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
-
         return Jwts.builder()
-                .setSubject(userPrincipal.getUsername())
+                .setSubject(username)
+                .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + JWT_EXPIRATION))
                 .signWith(SignatureAlgorithm.HS512, JWT_SECRET)
-                .claim("type", "REFRESH")
                 .compact();
     }
 

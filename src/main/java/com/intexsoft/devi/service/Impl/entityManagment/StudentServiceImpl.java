@@ -1,12 +1,12 @@
 package com.intexsoft.devi.service.Impl.entityManagment;
 
-import com.intexsoft.devi.controller.request.RequestParameters;
+import com.intexsoft.devi.controller.request.PageRequestParameters;
 import com.intexsoft.devi.controller.request.StudentTeacherFilter;
 import com.intexsoft.devi.controller.response.ValidationStatus;
 import com.intexsoft.devi.entity.Student;
 import com.intexsoft.devi.exception.SQLQueryException;
 import com.intexsoft.devi.repository.StudentRepository;
-import com.intexsoft.devi.service.*;
+import com.intexsoft.devi.service.interfaces.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -254,7 +254,7 @@ public class StudentServiceImpl implements StudentService {
      * @return list of students
      */
     @Override
-    public Page<Student> getByFilter(RequestParameters parameters, Locale locale) {
+    public Page<Student> getByFilter(PageRequestParameters parameters, Locale locale) {
         StudentTeacherFilter filter = (StudentTeacherFilter) parameters.getFilter();
         Pageable pageable = parameters.getPage().getPageable();
         return studentBaseService.getByFilter(filter, pageable,

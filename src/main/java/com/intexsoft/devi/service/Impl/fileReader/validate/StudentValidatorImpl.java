@@ -2,10 +2,10 @@ package com.intexsoft.devi.service.Impl.fileReader.validate;
 
 import com.intexsoft.devi.entity.Group;
 import com.intexsoft.devi.entity.Student;
-import com.intexsoft.devi.service.EntitiesValidationService;
-import com.intexsoft.devi.service.GroupService;
-import com.intexsoft.devi.service.StudentService;
-import com.intexsoft.devi.service.StudentValidator;
+import com.intexsoft.devi.service.interfaces.EntitiesValidationService;
+import com.intexsoft.devi.service.interfaces.GroupService;
+import com.intexsoft.devi.service.interfaces.StudentService;
+import com.intexsoft.devi.service.interfaces.StudentValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
-import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;

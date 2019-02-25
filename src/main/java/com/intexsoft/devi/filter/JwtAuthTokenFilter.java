@@ -35,16 +35,25 @@ public class JwtAuthTokenFilter implements Filter {
         this.userDetailsService = userDetailsService;
     }
 
-
     @Override
     public void destroy() {
     }
 
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
-        System.out.println("123");
+    public void init(FilterConfig filterConfig) {
     }
 
+    /**
+     * method make token from request and check it
+     * if token is not valid throw exception
+     * if token is not exist just make doFilter()
+     *
+     * @param request  of user
+     * @param response of app
+     * @param chain    is filters chain
+     * @throws IOException      if will exception
+     * @throws ServletException if will exception
+     */
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         try {

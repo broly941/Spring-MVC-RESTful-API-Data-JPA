@@ -1,7 +1,7 @@
 package com.intexsoft.devi.service.Impl.security;
 
 import com.intexsoft.devi.service.Impl.security.component.UserDetailsImpl;
-import com.intexsoft.devi.service.UserService;
+import com.intexsoft.devi.service.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

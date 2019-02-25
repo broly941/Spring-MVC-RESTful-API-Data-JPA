@@ -1,4 +1,4 @@
-package com.intexsoft.devi.service;
+package com.intexsoft.devi.service.interfaces;
 
 import java.io.IOException;
 import java.io.InputStream;

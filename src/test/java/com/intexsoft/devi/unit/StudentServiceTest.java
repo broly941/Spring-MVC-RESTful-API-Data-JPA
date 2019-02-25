@@ -1,13 +1,11 @@
 package com.intexsoft.devi.unit;
 
-import com.intexsoft.devi.controller.response.ValidationStatus;
 import com.intexsoft.devi.entity.Student;
 import com.intexsoft.devi.repository.StudentRepository;
-import com.intexsoft.devi.service.BaseService;
-import com.intexsoft.devi.service.EntitiesValidationService;
+import com.intexsoft.devi.service.interfaces.BaseService;
+import com.intexsoft.devi.service.interfaces.EntitiesValidationService;
 import com.intexsoft.devi.service.Impl.entityManagment.GroupServiceImpl;
 import com.intexsoft.devi.service.Impl.entityManagment.StudentServiceImpl;
-import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -17,7 +15,6 @@ import org.springframework.context.MessageSource;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;

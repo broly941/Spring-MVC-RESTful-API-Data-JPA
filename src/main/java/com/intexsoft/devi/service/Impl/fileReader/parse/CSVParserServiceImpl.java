@@ -3,7 +3,7 @@ package com.intexsoft.devi.service.Impl.fileReader.parse;
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvParser.Feature;
-import com.intexsoft.devi.service.CSVParserService;
+import com.intexsoft.devi.service.interfaces.CSVParserService;
 import com.intexsoft.devi.service.Impl.fileReader.FileServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;

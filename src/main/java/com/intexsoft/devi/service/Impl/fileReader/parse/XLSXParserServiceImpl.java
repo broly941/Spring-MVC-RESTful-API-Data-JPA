@@ -1,7 +1,7 @@
 package com.intexsoft.devi.service.Impl.fileReader.parse;
 
 import com.intexsoft.devi.service.Impl.fileReader.FileServiceImpl;
-import com.intexsoft.devi.service.XLSXParserService;
+import com.intexsoft.devi.service.interfaces.XLSXParserService;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;

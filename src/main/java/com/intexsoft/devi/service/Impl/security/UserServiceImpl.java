@@ -1,7 +1,7 @@
 package com.intexsoft.devi.service.Impl.security;
 
-import com.intexsoft.devi.controller.request.LoginForm;
-import com.intexsoft.devi.controller.request.SignUpForm;
+import com.intexsoft.devi.controller.request.UserAuthParameters;
+import com.intexsoft.devi.controller.request.UserRegistrationParameters;
 import com.intexsoft.devi.controller.response.JwtResponse;
 import com.intexsoft.devi.entity.Role;
 import com.intexsoft.devi.entity.User;
@@ -9,22 +9,19 @@ import com.intexsoft.devi.exception.ValidationException;
 import com.intexsoft.devi.repository.RoleRepository;
 import com.intexsoft.devi.repository.UserRepository;
 import com.intexsoft.devi.security.JwtProvider;
-import com.intexsoft.devi.service.UserService;
+import com.intexsoft.devi.service.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Implementation of {@link UserService} interface.
@@ -83,7 +80,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     @Transactional
-    public User save(SignUpForm signUpRequest) {
+    public User save(UserRegistrationParameters signUpRequest) {
         validationRequestData(signUpRequest);
         User user = new User(signUpRequest.getUsername(), signUpRequest.getEmail(), encoder.encode(signUpRequest.getPassword()), getRoles(signUpRequest.getRoles()));
         return userRepository.save(user);
@@ -96,7 +93,7 @@ public class UserServiceImpl implements UserService {
      * @return token
      */
     @Override
-    public JwtResponse getToken(LoginForm loginRequest) {
+    public JwtResponse getToken(UserAuthParameters loginRequest) {
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword());
         Authentication authentication = authenticationManager.authenticate(token);
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -115,28 +112,22 @@ public class UserServiceImpl implements UserService {
         return new JwtResponse(jwt);
     }
 
-    //todo stream filter
     private Set<Role> getRoles(Set<String> requestRoles) {
-        Set<Role> userRoles = new HashSet<>();
-        requestRoles.forEach(role -> {
-            switch (role.toLowerCase()) {
-                case ADMIN:
-                    Role adminRole = roleRepository.findByName(ROLE_ADMIN).orElseThrow(() -> new ValidationException(ADMIN_ROLE_NOT_FIND));
-                    userRoles.add(adminRole);
-                    break;
-                case PM:
-                    Role pmRole = roleRepository.findByName(ROLE_PM).orElseThrow(() -> new ValidationException(PM_ROLE_NOT_FIND));
-                    userRoles.add(pmRole);
-                    break;
-                default:
-                    Role userRole = roleRepository.findByName(ROLE_USER).orElseThrow(() -> new ValidationException(USER_ROLE_NOT_FIND));
-                    userRoles.add(userRole);
-            }
-        });
-        return userRoles;
+        return requestRoles.stream()
+                .map(role -> {
+                    switch (role) {
+                        case ADMIN:
+                            return roleRepository.findByName(ROLE_ADMIN).orElseThrow(() -> new ValidationException(ADMIN_ROLE_NOT_FIND));
+                        case PM:
+                            return roleRepository.findByName(ROLE_PM).orElseThrow(() -> new ValidationException(PM_ROLE_NOT_FIND));
+                        default:
+                            return roleRepository.findByName(ROLE_USER).orElseThrow(() -> new ValidationException(USER_ROLE_NOT_FIND));
+                    }
+                })
+                .collect(Collectors.toSet());
     }
 
-    private void validationRequestData(SignUpForm signUpRequest) {
+    private void validationRequestData(UserRegistrationParameters signUpRequest) {
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
             throw new ValidationException(USERNAME_IS_ALREADY_TAKEN);
         } else if (userRepository.existsByEmail(signUpRequest.getEmail())) {

@@ -1,16 +1,15 @@
 package com.intexsoft.devi.service.Impl.entityManagment;
 
 import com.intexsoft.devi.controller.request.GroupFilter;
-import com.intexsoft.devi.controller.request.RequestParameters;
-import com.intexsoft.devi.controller.request.StudentTeacherFilter;
+import com.intexsoft.devi.controller.request.PageRequestParameters;
 import com.intexsoft.devi.entity.Group;
 import com.intexsoft.devi.entity.Teacher;
 import com.intexsoft.devi.exception.SQLQueryException;
 import com.intexsoft.devi.repository.GroupRepository;
-import com.intexsoft.devi.service.BaseService;
-import com.intexsoft.devi.service.GroupService;
-import com.intexsoft.devi.service.QueryExecutor;
-import com.intexsoft.devi.service.TeacherService;
+import com.intexsoft.devi.service.interfaces.BaseService;
+import com.intexsoft.devi.service.interfaces.GroupService;
+import com.intexsoft.devi.service.interfaces.QueryExecutor;
+import com.intexsoft.devi.service.interfaces.TeacherService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -228,7 +227,7 @@ public class GroupServiceImpl implements GroupService {
      * @return list of teachers
      */
     @Override
-    public Page<Group> getByFilter(RequestParameters parameters, Locale locale) {
+    public Page<Group> getByFilter(PageRequestParameters parameters, Locale locale) {
         GroupFilter filter = (GroupFilter) parameters.getFilter();
         Pageable pageable = parameters.getPage().getPageable();
         return groupBaseService.getByFilter(filter, pageable,

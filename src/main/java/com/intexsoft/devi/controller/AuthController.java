@@ -1,10 +1,10 @@
 package com.intexsoft.devi.controller;
 
-import com.intexsoft.devi.controller.request.LoginForm;
-import com.intexsoft.devi.controller.request.SignUpForm;
+import com.intexsoft.devi.controller.request.UserAuthParameters;
+import com.intexsoft.devi.controller.request.UserRegistrationParameters;
 import com.intexsoft.devi.controller.response.JwtResponse;
 import com.intexsoft.devi.entity.User;
-import com.intexsoft.devi.service.UserService;
+import com.intexsoft.devi.service.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,7 +26,7 @@ public class AuthController {
      * @return token
      */
     @PostMapping("/signin")
-    public JwtResponse authenticateUser(@RequestBody LoginForm loginRequest) {
+    public JwtResponse authenticateUser(@RequestBody UserAuthParameters loginRequest) {
         return userService.getToken(loginRequest);
     }
 
@@ -47,7 +47,7 @@ public class AuthController {
      * @return new user data
      */
     @PostMapping("/signup")
-    public User registerUser(@RequestBody SignUpForm signUpRequest) {
+    public User registerUser(@RequestBody UserRegistrationParameters signUpRequest) {
         return userService.save(signUpRequest);
     }
 }
