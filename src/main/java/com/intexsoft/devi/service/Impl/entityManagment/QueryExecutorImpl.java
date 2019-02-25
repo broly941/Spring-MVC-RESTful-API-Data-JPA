@@ -1,7 +1,7 @@
 package com.intexsoft.devi.service.Impl.entityManagment;
 
-import com.intexsoft.devi.service.QueryExecutor;
-import oracle.jdbc.OracleTypes;
+import com.intexsoft.devi.service.interfaces.QueryExecutor;
+import oracle.jdbc.internal.OracleTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.CallableStatementCallback;
 import org.springframework.jdbc.core.JdbcOperations;

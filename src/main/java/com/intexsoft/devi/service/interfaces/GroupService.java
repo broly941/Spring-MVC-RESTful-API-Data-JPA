@@ -1,8 +1,7 @@
-package com.intexsoft.devi.service;
+package com.intexsoft.devi.service.interfaces;
 
-import com.intexsoft.devi.controller.request.RequestParameters;
+import com.intexsoft.devi.controller.request.PageRequestParameters;
 import com.intexsoft.devi.entity.Group;
-import com.intexsoft.devi.entity.Student;
 import org.springframework.data.domain.Page;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,5 +35,5 @@ public interface GroupService {
 
     List<Group> getSortedRevertGroups();
 
-    Page<Group> getByFilter(RequestParameters parameters, Locale locale);
+    Page<Group> getByFilter(PageRequestParameters parameters, Locale locale);
 }

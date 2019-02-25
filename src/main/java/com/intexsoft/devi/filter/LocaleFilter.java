@@ -1,16 +1,15 @@
 package com.intexsoft.devi.filter;
 
-import com.intexsoft.devi.service.Impl.entityManagment.GroupServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.core.annotation.Order;
+import org.springframework.stereotype.Component;
+import org.springframework.web.filter.GenericFilterBean;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.springframework.web.util.WebUtils;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
+import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -35,8 +34,8 @@ import static org.springframework.http.HttpHeaders.ACCEPT_LANGUAGE;
  * @author DEVIAPHAN on 19.12.2018
  * @project university
  */
-@Order(1)
-public class LocaleResolverRequestFilter extends OncePerRequestFilter {
+@Component("localeResolverFilter")
+public class LocaleFilter extends GenericFilterBean implements Filter {
 
     private final Predicate<Integer> indexValidPredicate = index -> index != -1;
 
@@ -52,24 +51,30 @@ public class LocaleResolverRequestFilter extends OncePerRequestFilter {
 
     private List<String> langList;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(LocaleFilter.class);
+
     @Override
-    protected void initFilterBean() {
+    public void destroy() {
+    }
+
+    @Override
+    public void initFilterBean() {
         langList = loadLanguageList();
     }
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(GroupServiceImpl.class);
-
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
-        String acceptLanguage = request.getHeader(ACCEPT_LANGUAGE);
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+        HttpServletRequest httpRequest = (HttpServletRequest) request;
+        HttpServletResponse httpServletResponse = (HttpServletResponse) response;
+        String acceptLanguage = httpRequest.getHeader(ACCEPT_LANGUAGE);
         if (acceptLanguage == null) {
-            setLocale(request, response, filterChain, LOCALE_EN);
+            setLocale(httpRequest, httpServletResponse, chain, LOCALE_EN);
         } else {
-            acceptLanguage = substring(request.getHeader(ACCEPT_LANGUAGE), COMMA);
+            acceptLanguage = substring(httpRequest.getHeader(ACCEPT_LANGUAGE), COMMA);
             try {
-                setLanguage(request, response, filterChain, acceptLanguage);
+                setLanguage(httpRequest, httpServletResponse, chain, acceptLanguage);
             } catch (IOException | ServletException e) {
-                response.sendError(400, e.getMessage());
+                httpServletResponse.sendError(400, e.getMessage());
             }
         }
     }

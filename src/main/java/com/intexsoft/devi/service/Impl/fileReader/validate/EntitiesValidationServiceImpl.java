@@ -1,8 +1,8 @@
 package com.intexsoft.devi.service.Impl.fileReader.validate;
 
 import com.intexsoft.devi.controller.response.ValidationStatus;
-import com.intexsoft.devi.service.EntitiesValidationService;
-import com.intexsoft.devi.service.GroupService;
+import com.intexsoft.devi.service.interfaces.EntitiesValidationService;
+import com.intexsoft.devi.service.interfaces.GroupService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

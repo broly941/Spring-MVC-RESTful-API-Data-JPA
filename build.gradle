@@ -47,6 +47,7 @@ dependencies {
 
     // DataBase
     compile group: 'org.hibernate', name: 'hibernate-core', version: '5.3.7.Final'
+    compile files('libs/ojdbc7.jar')
 
     // Parser
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.7'
@@ -70,4 +71,11 @@ dependencies {
 
     //DTO
     compile group: 'org.modelmapper', name: 'modelmapper', version: '2.3.2'
+
+    //SECURITY
+    compile group: 'org.springframework.security', name: 'spring-security-core', version: '5.1.4.RELEASE'
+    compile group: 'org.springframework.security', name: 'spring-security-web', version: '5.1.4.RELEASE'
+    compile group: 'org.springframework.security', name: 'spring-security-config', version: '5.1.4.RELEASE'
+    compile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
+    compile group: 'org.springframework', name: 'spring-aop', version: '5.1.5.RELEASE'
 }

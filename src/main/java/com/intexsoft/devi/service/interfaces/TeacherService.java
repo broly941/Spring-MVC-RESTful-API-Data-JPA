@@ -1,11 +1,9 @@
-package com.intexsoft.devi.service;
+package com.intexsoft.devi.service.interfaces;
 
-import com.intexsoft.devi.controller.request.RequestParameters;
+import com.intexsoft.devi.controller.request.PageRequestParameters;
 import com.intexsoft.devi.controller.response.ValidationStatus;
 import com.intexsoft.devi.entity.Teacher;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -37,5 +35,5 @@ public interface TeacherService {
 
     List<Teacher> getSortedRevertTeachers();
 
-    Page<Teacher> getByFilter(RequestParameters parameters, Locale locale);
+    Page<Teacher> getByFilter(PageRequestParameters parameters, Locale locale);
 }

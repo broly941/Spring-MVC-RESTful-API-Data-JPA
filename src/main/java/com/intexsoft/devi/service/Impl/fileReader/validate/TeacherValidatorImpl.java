@@ -2,7 +2,10 @@ package com.intexsoft.devi.service.Impl.fileReader.validate;
 
 import com.intexsoft.devi.entity.Group;
 import com.intexsoft.devi.entity.Teacher;
-import com.intexsoft.devi.service.*;
+import com.intexsoft.devi.service.interfaces.EntitiesValidationService;
+import com.intexsoft.devi.service.interfaces.GroupService;
+import com.intexsoft.devi.service.interfaces.TeacherService;
+import com.intexsoft.devi.service.interfaces.TeacherValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

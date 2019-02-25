@@ -10,8 +10,9 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * @author DEVIAPHAN
  * The class works with searching, retrieving and storing data from a database.
+ *
+ * @author DEVIAPHAN
  */
 public interface TeacherRepository extends JpaRepository<Teacher, Long> {
     @Query(value = "SELECT * FROM teacher WHERE Exists (select 1 from groupteacher where groupteacher.GroupId = ?1 and teacher.TeacherId = groupteacher.TeacherId)", nativeQuery = true)

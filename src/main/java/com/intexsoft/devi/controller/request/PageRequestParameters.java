@@ -7,11 +7,11 @@ import javax.persistence.EntityNotFoundException;
  *
  * @param <T> for parametrize filter
  */
-public class RequestParameters<T extends Filter> {
+public class PageRequestParameters<T extends Filter> {
     private PaginationPage page = null;
     private T filter = null;
 
-    public RequestParameters(PaginationPage page, T filter) {
+    public PageRequestParameters(PaginationPage page, T filter) {
         if (!page.isPageExist() && !filter.isFilterExist()) {
             throw new EntityNotFoundException("Missing all needed parameters");
         }

@@ -1,13 +1,14 @@
 package com.intexsoft.devi.controller;
 
+import com.intexsoft.devi.controller.component.DTOConverter;
 import com.intexsoft.devi.controller.request.PaginationPage;
-import com.intexsoft.devi.controller.request.RequestParameters;
+import com.intexsoft.devi.controller.request.PageRequestParameters;
 import com.intexsoft.devi.controller.request.StudentTeacherFilter;
 import com.intexsoft.devi.controller.response.ValidationStatus;
 import com.intexsoft.devi.dto.TeacherDTO;
 import com.intexsoft.devi.entity.Teacher;
-import com.intexsoft.devi.service.FileService;
-import com.intexsoft.devi.service.TeacherService;
+import com.intexsoft.devi.service.interfaces.FileService;
+import com.intexsoft.devi.service.interfaces.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
@@ -49,7 +50,7 @@ public class TeacherController {
     @GetMapping
     public Page<TeacherDTO> find(@RequestParam(required = false) Integer page, @RequestParam(required = false) Integer number,
                                  @RequestParam(required = false) String firstName, @RequestParam(required = false) String lastName, Locale locale) {
-        return teacherService.getByFilter(new RequestParameters<>(new PaginationPage(page, number), new StudentTeacherFilter(firstName, lastName)), locale).map(this::convertToDto);
+        return teacherService.getByFilter(new PageRequestParameters<>(new PaginationPage(page, number), new StudentTeacherFilter(firstName, lastName)), locale).map(this::convertToDto);
     }
 
     /**

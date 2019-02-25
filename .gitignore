@@ -1,4 +1,7 @@
 .gradle/
+gradle/
+gradllew
+gradllew.bat
 .idea/
 build/
 out/

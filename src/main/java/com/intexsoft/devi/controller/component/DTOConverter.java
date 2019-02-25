@@ -1,4 +1,4 @@
-package com.intexsoft.devi.controller;
+package com.intexsoft.devi.controller.component;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -2,7 +2,7 @@ package com.intexsoft.devi.unit;
 
 import com.intexsoft.devi.entity.Group;
 import com.intexsoft.devi.repository.GroupRepository;
-import com.intexsoft.devi.service.BaseService;
+import com.intexsoft.devi.service.interfaces.BaseService;
 import com.intexsoft.devi.service.Impl.entityManagment.GroupServiceImpl;
 import com.intexsoft.devi.service.Impl.entityManagment.TeacherServiceImpl;
 import org.junit.Test;
