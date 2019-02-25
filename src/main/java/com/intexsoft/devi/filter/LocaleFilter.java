@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.web.filter.GenericFilterBean;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.springframework.web.util.WebUtils;
@@ -34,7 +35,7 @@ import static org.springframework.http.HttpHeaders.ACCEPT_LANGUAGE;
  * @project university
  */
 @Component("localeResolverFilter")
-public class LocaleFilter implements Filter {
+public class LocaleFilter extends GenericFilterBean implements Filter {
 
     private final Predicate<Integer> indexValidPredicate = index -> index != -1;
 
@@ -53,16 +54,16 @@ public class LocaleFilter implements Filter {
     private static final Logger LOGGER = LoggerFactory.getLogger(LocaleFilter.class);
 
     @Override
-    public void destroy() {}
+    public void destroy() {
+    }
 
     @Override
-    public void init(FilterConfig filterConfig) {
+    public void initFilterBean() {
         langList = loadLanguageList();
     }
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        langList = loadLanguageList();
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpServletResponse = (HttpServletResponse) response;
         String acceptLanguage = httpRequest.getHeader(ACCEPT_LANGUAGE);
