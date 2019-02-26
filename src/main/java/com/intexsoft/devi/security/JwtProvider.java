@@ -78,7 +78,7 @@ public class JwtProvider {
     }
 
     /**
-     * method return username by token
+     * method return username from token
      *
      * @param token object
      * @return username

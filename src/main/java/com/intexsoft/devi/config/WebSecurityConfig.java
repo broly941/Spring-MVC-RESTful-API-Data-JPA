@@ -77,7 +77,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-        http.addFilterBefore(localeFilter, UsernamePasswordAuthenticationFilter.class);
-        http.addFilterAfter(new JwtAuthTokenFilter(jwtProvider, userDetailsService), localeFilter.getClass());
+        http.addFilterBefore(new JwtAuthTokenFilter(jwtProvider, userDetailsService), UsernamePasswordAuthenticationFilter.class);
+        http.addFilter(localeFilter);
     }
 }
