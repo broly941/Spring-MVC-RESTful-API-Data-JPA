@@ -5,11 +5,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
-import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.springframework.web.util.WebUtils;
 
-import javax.servlet.*;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -35,7 +37,7 @@ import static org.springframework.http.HttpHeaders.ACCEPT_LANGUAGE;
  * @project university
  */
 @Component("localeResolverFilter")
-public class LocaleFilter extends GenericFilterBean implements Filter {
+public class LocaleFilter extends GenericFilterBean {
 
     private final Predicate<Integer> indexValidPredicate = index -> index != -1;
 
@@ -60,6 +62,7 @@ public class LocaleFilter extends GenericFilterBean implements Filter {
     @Override
     public void initFilterBean() {
         langList = loadLanguageList();
+        LOGGER.debug("Invoke filter init method()'");
     }
 
     @Override

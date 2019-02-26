@@ -37,6 +37,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private JwtProvider jwtProvider;
 
     @Autowired
+    private LocaleFilter localeFilter;
+
+    @Autowired
     private UserDetailsService userDetailsService;
 
     /**
@@ -74,7 +77,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-        http.addFilterBefore(new LocaleFilter(), UsernamePasswordAuthenticationFilter.class);
-        http.addFilterAfter(new JwtAuthTokenFilter(jwtProvider, userDetailsService), LocaleFilter.class);
+        http.addFilterBefore(localeFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterAfter(new JwtAuthTokenFilter(jwtProvider, userDetailsService), localeFilter.getClass());
     }
 }
