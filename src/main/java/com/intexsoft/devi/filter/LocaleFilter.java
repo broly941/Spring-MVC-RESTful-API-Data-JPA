@@ -3,6 +3,7 @@ package com.intexsoft.devi.filter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
@@ -36,7 +37,7 @@ import static org.springframework.http.HttpHeaders.ACCEPT_LANGUAGE;
  * @author DEVIAPHAN on 19.12.2018
  * @project university
  */
-@Component("localeResolverFilter")
+@Component
 public class LocaleFilter extends GenericFilterBean {
 
     private final Predicate<Integer> indexValidPredicate = index -> index != -1;
@@ -56,13 +57,8 @@ public class LocaleFilter extends GenericFilterBean {
     private static final Logger LOGGER = LoggerFactory.getLogger(LocaleFilter.class);
 
     @Override
-    public void destroy() {
-    }
-
-    @Override
     public void initFilterBean() {
         langList = loadLanguageList();
-        LOGGER.debug("Invoke filter init method()'");
     }
 
     @Override
@@ -82,8 +78,7 @@ public class LocaleFilter extends GenericFilterBean {
         }
     }
 
-    private void setLocale(HttpServletRequest request, HttpServletResponse response, FilterChain
-            filterChain, String acceptLanguage) throws IOException, ServletException {
+    private void setLocale(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain, String acceptLanguage) throws IOException, ServletException {
         Locale locale = Locale.forLanguageTag(acceptLanguage);
         LocaleContextHolder.setLocale(locale);
         WebUtils.setSessionAttribute(request, SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME, locale);

@@ -18,6 +18,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 /**
  * Specifies that the class contains the definitions
@@ -77,7 +78,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
+        http.addFilterBefore(localeFilter, UsernamePasswordAuthenticationFilter.class);
         http.addFilterBefore(new JwtAuthTokenFilter(jwtProvider, userDetailsService), UsernamePasswordAuthenticationFilter.class);
-        http.addFilter(localeFilter);
     }
 }

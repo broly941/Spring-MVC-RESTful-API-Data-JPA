@@ -3,12 +3,14 @@ package com.intexsoft.devi.filter;
 import com.intexsoft.devi.security.JwtProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
+import org.springframework.web.filter.GenericFilterBean;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -17,12 +19,12 @@ import java.io.IOException;
 /**
  * Validate jwt token and set context
  */
-@Component("jwtFilter")
-public class JwtAuthTokenFilter implements Filter {
+@Component
+public class JwtAuthTokenFilter extends GenericFilterBean {
     private static final Logger LOGGER = LoggerFactory.getLogger(JwtAuthTokenFilter.class);
-    public static final String CAN_NOT_SET_USER_AUTHENTICATION_MESSAGE = "Can NOT set user authentication -> Message: {}";
-    public static final String AUTHORIZATION = "Authorization";
-    public static final String BEARER_ = "Bearer ";
+    private static final String CAN_NOT_SET_USER_AUTHENTICATION_MESSAGE = "Can NOT set user authentication -> Message: {}";
+    private static final String AUTHORIZATION = "Authorization";
+    private static final String BEARER_ = "Bearer ";
 
     private JwtProvider tokenProvider;
     private UserDetailsService userDetailsService;
@@ -30,14 +32,6 @@ public class JwtAuthTokenFilter implements Filter {
     public JwtAuthTokenFilter(JwtProvider jwtProvider, UserDetailsService userDetailsService) {
         this.tokenProvider = jwtProvider;
         this.userDetailsService = userDetailsService;
-    }
-
-    @Override
-    public void destroy() {
-    }
-
-    @Override
-    public void init(FilterConfig filterConfig) {
     }
 
     /**
