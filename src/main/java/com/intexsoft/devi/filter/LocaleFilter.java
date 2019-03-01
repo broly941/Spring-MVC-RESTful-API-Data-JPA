@@ -62,7 +62,6 @@ public class LocaleFilter extends GenericFilterBean {
     @Override
     public void initFilterBean() {
         langList = loadLanguageList();
-        LOGGER.debug("Invoke filter init method()'");
     }
 
     @Override
