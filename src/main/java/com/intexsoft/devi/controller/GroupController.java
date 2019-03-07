@@ -33,7 +33,6 @@ public class GroupController {
      * @return getAll group entities in the database.
      */
     @GetMapping
-//    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public List<GroupDTO> getAll(Locale locale) {
         return groupService.getAll(locale).stream()
                 .map(this::convertToDto)

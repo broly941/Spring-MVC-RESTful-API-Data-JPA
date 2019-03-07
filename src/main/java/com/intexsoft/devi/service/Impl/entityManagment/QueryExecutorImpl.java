@@ -16,6 +16,9 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 
+/**
+ * Class process sql request and call functions/procedures from Oracle DB.
+ */
 @Service
 public class QueryExecutorImpl implements QueryExecutor {
 

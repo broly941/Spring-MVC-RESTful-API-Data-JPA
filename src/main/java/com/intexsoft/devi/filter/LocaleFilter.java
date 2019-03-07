@@ -3,8 +3,10 @@ package com.intexsoft.devi.filter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
+import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.springframework.web.util.WebUtils;
 
@@ -36,8 +38,8 @@ import static org.springframework.http.HttpHeaders.ACCEPT_LANGUAGE;
  * @author DEVIAPHAN on 19.12.2018
  * @project university
  */
-@Component("localeResolverFilter")
-public class LocaleFilter extends GenericFilterBean {
+@Component
+public class LocaleFilter extends OncePerRequestFilter {
 
     private final Predicate<Integer> indexValidPredicate = index -> index != -1;
 
@@ -56,18 +58,12 @@ public class LocaleFilter extends GenericFilterBean {
     private static final Logger LOGGER = LoggerFactory.getLogger(LocaleFilter.class);
 
     @Override
-    public void destroy() {
-    }
-
-    @Override
     public void initFilterBean() {
         langList = loadLanguageList();
     }
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        HttpServletRequest httpRequest = (HttpServletRequest) request;
-        HttpServletResponse httpServletResponse = (HttpServletResponse) response;
+    protected void doFilterInternal(HttpServletRequest httpRequest, HttpServletResponse httpServletResponse, FilterChain chain) throws ServletException, IOException {
         String acceptLanguage = httpRequest.getHeader(ACCEPT_LANGUAGE);
         if (acceptLanguage == null) {
             setLocale(httpRequest, httpServletResponse, chain, LOCALE_EN);
@@ -99,7 +95,7 @@ public class LocaleFilter extends GenericFilterBean {
             setLocale(request, response, filterChain, acceptLanguage);
         } else if (!getLocaleByLanguage(request, response, filterChain, acceptLanguage)) {
             LOGGER.error(HTTP_STATUS_400_LANGUAGE_NOT_SUPPORTED + acceptLanguage);
-            response.sendError(400, LANGUAGE_NOT_SUPPORTED + acceptLanguage);
+                response.sendError(400, LANGUAGE_NOT_SUPPORTED + acceptLanguage);
         }
     }
 

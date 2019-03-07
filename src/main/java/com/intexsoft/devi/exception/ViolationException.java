@@ -1,5 +1,9 @@
 package com.intexsoft.devi.exception;
 
+/**
+ * Custom Exception.
+ * It will execute when come in exception from database.
+ */
 public class ViolationException extends RuntimeException {
     public ViolationException() {
         super();

@@ -33,18 +33,18 @@ import java.util.stream.Collectors;
 @Service
 public class UserServiceImpl implements UserService {
 
-    public static final String ROLE_ADMIN = "ROLE_ADMIN";
-    public static final String ROLE_PM = "ROLE_PM";
-    public static final String ROLE_USER = "ROLE_USER";
-    public static final String ADMIN_ROLE_NOT_FIND = "Admin Role not find";
-    public static final String PM_ROLE_NOT_FIND = "PM Role not find";
-    public static final String USER_ROLE_NOT_FIND = "User Role not find";
+    private static final String ROLE_ADMIN = "ROLE_ADMIN";
+    private static final String ROLE_PM = "ROLE_PM";
+    private static final String ROLE_USER = "ROLE_USER";
+    private static final String ADMIN_ROLE_NOT_FIND = "Admin Role not find";
+    private static final String PM_ROLE_NOT_FIND = "PM Role not find";
+    private static final String USER_ROLE_NOT_FIND = "User Role not find";
 
-    public static final String ADMIN = "admin";
-    public static final String PM = "pm";
-    public static final String USERNAME_IS_ALREADY_TAKEN = "Username is already taken";
-    public static final String EMAIL_IS_ALREADY_IN_USE = "Email is already in use";
-    public static final String USER_NOT_FOUND = "User not found: ";
+    private static final String ADMIN = "admin";
+    private static final String PM = "pm";
+    private static final String USERNAME_IS_ALREADY_TAKEN = "Username is already taken";
+    private static final String EMAIL_IS_ALREADY_IN_USE = "Email is already in use";
+    private static final String USER_NOT_FOUND = "User not found: ";
 
     @Autowired
     private UserRepository userRepository;

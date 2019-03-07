@@ -9,20 +9,20 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
  * Validate jwt token and set context
  */
-@Component("jwtFilter")
-public class JwtAuthTokenFilter implements Filter {
+public class JwtAuthTokenFilter extends OncePerRequestFilter {
     private static final Logger LOGGER = LoggerFactory.getLogger(JwtAuthTokenFilter.class);
-    public static final String CAN_NOT_SET_USER_AUTHENTICATION_MESSAGE = "Can NOT set user authentication -> Message: {}";
-    public static final String AUTHORIZATION = "Authorization";
-    public static final String BEARER_ = "Bearer ";
+    private static final String AUTHORIZATION = "Authorization";
+    private static final String BEARER_ = "Bearer ";
 
     private JwtProvider tokenProvider;
     private UserDetailsService userDetailsService;
@@ -32,31 +32,22 @@ public class JwtAuthTokenFilter implements Filter {
         this.userDetailsService = userDetailsService;
     }
 
-    @Override
-    public void destroy() {
-    }
-
-    @Override
-    public void init(FilterConfig filterConfig) {
-    }
-
     /**
      * method make token from request and check it
      * if token is not valid throw exception
      * if token is not exist just make doFilter()
      *
-     * @param request  of user
-     * @param response of app
+     * @param httpRequest  of user
+     * @param httpServletResponse of app
      * @param chain    is filters chain
      * @throws IOException      if will exception
      * @throws ServletException if will exception
      */
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+    protected void doFilterInternal(HttpServletRequest httpRequest, HttpServletResponse httpServletResponse, FilterChain chain) throws ServletException, IOException {
+        String jwt = getJwt(httpRequest);
+        LOGGER.info(httpRequest.getRequestURL().toString());
         try {
-            HttpServletRequest httpRequest = (HttpServletRequest) request;
-            String jwt = getJwt(httpRequest);
-
             if (jwt != null && tokenProvider.validateJwtToken(jwt)) {
                 String username = tokenProvider.getUserNameFromJwtToken(jwt);
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
@@ -65,11 +56,9 @@ public class JwtAuthTokenFilter implements Filter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         } catch (Exception e) {
-            LOGGER.error(CAN_NOT_SET_USER_AUTHENTICATION_MESSAGE, e);
             throw e;
         }
-
-        chain.doFilter(request, response);
+        chain.doFilter(httpRequest, httpServletResponse);
     }
 
     private String getJwt(HttpServletRequest request) {

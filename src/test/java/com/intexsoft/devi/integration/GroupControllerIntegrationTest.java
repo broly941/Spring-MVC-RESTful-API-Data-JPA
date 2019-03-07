@@ -33,13 +33,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = DataConfigTest.class)
 @WebAppConfiguration
-@TestExecutionListeners({
-        DependencyInjectionTestExecutionListener.class,
-        DbUnitTestExecutionListener.class})
-@DatabaseSetups({
-        @DatabaseSetup("/xml/teachers.xml"),
-        @DatabaseSetup("/xml/groups.xml")
-})
+@TestExecutionListeners({DependencyInjectionTestExecutionListener.class, DbUnitTestExecutionListener.class})
+@DatabaseSetups({@DatabaseSetup("/xml/teachers.xml"), @DatabaseSetup("/xml/groups.xml")})
 public class GroupControllerIntegrationTest {
 
     private static final String ACCEPT_LANGUAGE = "Accept-language";

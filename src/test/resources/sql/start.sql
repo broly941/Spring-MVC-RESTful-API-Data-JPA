@@ -2,15 +2,17 @@ CREATE TABLE Teacher
 (
   TeacherId BIGINT PRIMARY KEY AUTO_INCREMENT,
   FirstName VARCHAR(20) NOT NULL,
-  LastName VARCHAR(20) NOT NULL
+  LastName VARCHAR(20) NOT NULL,
+  UNIQUE (FirstName, LastName)
 );
 
 CREATE TABLE GroupOfUniversity
 (
   GroupId BIGINT PRIMARY KEY AUTO_INCREMENT,
-	NumberGroup VARCHAR(8) NOT NULL,
-	TeacherId BIGINT,
-  FOREIGN KEY(TeacherId) REFERENCES Teacher(TeacherId) ON DELETE CASCADE
+  NumberGroup VARCHAR(8) NOT NULL,
+  TeacherId BIGINT,
+  FOREIGN KEY(TeacherId) REFERENCES Teacher(TeacherId) ON DELETE CASCADE,
+  UNIQUE (NumberGroup)
 );
 
 CREATE TABLE Student
@@ -19,7 +21,8 @@ CREATE TABLE Student
 	FirstName VARCHAR(20) NOT NULL,
 	LastName VARCHAR(20) NOT NULL,
 	GroupId BIGINT,
-  FOREIGN KEY (GroupId) REFERENCES GroupOfUniversity (GroupId) ON DELETE CASCADE
+  FOREIGN KEY (GroupId) REFERENCES GroupOfUniversity (GroupId) ON DELETE CASCADE,
+  UNIQUE (FirstName, LastName)
 );
 
 CREATE TABLE GroupTeacher (
@@ -28,4 +31,24 @@ CREATE TABLE GroupTeacher (
   FOREIGN KEY (GroupId) REFERENCES GroupOfUniversity (GroupId) ON DELETE CASCADE,
   FOREIGN KEY (TeacherId) REFERENCES Teacher (TeacherId) ON DELETE CASCADE,
   PRIMARY KEY (GroupId, TeacherId)
+);
+
+CREATE TABLE AppUsers (
+ UserId BIGINT PRIMARY KEY AUTO_INCREMENT,
+ Email VARCHAR(40) NOT NULL,
+ UserPassword VARCHAR(100) NOT NULL,
+ UserName VARCHAR(40) NOT NULL
+);
+
+CREATE TABLE UserRoles (
+ RoleId BIGINT PRIMARY KEY AUTO_INCREMENT,
+ RoleName VARCHAR(60) NOT NULL
+);
+
+CREATE TABLE UserRole (
+ UserId BIGINT NOT NULL,
+ RoleId BIGINT NOT NULL,
+ CONSTRAINT fk_user_userRoles FOREIGN KEY (UserId) REFERENCES AppUsers (UserId) ON DELETE CASCADE,
+ CONSTRAINT fk_roles_userRoles FOREIGN KEY (RoleId) REFERENCES UserRoles (RoleId) ON DELETE CASCADE,
+ CONSTRAINT user_roles_pk PRIMARY KEY (UserId, RoleId)
 );

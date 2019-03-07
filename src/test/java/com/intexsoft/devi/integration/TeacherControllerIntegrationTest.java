@@ -40,16 +40,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = DataConfigTest.class)
 @WebAppConfiguration
-@TestExecutionListeners({
-        DependencyInjectionTestExecutionListener.class,
-        DbUnitTestExecutionListener.class})
-@DatabaseSetup({"/xml/teachers.xml"})
-
-@DatabaseSetups({
-        @DatabaseSetup("/xml/teachers.xml"),
-        @DatabaseSetup("/xml/groups.xml"),
-        @DatabaseSetup("/xml/groupteacher.xml")
-})
+@TestExecutionListeners({DependencyInjectionTestExecutionListener.class, DbUnitTestExecutionListener.class})
+@DatabaseSetups({@DatabaseSetup("/xml/teachers.xml"), @DatabaseSetup("/xml/groups.xml"), @DatabaseSetup("/xml/groupteacher.xml")})
 public class TeacherControllerIntegrationTest {
 
     private static final String ACCEPT_LANGUAGE = "Accept-language";
@@ -79,7 +71,7 @@ public class TeacherControllerIntegrationTest {
     private static final String SUCCESS_CSV_FILE = "addGroupsToTeacher_Success.csv";
     private static final String UNSUCCESS_CSV_FILE = "addGroupsToTeacher_Unsuccessful.csv";
     private static final String ADD_GROUPS_TO_TEACHERS_SUC = "{\"rowCount\":3,\"validRow\":3,\"errorsCount\":0,\"errors\":[]}";
-    private static final String ADD_GROUPS_TO_TEACHERS_UNSUC = "{\"rowCount\":3,\"validRow\":0,\"errorsCount\":3,\"errors\":[\"Row 1: [teacher already isFilterExist]\",\"Row 2: [some type is not a string]\",\"Row 3: [the required number of columns is missing]\"]}";
+    private static final String ADD_GROUPS_TO_TEACHERS_UNSUC = "{\"rowCount\":3,\"validRow\":0,\"errorsCount\":3,\"errors\":[\"Row 1: [teacher already exists]\",\"Row 2: [some type is not a string]\",\"Row 3: [the required number of columns is missing]\"]}";
 
     private MockMvc mockMvc;
 
@@ -92,23 +84,6 @@ public class TeacherControllerIntegrationTest {
     @Before
     public void init() {
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-    }
-
-    /**
-     * Will return an all records from tested db
-     *
-     * @throws Exception in json parse or MockMvc.perform
-     */
-    @Test
-    public void getAll() throws Exception {
-        mockMvc.perform(get(TEACHERS)
-                .header(ACCEPT_LANGUAGE, EN)
-        )
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(APPLICATION_JSON_CHARSET_UTF_8))
-                .andExpect(jsonPath($_2_ID, is(3)))
-                .andExpect(jsonPath($_2_FIRST_NAME, is(ROB)))
-                .andExpect(jsonPath($_2_LAST_NAME, is(STARK)));
     }
 
     /**
