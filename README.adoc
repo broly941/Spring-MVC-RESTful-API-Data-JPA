@@ -1,12 +1,12 @@
-University Application
+# University Application
 ==========================
 
-The task that I performed while practicing in Intexsoft.
+> The task that I performed while practicing in Intexsoft.
 
 Tools:
+
 - Spring Web MVC Framework
 - Restful API
 - DATA JPA
 - Apache POI (xls parser)
 - Concurrency
-
